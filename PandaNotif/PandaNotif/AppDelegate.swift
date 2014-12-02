@@ -1,12 +1,10 @@
 //
 //  AppDelegate.swift
-//  PandaNotif
+//  test2
 //
-//  Created by ShinichiSakaguchi on 2014/11/21.
-//  Copyright (c) 2014年 Shinichi.Sakaguchi. All rights reserved.
+//  Created by 坂口真一 on 2014/12/01.
+//  Copyright (c) 2014年 坂口真一. All rights reserved.
 //
-// test push
-// macbook test push
 
 import UIKit
 

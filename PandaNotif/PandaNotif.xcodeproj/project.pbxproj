@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8BD3B61B1A2C5D7000AFF19E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD3B61A1A2C5D7000AFF19E /* ViewController.swift */; };
 		E893636F1A1F0F6D009A0259 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E893636E1A1F0F6D009A0259 /* AppDelegate.swift */; };
-		E89363711A1F0F6D009A0259 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89363701A1F0F6D009A0259 /* MasterViewController.swift */; };
-		E89363731A1F0F6D009A0259 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89363721A1F0F6D009A0259 /* DetailViewController.swift */; };
 		E89363761A1F0F6D009A0259 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E89363741A1F0F6D009A0259 /* Main.storyboard */; };
 		E89363781A1F0F6D009A0259 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E89363771A1F0F6D009A0259 /* Images.xcassets */; };
 		E893637B1A1F0F6D009A0259 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E89363791A1F0F6D009A0259 /* LaunchScreen.xib */; };
@@ -27,11 +26,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8BD3B61A1A2C5D7000AFF19E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E89363691A1F0F6D009A0259 /* PandaNotif.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PandaNotif.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E893636D1A1F0F6D009A0259 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E893636E1A1F0F6D009A0259 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		E89363701A1F0F6D009A0259 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		E89363721A1F0F6D009A0259 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		E89363751A1F0F6D009A0259 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E89363771A1F0F6D009A0259 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E893637A1A1F0F6D009A0259 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -80,8 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				E893636E1A1F0F6D009A0259 /* AppDelegate.swift */,
-				E89363701A1F0F6D009A0259 /* MasterViewController.swift */,
-				E89363721A1F0F6D009A0259 /* DetailViewController.swift */,
+				8BD3B61A1A2C5D7000AFF19E /* ViewController.swift */,
 				E89363741A1F0F6D009A0259 /* Main.storyboard */,
 				E89363771A1F0F6D009A0259 /* Images.xcassets */,
 				E89363791A1F0F6D009A0259 /* LaunchScreen.xib */,
@@ -215,8 +212,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E89363731A1F0F6D009A0259 /* DetailViewController.swift in Sources */,
-				E89363711A1F0F6D009A0259 /* MasterViewController.swift in Sources */,
+				8BD3B61B1A2C5D7000AFF19E /* ViewController.swift in Sources */,
 				E893636F1A1F0F6D009A0259 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -340,9 +336,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = PandaNotif/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -350,9 +348,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = PandaNotif/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -409,6 +409,7 @@
 				E893638C1A1F0F6D009A0259 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E893638D1A1F0F6D009A0259 /* Build configuration list for PBXNativeTarget "PandaNotifTests" */ = {
 			isa = XCConfigurationList;
@@ -417,6 +418,7 @@
 				E893638F1A1F0F6D009A0259 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
