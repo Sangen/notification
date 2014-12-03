@@ -13,6 +13,8 @@
 		E89363781A1F0F6D009A0259 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E89363771A1F0F6D009A0259 /* Images.xcassets */; };
 		E893637B1A1F0F6D009A0259 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E89363791A1F0F6D009A0259 /* LaunchScreen.xib */; };
 		E89363871A1F0F6D009A0259 /* PandaNotifTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89363861A1F0F6D009A0259 /* PandaNotifTests.swift */; };
+		E8FCC4131A2EEE130000FFAD /* CustomViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FCC4111A2EEE130000FFAD /* CustomViewCell.swift */; };
+		E8FCC4141A2EEE130000FFAD /* CustomViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8FCC4121A2EEE130000FFAD /* CustomViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +38,8 @@
 		E89363801A1F0F6D009A0259 /* PandaNotifTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PandaNotifTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E89363851A1F0F6D009A0259 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E89363861A1F0F6D009A0259 /* PandaNotifTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PandaNotifTests.swift; sourceTree = "<group>"; };
+		E8FCC4111A2EEE130000FFAD /* CustomViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomViewCell.swift; sourceTree = "<group>"; };
+		E8FCC4121A2EEE130000FFAD /* CustomViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +87,8 @@
 				E89363771A1F0F6D009A0259 /* Images.xcassets */,
 				E89363791A1F0F6D009A0259 /* LaunchScreen.xib */,
 				E893636C1A1F0F6D009A0259 /* Supporting Files */,
+				E8FCC4111A2EEE130000FFAD /* CustomViewCell.swift */,
+				E8FCC4121A2EEE130000FFAD /* CustomViewCell.xib */,
 			);
 			path = PandaNotif;
 			sourceTree = "<group>";
@@ -193,6 +199,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E89363761A1F0F6D009A0259 /* Main.storyboard in Resources */,
+				E8FCC4141A2EEE130000FFAD /* CustomViewCell.xib in Resources */,
 				E893637B1A1F0F6D009A0259 /* LaunchScreen.xib in Resources */,
 				E89363781A1F0F6D009A0259 /* Images.xcassets in Resources */,
 			);
@@ -213,6 +220,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8BD3B61B1A2C5D7000AFF19E /* ViewController.swift in Sources */,
+				E8FCC4131A2EEE130000FFAD /* CustomViewCell.swift in Sources */,
 				E893636F1A1F0F6D009A0259 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

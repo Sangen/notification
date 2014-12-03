@@ -8,83 +8,102 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var alarmTableView: UITableView!
+    @IBOutlet weak var minuteTableView: UITableView!
     @IBOutlet weak var detailDescriptionLabel: UILabel!
-    var myNotificationButton: UIButton!
-    var myNotificationFireButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // アラート表示の許可をもらう.
+        // アラート表示の許可
         UIApplication.sharedApplication().registerUserNotificationSettings(
             UIUserNotificationSettings(
                 forTypes:UIUserNotificationType.Sound | UIUserNotificationType.Alert,
                 categories: nil)
         )
+        minuteTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
+        minuteTableView.delegate = self
+        minuteTableView.dataSource = self
+        minuteTableView.backgroundColor = UIColor.clearColor()
         
-        // すぐにNotificationを発火するボタンを作成する.
-        myNotificationButton = UIButton(frame: CGRectMake(0,0,200,80))
-        myNotificationButton.backgroundColor = UIColor.orangeColor()
-        myNotificationButton.layer.masksToBounds = true
-        myNotificationButton.setTitle("Notification", forState: .Normal)
-        myNotificationButton.layer.cornerRadius = 20.0
-        myNotificationButton.layer.position = CGPoint(x: self.view.bounds.width/2, y:200)
-        myNotificationButton.addTarget(self, action: "onClickMyButton:", forControlEvents: .TouchUpInside)
-        myNotificationButton.tag = 1
-        
-        // 時間をおいてNotificationを発火するボタンを作成する.
-        myNotificationFireButton = UIButton(frame: CGRectMake(0,0,200,80))
-        myNotificationFireButton.backgroundColor = UIColor.blueColor()
-        myNotificationFireButton.layer.masksToBounds = true
-        myNotificationFireButton.setTitle("Notification(Fire)", forState: .Normal)
-        myNotificationFireButton.layer.cornerRadius = 20.0
-        myNotificationFireButton.layer.position = CGPoint(x: self.view.bounds.width/2, y:400)
-        myNotificationFireButton.addTarget(self, action: "onClickMyButton:", forControlEvents: .TouchUpInside)
-        myNotificationFireButton.tag = 2
-        
-        // ViewにButtonを追加する.
-        view.addSubview(myNotificationButton)
-        view.addSubview(myNotificationFireButton)
+        alarmTableView.registerNib(UINib(nibName: "CustomViewCell", bundle: nil), forCellReuseIdentifier: "CustomCell")
+//        var nib = UINib(nibName: "CustomViewCell", bundle: nil)
+//        alarmTableView.registerNib(nib, forCellReuseIdentifier:"Cell")
+        alarmTableView.delegate = self
+        alarmTableView.dataSource = self
+        alarmTableView.backgroundColor = UIColor.clearColor()
     }
-    /*
-    ボタンイベント
-    */
-    func onClickMyButton(sender: UIButton){
-        if sender.tag == 1 {
-            showNotification()
-        } else if sender.tag == 2 {
-            showNotificationFire()
+    
+    var texts = ["3 min", "5 min", "10 min", "15 min", "30 min", "60 min"]
+    var texts2 = ["14:30", "15:30", "18:30"]
+
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
+    {
+        return 80
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        if tableView.tag == 0{
+            return texts.count
+        }else{
+            return texts2.count
         }
     }
-    /*
-    Show Notification
-    */
-    private func showNotification(){
-        // Notificationの生成する.
-        let myNotification: UILocalNotification = UILocalNotification()
-        // メッセージを代入する.
-        myNotification.alertBody = "TEST"
-        // Timezoneを設定をする.
-        myNotification.timeZone = NSTimeZone.defaultTimeZone()
-        // Notificationを表示する.
-        UIApplication.sharedApplication().scheduleLocalNotification(myNotification)
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        var cell = tableView.dequeueReusableCellWithIdentifier("data", forIndexPath: indexPath) as UITableViewCell
+        let customCell = tableView.dequeueReusableCellWithIdentifier("CustomCell") as CustomViewCell
+     
+        if tableView.tag == 0{
+            cell.textLabel?.text = texts[indexPath.row]
+            cell.textLabel?.font = UIFont.systemFontOfSize(25.0)
+            return cell
+        }else{
+          //  customCell.timeLabel.text = texts2[indexPath.row]
+           // customCell.textLabel?.font = UIFont.systemFontOfSize(18.0)
+            return customCell
+        }
     }
-    /*
-    Show Notification(10 sec後に発火)
-    */
-    private func showNotificationFire(){
-        // Notificationの生成する.
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!)
+    {
+        if tableView.tag == 0 {
+            switch texts[indexPath.row]{
+                case "3 min":
+                    showNotificationFire(180,label: "アラーム")
+                case "5 min":
+                    showNotificationFire(300,label: "アラーム")
+                case "10 min":
+                    showNotificationFire(600,label: "アラーム")
+                case "15 min":
+                    showNotificationFire(900,label: "アラーム")
+                case "30 min":
+                    showNotificationFire(1800,label: "アラーム")
+                case "60 min":
+                    showNotificationFire(3600,label: "アラーム")
+                default:
+                    break
+            }
+        }else{
+            showNotificationFire(10, label: "アラームテスト")
+        }
+    }
+
+    private func showNotificationFire(time:Double, label:String){
+        // Notificationの生成
         let myNotification: UILocalNotification = UILocalNotification()
-        // メッセージを代入する.
-        myNotification.alertBody = "こっち見んな"
-        // 再生サウンドを設定する.
+        // メッセージ
+        myNotification.alertBody = label
+        // 再生サウンド
         myNotification.soundName = UILocalNotificationDefaultSoundName
-        // Timezoneを設定する.
+        // Timezone
         myNotification.timeZone = NSTimeZone.defaultTimeZone()
-        // 10秒後に設定する.
-        myNotification.fireDate = NSDate(timeIntervalSinceNow: 10)
-        // Notificationを表示する.
+        // 指定秒
+        myNotification.fireDate = NSDate(timeIntervalSinceNow: time)
+        // Notificationを表示
         UIApplication.sharedApplication().scheduleLocalNotification(myNotification)
     }
     
