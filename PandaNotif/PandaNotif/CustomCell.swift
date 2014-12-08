@@ -1,22 +1,19 @@
 //
-//  CustomViewCell.swift
+//  CustomCell.swift
 //  PandaNotif
 //
-//  Created by ShinichiSakaguchi on 2014/12/03.
+//  Created by 坂口真一 on 2014/12/08.
 //  Copyright (c) 2014年 Shinichi.Sakaguchi. All rights reserved.
 //
 
 import UIKit
 
-class CustomViewCell: UITableViewCell {
+class CustomCell: UITableViewCell {
+
 
     @IBOutlet weak var timeLabel: UILabel!
-    @IBOutlet weak var captionLabel: UILabel!
-    
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
+    @IBOutlet weak var descriptionLabel: UILabel!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
