@@ -10,10 +10,10 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    @IBOutlet weak var navigationBar: UINavigationBar!
+    @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var addButton: UIBarButtonItem!
     @IBOutlet weak var alarmTableView: UITableView!
     @IBOutlet weak var minuteTableView: UITableView!
-    var myRightButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,17 +23,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 forTypes:UIUserNotificationType.Sound | UIUserNotificationType.Alert,
                 categories: nil)
         )
-
-        self.title = "My Navigation"
-        self.navigationController?.navigationBar;
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
-        
-        // 右ボタンを作成する
-        myRightButton = UIBarButtonItem(title: "RightBtn", style: .Plain, target: self, action: "onClickMyButton:")
-        myRightButton.tag = 2
-        
-        // ナビゲーションバーの右に設置する.
-        self.navigationItem.rightBarButtonItem = myRightButton
 
         minuteTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
         minuteTableView.delegate = self
@@ -177,6 +166,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         alarmTimes.append(dateFormatter.stringFromDate(alarmTime))
         descriptions.append("アラーム")
         alarmTableView.reloadData()
+    }
+    
+    @IBAction func leftBarButtonItem(sender: UIBarButtonItem) {
+        //編集
+        println("edit push")
+    }
+    
+    @IBAction func rightBarButtonItem(sender: UIBarButtonItem) {
+        //新規追加
+        println("add push")
     }
     
     override func didReceiveMemoryWarning() {

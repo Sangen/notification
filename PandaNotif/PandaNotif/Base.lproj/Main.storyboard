@@ -42,20 +42,32 @@
                                 </items>
                             </tabBar>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hF3-s6-liO">
-                                <rect key="frame" x="-117" y="19" width="608" height="44"/>
+                                <rect key="frame" x="0.0" y="19" width="382" height="44"/>
                                 <items>
-                                    <navigationItem title="アラーム" id="inJ-SU-nZA"/>
+                                    <navigationItem title="アラーム" id="inJ-SU-nZA">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="iFo-AK-6BC">
+                                            <connections>
+                                                <action selector="leftBarButtonItem:" destination="BYZ-38-t0r" id="PPL-zS-gej"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="itT-hB-9z4">
+                                            <connections>
+                                                <action selector="rightBarButtonItem:" destination="BYZ-38-t0r" id="Cgv-vQ-FHE"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
                                 </items>
                             </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="addButton" destination="itT-hB-9z4" id="veC-4v-6LJ"/>
                         <outlet property="alarmTableView" destination="mco-7V-ZGU" id="Qei-R0-nE2"/>
+                        <outlet property="editButton" destination="iFo-AK-6BC" id="wR7-n0-QSw"/>
                         <outlet property="minuteTableView" destination="rkH-cI-t1M" id="sms-KG-8fL"/>
-                        <outlet property="navigationBar" destination="hF3-s6-liO" id="Nue-HY-uHO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
