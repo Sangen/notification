@@ -53,6 +53,7 @@
                                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="itT-hB-9z4">
                                             <connections>
                                                 <action selector="rightBarButtonItem:" destination="BYZ-38-t0r" id="Cgv-vQ-FHE"/>
+                                                <segue destination="QWA-hQ-ZiF" kind="presentation" id="PKX-68-JMT"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -73,6 +74,60 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="782" y="709"/>
+        </scene>
+        <!--Add View Controller-->
+        <scene sceneID="Frn-HH-Qv0">
+            <objects>
+                <viewController id="QWA-hQ-ZiF" customClass="AddViewController" customModule="PandaNotif" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="QCf-Fe-bdo"/>
+                        <viewControllerLayoutGuide type="bottom" id="J8D-el-waT"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ChH-mO-Cg8">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="qFj-AS-Nki">
+                                <rect key="frame" x="-120" y="60" width="600" height="162"/>
+                                <date key="date" timeIntervalSinceReferenceDate="439799731.693551">
+                                    <!--2014-12-09 06:35:31 +0000-->
+                                </date>
+                                <locale key="locale" localeIdentifier="ja_JP"/>
+                            </datePicker>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="22J-aM-Q63">
+                                <rect key="frame" x="0.0" y="16" width="382" height="44"/>
+                                <items>
+                                    <navigationItem title="アラームの追加" id="T8J-KE-95o">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="r2T-I2-vol">
+                                            <connections>
+                                                <action selector="cancelButton:" destination="QWA-hQ-ZiF" id="lE6-Ff-p83"/>
+                                                <segue destination="Fk1-X3-siz" kind="unwind" unwindAction="backFromAddView:" id="xuw-po-fMR"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="GNy-eD-Riz">
+                                            <connections>
+                                                <action selector="saveButton:" destination="QWA-hQ-ZiF" id="Nt6-ED-hgj"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="tTy-Ys-afP">
+                                <rect key="frame" x="0.0" y="252" width="600" height="140"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="datePicker" destination="qFj-AS-Nki" id="IEw-tY-qEM"/>
+                        <outlet property="testTable" destination="tTy-Ys-afP" id="iUw-rk-9aP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RX5-jw-Yf2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Fk1-X3-siz" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="1444" y="709"/>
         </scene>
     </scenes>
 </document>

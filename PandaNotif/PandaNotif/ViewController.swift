@@ -173,9 +173,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         println("edit push")
     }
     
-    @IBAction func rightBarButtonItem(sender: UIBarButtonItem) {
-        //新規追加
-        println("add push")
+    @IBAction func backFromAddView(segue:UIStoryboardSegue){
+        NSLog("I'll　Be　Back")
     }
     
     override func didReceiveMemoryWarning() {

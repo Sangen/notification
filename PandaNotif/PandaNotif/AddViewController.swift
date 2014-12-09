@@ -8,21 +8,52 @@
 
 import UIKit
 
-class AddViewController: UIViewController {
+class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-
-    @IBOutlet weak var optionTable: UITableView!
     @IBOutlet weak var datePicker: UIDatePicker!
-
+    @IBOutlet weak var testTable: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.testTable.dataSource = self
+        self.testTable.delegate = self
+        self.testTable.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
+        self.testTable.backgroundColor = UIColor.clearColor()
+        
         // Do any additional setup after loading the view.
     }
     
-    @IBAction func saveButton(sender: UIBarButtonItem) {
+    let texts = ["Repeat", "Label", "Snooze"]
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
+    {
+        return 44
     }
-    @IBAction func cancelButton(sender: UIBarButtonItem) {
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        return 3
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        var cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
+        cell.textLabel?.text = texts[indexPath.row]
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!)
+    {
+        switch texts[indexPath.row]{
+        case "Repeat":
+            break
+        case "Label":
+            break
+        case "Snooze":
+            break
+        default:
+            break
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,6 +61,11 @@ class AddViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func saveButton(sender: UIBarButtonItem) {
+    }
+    @IBAction func cancelButton(sender: UIBarButtonItem) {
+        
+    }
 
     /*
     // MARK: - Navigation
