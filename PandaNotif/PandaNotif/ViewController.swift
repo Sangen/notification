@@ -40,6 +40,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var texts = ["3 min", "5 min", "10 min", "15 min", "30 min", "60 min"]
     var alarmTimes : [ String ] = [ ]
     var descriptions : [ String ] = [ ]
+    var repeats : [ String ] = [ ]
+    var snoozes : [ String ] = [ ]
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
     {
@@ -81,8 +83,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             switch texts[indexPath.row]{
                 case "3 min":
                     dateAdd(.Minute,number:3,date: NSDate())
-                    //println(alarmTimes)
-                    //println(descriptions)
+                 //   println(alarmTimes)
+                 //   println(descriptions)
+                 //   println(repeats)
+                 //   println(snoozes)
                     showNotificationFire(180,label: "アラーム")
                 case "5 min":
                     dateAdd(.Minute,number:5,date: NSDate())
@@ -144,20 +148,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var comp = NSDateComponents()
         
         switch interval {
-        case .Year:
-            comp.year = number
-        case .Month:
-            comp.month = number
-        case .Day:
-            comp.day = number
-        case .Hour:
-            comp.hour = number
-        case .Minute:
-            comp.minute = number
-        case .Second:
-            comp.second = number
-        default:
-            comp.day = 0
+            case .Year:
+                comp.year = number
+            case .Month:
+                comp.month = number
+            case .Day:
+                comp.day = number
+            case .Hour:
+                comp.hour = number
+            case .Minute:
+                comp.minute = number
+            case .Second:
+                comp.second = number
+            default:
+                comp.day = 0
         }
         let alarmTime = calendar.dateByAddingComponents(comp, toDate: date, options: nil)!
         let dateFormatter = NSDateFormatter()
@@ -165,6 +169,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
         alarmTimes.append(dateFormatter.stringFromDate(alarmTime))
         descriptions.append("アラーム")
+        repeats.append("no")
+        snoozes.append("on")
         alarmTableView.reloadData()
     }
     

@@ -10,6 +10,8 @@
 		8B63F58C1A3561EC00C4A022 /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B63F58A1A3561EC00C4A022 /* CustomCell.swift */; };
 		8B63F58D1A3561EC00C4A022 /* CustomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8B63F58B1A3561EC00C4A022 /* CustomCell.xib */; };
 		8BD3B61B1A2C5D7000AFF19E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD3B61A1A2C5D7000AFF19E /* ViewController.swift */; };
+		8BF035D51A36F99B006B83F4 /* RepeatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF035D31A36F99B006B83F4 /* RepeatViewController.swift */; };
+		8BF035D61A36F99B006B83F4 /* RepeatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BF035D41A36F99B006B83F4 /* RepeatViewController.xib */; };
 		8BF696D21A36B790008FD264 /* AddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF696D01A36B790008FD264 /* AddViewController.swift */; };
 		E893636F1A1F0F6D009A0259 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E893636E1A1F0F6D009A0259 /* AppDelegate.swift */; };
 		E89363761A1F0F6D009A0259 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E89363741A1F0F6D009A0259 /* Main.storyboard */; };
@@ -32,6 +34,8 @@
 		8B63F58A1A3561EC00C4A022 /* CustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
 		8B63F58B1A3561EC00C4A022 /* CustomCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomCell.xib; sourceTree = "<group>"; };
 		8BD3B61A1A2C5D7000AFF19E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		8BF035D31A36F99B006B83F4 /* RepeatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatViewController.swift; sourceTree = "<group>"; };
+		8BF035D41A36F99B006B83F4 /* RepeatViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RepeatViewController.xib; sourceTree = "<group>"; };
 		8BF696D01A36B790008FD264 /* AddViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddViewController.swift; sourceTree = "<group>"; };
 		E89363691A1F0F6D009A0259 /* PandaNotif.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PandaNotif.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E893636D1A1F0F6D009A0259 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -92,6 +96,8 @@
 				8B63F58A1A3561EC00C4A022 /* CustomCell.swift */,
 				8B63F58B1A3561EC00C4A022 /* CustomCell.xib */,
 				8BF696D01A36B790008FD264 /* AddViewController.swift */,
+				8BF035D31A36F99B006B83F4 /* RepeatViewController.swift */,
+				8BF035D41A36F99B006B83F4 /* RepeatViewController.xib */,
 			);
 			path = PandaNotif;
 			sourceTree = "<group>";
@@ -205,6 +211,7 @@
 				E893637B1A1F0F6D009A0259 /* LaunchScreen.xib in Resources */,
 				8B63F58D1A3561EC00C4A022 /* CustomCell.xib in Resources */,
 				E89363781A1F0F6D009A0259 /* Images.xcassets in Resources */,
+				8BF035D61A36F99B006B83F4 /* RepeatViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,6 +232,7 @@
 				8BD3B61B1A2C5D7000AFF19E /* ViewController.swift in Sources */,
 				8B63F58C1A3561EC00C4A022 /* CustomCell.swift in Sources */,
 				8BF696D21A36B790008FD264 /* AddViewController.swift in Sources */,
+				8BF035D51A36F99B006B83F4 /* RepeatViewController.swift in Sources */,
 				E893636F1A1F0F6D009A0259 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

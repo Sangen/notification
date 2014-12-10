@@ -15,11 +15,12 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.testTable.dataSource = self
         self.testTable.delegate = self
         self.testTable.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
         self.testTable.backgroundColor = UIColor.clearColor()
-        
+
         // Do any additional setup after loading the view.
     }
     
@@ -38,21 +39,42 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
         var cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
-        cell.textLabel?.text = texts[indexPath.row]
+        
+        if indexPath.row == 2 {
+            let mySwicth: UISwitch = UISwitch()
+            
+            // Snooze data set
+            mySwicth.on = true
+            cell.accessoryView = mySwicth
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            // SwitchのOn/Off切り替わりの際に、呼ばれるイベントを設定する.
+            mySwicth.addTarget(self, action: "onClickMySwicth:", forControlEvents: UIControlEvents.ValueChanged)
+        }else{
+            cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "data")
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell.detailTextLabel?.text = texts[indexPath.row]
+        }
+            cell.textLabel?.text = texts[indexPath.row]
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!)
     {
         switch texts[indexPath.row]{
-        case "Repeat":
-            break
-        case "Label":
-            break
-        case "Snooze":
-            break
-        default:
-            break
+            case "Repeat":
+                presentViewController(<#viewControllerToPresent: UIViewController#>, animated: <#Bool#>, completion: <#(() -> Void)?##() -> Void#>)
+            case "Label":
+                break
+            default:
+                break
+        }
+    }
+    
+    func onClickMySwicth(sender: UISwitch){
+        if sender.on == true {
+            println("on")
+        } else {
+            println("off")
         }
     }
 
@@ -62,9 +84,6 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     @IBAction func saveButton(sender: UIBarButtonItem) {
-    }
-    @IBAction func cancelButton(sender: UIBarButtonItem) {
-        
     }
 
     /*
