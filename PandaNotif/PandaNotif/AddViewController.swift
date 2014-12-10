@@ -24,7 +24,7 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         // Do any additional setup after loading the view.
     }
     
-    let texts = ["Repeat", "Label", "Snooze"]
+    let texts = ["Repeat", "Label", "Sound", "Snooze"]
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
     {
@@ -33,14 +33,14 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return 3
+        return 4
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
         var cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
         
-        if indexPath.row == 2 {
+        if indexPath.row == 3 {
             let mySwicth: UISwitch = UISwitch()
             
             // Snooze data set
@@ -64,6 +64,8 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             case "Repeat":
                 break
             case "Label":
+                break
+            case "Sound":
                 break
             default:
                 break

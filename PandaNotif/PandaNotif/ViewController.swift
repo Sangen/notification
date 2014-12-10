@@ -41,7 +41,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var alarmTimes : [ String ] = [ ]
     var descriptions : [ String ] = [ ]
     var repeats : [ String ] = [ ]
-    var snoozes : [ String ] = [ ]
+    var sounds : [ String? ] = [ ]
+    var snoozes : [ Bool ] = [ ]
+    var enabled : [ Bool ] = [ ]
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
     {
@@ -66,7 +68,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return cell
         }else{
             var customCell = tableView.dequeueReusableCellWithIdentifier("cell") as CustomCell
-            customCell.timeLabel?.text = alarmTimes[indexPath.row]
+            
+            customCell.timeLabel?.text = right(alarmTimes[indexPath.row],length: 5)
             customCell.timeLabel?.font = UIFont.systemFontOfSize(40.0)
             customCell.descriptionLabel?.text = descriptions[indexPath.row]
             return customCell
@@ -76,52 +79,74 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!)
     {
         if tableView.tag == 0 {
-            let now = NSDate()
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
-            
             switch texts[indexPath.row]{
                 case "3 min":
                     dateAdd(.Minute,number:3,date: NSDate())
-                 //   println(alarmTimes)
-                 //   println(descriptions)
-                 //   println(repeats)
-                 //   println(snoozes)
-                    showNotificationFire(180,label: "アラーム")
+                    stringForDate(  alarmTimes[indexPath.row],
+                                    repeat: repeats[indexPath.row],
+                                    snooze:snoozes[indexPath.row],
+                                    label:descriptions[indexPath.row],
+                                    sound: sounds[indexPath.row]!)
                 case "5 min":
                     dateAdd(.Minute,number:5,date: NSDate())
-                    showNotificationFire(300,label: "アラーム")
                 case "10 min":
                     dateAdd(.Minute,number:10,date: NSDate())
-                    showNotificationFire(600,label: "アラーム")
                 case "15 min":
                     dateAdd(.Minute,number:15,date: NSDate())
-                    showNotificationFire(900,label: "アラーム")
                 case "30 min":
                     dateAdd(.Minute,number:30,date: NSDate())
-                    showNotificationFire(1800,label: "アラーム")
                 case "60 min":
                     dateAdd(.Minute,number:60,date: NSDate())
-                    showNotificationFire(3600,label: "アラーム")
                 default:
                     break
             }
         }
     }
 
-    private func showNotificationFire(time:Double, label:String){
+    //notification 全部発火？
+    private func showNotificationFire(time:NSDate, repeat:String, snooze:Bool, label:String, sound:String){
         // Notificationの生成
         let myNotification: UILocalNotification = UILocalNotification()
-        // メッセージ
         myNotification.alertBody = label
-        // 再生サウンド
-        myNotification.soundName = UILocalNotificationDefaultSoundName
-        // Timezone
+        myNotification.soundName = sound
         myNotification.timeZone = NSTimeZone.defaultTimeZone()
-        // 指定秒
-        myNotification.fireDate = NSDate(timeIntervalSinceNow: time)
-        // Notificationを表示
+        myNotification.fireDate = time
         UIApplication.sharedApplication().scheduleLocalNotification(myNotification)
+    }
+    
+    private func stringForDate(time:NSString, repeat:String, snooze:Bool, label:String, sound:String) {
+        var dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
+        let dateFromString = dateFormatter.dateFromString(time)
+        let now = NSDate()
+        
+        // 現在より過去の時刻を指定した場合は通知しないß
+        if dateFromString!.compare(now) == NSComparisonResult.OrderedAscending{
+            return
+        }
+        
+        showNotificationFire(dateFromString!, repeat: repeat, snooze: snooze, label: label, sound: sound)
+        
+    }
+    
+    private func right(str : String, length : Int) -> String {
+        var len: Int = countElements(str)
+        var buf: String = ""
+        var i: Int = 0
+        
+        if length <= 0 {
+            buf = ""
+        } else if length > len {
+            buf = str
+        } else {
+            for char: Character in str {
+                i++
+                if len - i < length {
+                    buf = buf + String(char)
+                }
+            }
+        }
+        return buf
     }
     
     enum Interval: String {
@@ -165,12 +190,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         let alarmTime = calendar.dateByAddingComponents(comp, toDate: date, options: nil)!
         let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
 
         alarmTimes.append(dateFormatter.stringFromDate(alarmTime))
         descriptions.append("アラーム")
-        repeats.append("no")
-        snoozes.append("on")
+        repeats.append("0")
+        snoozes.append(true)
+        enabled.append(true)
         alarmTableView.reloadData()
     }
     
