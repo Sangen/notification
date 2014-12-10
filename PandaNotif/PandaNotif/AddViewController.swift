@@ -62,7 +62,7 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     {
         switch texts[indexPath.row]{
             case "Repeat":
-                presentViewController(<#viewControllerToPresent: UIViewController#>, animated: <#Bool#>, completion: <#(() -> Void)?##() -> Void#>)
+                break
             case "Label":
                 break
             default:
