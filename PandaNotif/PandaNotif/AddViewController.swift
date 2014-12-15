@@ -62,7 +62,11 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     {
         switch texts[indexPath.row]{
             case "Repeat":
-                break
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let vc = storyboard.instantiateViewControllerWithIdentifier("RepeatViewController") as UIViewController
+                vc.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+                self.presentViewController(vc, animated: true, completion: nil)
+            
             case "Label":
                 break
             case "Sound":
@@ -86,6 +90,17 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     @IBAction func saveButton(sender: UIBarButtonItem) {
+    }
+    
+    @IBAction func backFromRepeatView(segue:UIStoryboardSegue){
+        NSLog("I'll　Be　Back")
+    }
+    
+    var repeats = ["1", "1", "1", "0", "0", "0", "0"]
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?){
+        var repeatViewController:RepeatViewController = segue.destinationViewController as RepeatViewController
+        repeatViewController.param = self.repeats
     }
 
     /*

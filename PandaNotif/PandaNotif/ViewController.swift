@@ -81,26 +81,71 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if tableView.tag == 0 {
             switch texts[indexPath.row]{
                 case "3 min":
-                    dateAdd(.Minute,number:3,date: NSDate())
-                    stringForDate(  alarmTimes[indexPath.row],
-                                    repeat: repeats[indexPath.row],
-                                    snooze:snoozes[indexPath.row],
-                                    label:descriptions[indexPath.row],
-                                    sound: sounds[indexPath.row]!)
+                    minuteSet(.Minute,number:3,date: NSDate())
+                    
+                    for i in 1...30 {
+                        let days = makeDate(.Day,number: i,date: NSDate())
+                        var calender = NSCalendar.currentCalendar()
+                        var components = calender.components(NSCalendarUnit.YearCalendarUnit|NSCalendarUnit.MonthCalendarUnit|NSCalendarUnit.DayCalendarUnit|NSCalendarUnit.WeekdayCalendarUnit, fromDate: days)
+                        var weekday = components.weekday
+                        
+                        if weekday == 1{
+                            println(days,"は日曜日です")
+                        }
+                        if weekday == 2{
+                            println(days,"は月曜日です")
+                        }
+                        if weekday == 3{
+                            println(days,"は火曜日です")
+                        }
+                        if weekday == 4{
+                            println(days,"は水曜日です")
+                        }
+                        if weekday == 5{
+                            println(days,"は木曜日です")
+                        }
+                        if weekday == 6{
+                            println(days,"は金曜日です")
+                        }
+                        if weekday == 7{
+                            println(days,"は土曜日です")
+                        }
+                    }
                 case "5 min":
-                    dateAdd(.Minute,number:5,date: NSDate())
+                    minuteSet(.Minute,number:5,date: NSDate())
                 case "10 min":
-                    dateAdd(.Minute,number:10,date: NSDate())
+                    minuteSet(.Minute,number:10,date: NSDate())
                 case "15 min":
-                    dateAdd(.Minute,number:15,date: NSDate())
+                    minuteSet(.Minute,number:15,date: NSDate())
                 case "30 min":
-                    dateAdd(.Minute,number:30,date: NSDate())
+                    minuteSet(.Minute,number:30,date: NSDate())
                 case "60 min":
-                    dateAdd(.Minute,number:60,date: NSDate())
+                    minuteSet(.Minute,number:60,date: NSDate())
                 default:
                     break
             }
         }
+    }
+    
+    //有効なNotificationか確認する
+    private func makeNotification(time:NSString, repeat:String, snooze:Bool, label:String, sound:String, enabled:Bool) {
+        
+        //スイッチ無効の場合は何もせず終了
+        if enabled == false {
+            return
+        }
+
+        var dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
+        let dateFromString = dateFormatter.dateFromString(time)
+        let now = NSDate()
+        
+        // 現在より過去の時刻を指定した場合は通知しない
+        if (dateFromString!.compare(now) == NSComparisonResult.OrderedAscending || repeat == "no repeat"){
+            return
+        }
+        
+        showNotificationFire(dateFromString!, repeat: repeat, snooze: snooze, label: label, sound: sound)
     }
 
     //notification 全部発火？
@@ -111,22 +156,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         myNotification.soundName = sound
         myNotification.timeZone = NSTimeZone.defaultTimeZone()
         myNotification.fireDate = time
+        
+        //repeat時は繰り返し（繰り返し期間は1ヶ月くらい？）
+
         UIApplication.sharedApplication().scheduleLocalNotification(myNotification)
-    }
-    
-    private func stringForDate(time:NSString, repeat:String, snooze:Bool, label:String, sound:String) {
-        var dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
-        let dateFromString = dateFormatter.dateFromString(time)
-        let now = NSDate()
-        
-        // 現在より過去の時刻を指定した場合は通知しないß
-        if dateFromString!.compare(now) == NSComparisonResult.OrderedAscending{
-            return
-        }
-        
-        showNotificationFire(dateFromString!, repeat: repeat, snooze: snooze, label: label, sound: sound)
-        
     }
     
     private func right(str : String, length : Int) -> String {
@@ -167,7 +200,31 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //  date : 元の日時を NSDate で指定します
     //
     
-    private func dateAdd(interval: Interval, number: Int, date: NSDate)  {
+    func makeDate(interval: Interval, number: Int, date: NSDate) -> NSDate {
+        
+        let calendar = NSCalendar.currentCalendar()
+        var comp = NSDateComponents()
+        
+        switch interval {
+            case .Year:
+                comp.year = number
+            case .Month:
+                comp.month = number
+            case .Day:
+                comp.day = number
+            case .Hour:
+                comp.hour = number
+            case .Minute:
+                comp.minute = number
+            case .Second:
+                comp.second = number
+            default:
+                comp.day = 0
+        }
+        return calendar.dateByAddingComponents(comp, toDate: date, options: nil)!
+    }
+    
+    private func minuteSet(interval: Interval, number: Int, date: NSDate)  {
         
         let calendar = NSCalendar.currentCalendar()
         var comp = NSDateComponents()
