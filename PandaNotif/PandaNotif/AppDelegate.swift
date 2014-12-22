@@ -12,11 +12,18 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var myUserDafault:NSUserDefaults = NSUserDefaults()
     //var myNavigationController: UINavigationController?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: UIUserNotificationType.Sound | UIUserNotificationType.Alert | UIUserNotificationType.Badge, categories: nil))
+        
+        myUserDafault.setObject(["0","0","0","0","0","0","0"], forKey: "NewRepeat")
+        myUserDafault.setObject("アラーム", forKey: "NewLabel")
+        myUserDafault.setObject(["レーザー",UILocalNotificationDefaultSoundName], forKey: "NewSound")
+        myUserDafault.setObject(true, forKey: "NewSnooze")
+        myUserDafault.synchronize()
         
         return true
     }

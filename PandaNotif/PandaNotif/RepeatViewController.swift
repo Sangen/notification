@@ -12,16 +12,15 @@ class RepeatViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     @IBOutlet weak var repeatTable: UITableView!
     
-    var param : [ String ] = [ "", "", "", "", "", "", "" ]
-    var repeats = ["0", "0", "0", "0", "0", "0", "0"]
+    var repeats = ["","","","","","",""]
+    var getRepeats :AnyObject = ["0", "0", "0", "0", "0", "0", "0"]
     let texts = ["毎日曜日", "毎月曜日", "毎火曜日", "毎水曜日", "毎木曜日", "毎金曜日", "毎土曜日"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //パラメータのバインド
-        self.repeats = self.param
-        println(self.repeats)
-        println(self.param)
+
+        self.repeats = self.getRepeats as [String]
+        
         self.repeatTable.delegate = self
         self.repeatTable.dataSource = self
         self.repeatTable.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
@@ -102,6 +101,12 @@ class RepeatViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 break
         }
         repeatTable.reloadData()
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!){
+        var myUserDafault:NSUserDefaults = NSUserDefaults()
+        var setRepeat:Array = self.repeats
+        myUserDafault.setObject(setRepeat, forKey: "NewRepeat")
     }
 
     override func didReceiveMemoryWarning() {

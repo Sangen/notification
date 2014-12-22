@@ -8,12 +8,18 @@
 
 import UIKit
 
+protocol CustomCellDelegate{
+    func tableView(tableView: UITableView, changeSwitchValue: Bool, indexPath:NSIndexPath!)
+}
+
+
 class CustomCell: UITableViewCell {
-
-
+    
+    var delegate: AnyObject!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
-
+    @IBOutlet weak var enabledSwitch: UISwitch!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

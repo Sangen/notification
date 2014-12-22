@@ -15,7 +15,7 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.testTable.dataSource = self
         self.testTable.delegate = self
         self.testTable.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
@@ -43,8 +43,12 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         if indexPath.row == 3 {
             let mySwicth: UISwitch = UISwitch()
             
-            // Snooze data set
-            mySwicth.on = true
+            var myUserDafault:NSUserDefaults = NSUserDefaults()
+            if myUserDafault.boolForKey("NewSnooze"){
+                mySwicth.on = true
+            }else{
+                mySwicth.on = false
+            }
             cell.accessoryView = mySwicth
             cell.selectionStyle = UITableViewCellSelectionStyle.None
             // SwitchのOn/Off切り替わりの際に、呼ばれるイベントを設定する.
@@ -52,35 +56,79 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         }else{
             cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "data")
             cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-            cell.detailTextLabel?.text = texts[indexPath.row]
         }
-            cell.textLabel?.text = texts[indexPath.row]
+        
+        if indexPath.row == 0{
+            var myUserDafault:NSUserDefaults = NSUserDefaults()
+            var repeatCheck:Array = myUserDafault.arrayForKey("NewRepeat")!
+            var repeats = repeatCheck as [String]
+            
+            if repeats == ["1","1","1","1","1","1","1"]{
+                cell.detailTextLabel?.text = "毎日"
+            }else if repeats == ["1","0","0","0","0","0","1"]{
+                cell.detailTextLabel?.text = "週末"
+            }else if repeats == ["0","1","1","1","1","1","0"]{
+                cell.detailTextLabel?.text = "平日"
+            }else if repeats == ["0","0","0","0","0","0","0"]{
+                cell.detailTextLabel?.text = "しない"
+            }else{
+                var weekDay = ""
+                if repeats[1] == "1"{
+                    weekDay += "月 "
+                }
+                if repeats[2] == "1"{
+                    weekDay += "火 "
+                }
+                if repeats[3] == "1"{
+                    weekDay += "水 "
+                }
+                if repeats[4] == "1"{
+                    weekDay += "木 "
+                }
+                if repeats[5] == "1"{
+                    weekDay += "金 "
+                }
+                if repeats[6] == "1"{
+                    weekDay += "土 "
+                }
+                if repeats[0] == "1"{
+                    weekDay += "日"
+                }
+                cell.detailTextLabel?.text = weekDay
+            }
+        }else if indexPath.row == 1{
+            var myUserDafault:NSUserDefaults = NSUserDefaults()
+            cell.detailTextLabel?.text = myUserDafault.stringForKey("NewLabel")!
+        }else if indexPath.row == 2{
+            var myUserDafault:NSUserDefaults = NSUserDefaults()
+            let soundMan = myUserDafault.stringArrayForKey("NewSound")
+            let soundMan2 = soundMan as [String]
+            cell.detailTextLabel?.text = soundMan2[0]
+        }
+        cell.textLabel?.text = texts[indexPath.row]
         return cell
     }
-    
+
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!)
     {
         switch texts[indexPath.row]{
             case "Repeat":
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let vc = storyboard.instantiateViewControllerWithIdentifier("RepeatViewController") as UIViewController
-                vc.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
-                self.presentViewController(vc, animated: true, completion: nil)
-            
+                performSegueWithIdentifier("toRepeatViewController",sender: nil)
             case "Label":
-                break
+                performSegueWithIdentifier("toLabelViewController",sender: nil)
             case "Sound":
-                break
+                performSegueWithIdentifier("toSoundViewController",sender: nil)
             default:
                 break
         }
     }
-    
+
     func onClickMySwicth(sender: UISwitch){
+        var myUserDafault:NSUserDefaults = NSUserDefaults()
         if sender.on == true {
-            println("on")
+            myUserDafault.setObject(true, forKey: "NewSnooze")
         } else {
-            println("off")
+            myUserDafault.setObject(false, forKey: "NewSnooze")
         }
     }
 
@@ -89,28 +137,46 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         // Dispose of any resources that can be recreated.
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!){
+        if (segue.identifier == "toRepeatViewController"){
+            let vc = segue.destinationViewController as RepeatViewController
+            var myUserDafault:NSUserDefaults = NSUserDefaults()
+            var newRepeat = myUserDafault.arrayForKey("NewRepeat")!
+            vc.getRepeats = newRepeat
+        }else if (segue.identifier == "toViewController"){
+            var myUserDafault:NSUserDefaults = NSUserDefaults()
+            myUserDafault.setObject(["0","0","0","0","0","0","0"], forKey: "NewRepeat")
+            myUserDafault.setObject("アラーム", forKey: "NewLabel")
+            myUserDafault.setObject(["レーザー",UILocalNotificationDefaultSoundName], forKey: "NewSound")
+            myUserDafault.setObject(true, forKey: "NewSnooze")
+        }else if (segue.identifier == "toLabelViewController"){
+            let vc = segue.destinationViewController as LabelViewController
+            var myUserDafault:NSUserDefaults = NSUserDefaults()
+            var newLabel = myUserDafault.stringForKey("NewLabel")!
+            vc.getLabel = newLabel
+        }else if (segue.identifier == "toSoundViewController"){
+            let vc = segue.destinationViewController as SoundViewController
+            var myUserDafault:NSUserDefaults = NSUserDefaults()
+            var newSound = myUserDafault.stringArrayForKey("NewSound")!
+            vc.getSound = newSound
+        }
+    }
+    
     @IBAction func saveButton(sender: UIBarButtonItem) {
+        //create new alarm
+        
     }
     
     @IBAction func backFromRepeatView(segue:UIStoryboardSegue){
-        NSLog("I'll　Be　Back")
+        testTable.reloadData()
     }
     
-    var repeats = ["1", "1", "1", "0", "0", "0", "0"]
+    @IBAction func backFromLabelView(segue:UIStoryboardSegue){
+        testTable.reloadData()
+    }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?){
-        var repeatViewController:RepeatViewController = segue.destinationViewController as RepeatViewController
-        repeatViewController.param = self.repeats
+    @IBAction func backFromSoundView(segue:UIStoryboardSegue){
+        testTable.reloadData()
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
 }

@@ -32,6 +32,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="descriptionLabel" destination="l5P-RM-t2l" id="Owy-vi-xwT"/>
+                <outlet property="enabledSwitch" destination="TJL-gC-UBb" id="CtP-8o-TPS"/>
                 <outlet property="timeLabel" destination="j4q-79-3mF" id="s5u-6d-6Nz"/>
             </connections>
             <point key="canvasLocation" x="377" y="426"/>

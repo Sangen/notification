@@ -23,7 +23,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 forTypes:UIUserNotificationType.Sound | UIUserNotificationType.Alert,
                 categories: nil)
         )
-
+        
+        var myUserDafault:NSUserDefaults = NSUserDefaults()
+        myUserDafault.setObject(["0","0","0","0","0","0","0"], forKey: "NewRepeat")
+        myUserDafault.setObject("アラーム", forKey: "NewLabel")
+        myUserDafault.setObject(["レーザー",UILocalNotificationDefaultSoundName], forKey: "NewSound")
+        myUserDafault.setObject(true, forKey: "NewSnooze")
+        myUserDafault.synchronize()
+        
         minuteTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
         minuteTableView.delegate = self
         minuteTableView.dataSource = self
@@ -38,12 +45,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     var texts = ["3 min", "5 min", "10 min", "15 min", "30 min", "60 min"]
-    var alarmTimes : [ String ] = [ ]
-    var descriptions : [ String ] = [ ]
-    var repeats : [ String ] = [ ]
-    var sounds : [ String? ] = [ ]
-    var snoozes : [ Bool ] = [ ]
-    var enabled : [ Bool ] = [ ]
+    var alarmTimes : [ String ] = [ "17:05", "18:15" ]
+    var descriptions : [ String ] = [ "アラーム", "マル秘" ] // Label
+    var repeats : [ String ] = [ "0","1","1","1","0","0","0",  "1","1","1","1","1","1","1"  ] // repeat
+    var sounds : [ String? ] = [ UILocalNotificationDefaultSoundName, nil, "sample" ] // sound
+    var snoozes : [ Bool ] = [ true,false ] // snooze
+    var enabled : [ Bool ] = [ true,true ]
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
     {
@@ -69,9 +76,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }else{
             var customCell = tableView.dequeueReusableCellWithIdentifier("cell") as CustomCell
             
-            customCell.timeLabel?.text = right(alarmTimes[indexPath.row],length: 5)
-            customCell.timeLabel?.font = UIFont.systemFontOfSize(40.0)
-            customCell.descriptionLabel?.text = descriptions[indexPath.row]
+            if enabled[indexPath.row]{
+                customCell.enabledSwitch.on = true
+                customCell.timeLabel?.text = right(alarmTimes[indexPath.row],length: 5)
+                customCell.timeLabel?.font = UIFont.systemFontOfSize(40.0)
+                customCell.timeLabel?.textColor = UIColor.blackColor()
+                customCell.descriptionLabel?.text = descriptions[indexPath.row]
+            }else{
+                customCell.enabledSwitch.on = false
+                customCell.timeLabel?.text = right(alarmTimes[indexPath.row],length: 5)
+                customCell.timeLabel?.font = UIFont.systemFontOfSize(40.0)
+                customCell.timeLabel?.textColor = UIColor.grayColor()
+                customCell.descriptionLabel?.text = descriptions[indexPath.row]
+            }
+            customCell.enabledSwitch.addTarget(self, action: "onClickEnabledSwicth:", forControlEvents: UIControlEvents.ValueChanged)
+            
             return customCell
         }
     }
@@ -125,6 +144,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     break
             }
         }
+    }
+    
+    func onClickEnabledSwicth(sender: UISwitch){
+      //  alarmTableView.reloadData()
     }
     
     //有効なNotificationか確認する
@@ -251,9 +274,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
         alarmTimes.append(dateFormatter.stringFromDate(alarmTime))
         descriptions.append("アラーム")
-        repeats.append("0")
+        for i in 1...7 {
+            repeats.append("0")
+        }
         snoozes.append(true)
-        enabled.append(true)
+        enabled.append(false)
         alarmTableView.reloadData()
     }
     

@@ -53,7 +53,7 @@
                                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="itT-hB-9z4">
                                             <connections>
                                                 <action selector="rightBarButtonItem:" destination="BYZ-38-t0r" id="Cgv-vQ-FHE"/>
-                                                <segue destination="QWA-hQ-ZiF" kind="presentation" id="PKX-68-JMT"/>
+                                                <segue destination="QWA-hQ-ZiF" kind="show" id="PKX-68-JMT"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -119,7 +119,7 @@
                                     <navigationItem title="Repeat" id="GMi-AE-L9z">
                                         <barButtonItem key="leftBarButtonItem" title="＞戻る" id="ENF-qf-gVb">
                                             <connections>
-                                                <segue destination="T5M-At-upT" kind="unwind" unwindAction="backFromRepeatView:" id="elP-LA-UaH"/>
+                                                <segue destination="T5M-At-upT" kind="unwind" identifier="backToRepeatViewController" unwindAction="backFromRepeatView:" id="elP-LA-UaH"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -136,7 +136,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Io-jM-QGs" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="T5M-At-upT" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2039.5" y="706.5"/>
+            <point key="canvasLocation" x="2051.5" y="350.5"/>
         </scene>
         <!--Add View Controller-->
         <scene sceneID="Frn-HH-Qv0">
@@ -150,21 +150,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="qFj-AS-Nki">
-                                <rect key="frame" x="0.0" y="72" width="375" height="216"/>
-                                <date key="date" timeIntervalSinceReferenceDate="439799731.693551">
-                                    <!--2014-12-09 06:35:31 +0000-->
-                                </date>
-                                <locale key="locale" localeIdentifier="ja_JP"/>
-                            </datePicker>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="22J-aM-Q63">
                                 <rect key="frame" x="0.0" y="16" width="374" height="44"/>
                                 <items>
                                     <navigationItem title="アラームの追加" id="T8J-KE-95o">
                                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="r2T-I2-vol">
                                             <connections>
-                                                <action selector="cancelButton:" destination="QWA-hQ-ZiF" id="lE6-Ff-p83"/>
-                                                <segue destination="Fk1-X3-siz" kind="unwind" unwindAction="backFromAddView:" id="xuw-po-fMR"/>
+                                                <segue destination="Fk1-X3-siz" kind="unwind" identifier="toViewController" unwindAction="backFromAddView:" id="xuw-po-fMR"/>
                                             </connections>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="GNy-eD-Riz">
@@ -218,6 +210,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="hdf-v2-KZr" kind="presentation" identifier="toLabelViewController" id="bw6-Ks-RVg"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="RTy-Dt-deV" detailTextLabel="0oJ-Yi-g0q" style="IBUITableViewCellStyleValue1" id="doP-1G-mUh">
                                         <autoresizingMask key="autoresizingMask"/>
@@ -238,6 +233,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="VhD-uV-IyU" kind="presentation" identifier="toSoundViewController" id="q4z-DU-xAb"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="VGh-Bk-D2v" detailTextLabel="IHm-xw-L1K" style="IBUITableViewCellStyleValue1" id="fEE-4I-6wR">
                                         <autoresizingMask key="autoresizingMask"/>
@@ -262,6 +260,13 @@
                                 </prototypes>
                                 <sections/>
                             </tableView>
+                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="qFj-AS-Nki">
+                                <rect key="frame" x="0.0" y="73" width="375" height="216"/>
+                                <date key="date" timeIntervalSinceReferenceDate="439799731.693551">
+                                    <!--2014-12-09 06:35:31 +0000-->
+                                </date>
+                                <locale key="locale" localeIdentifier="ja_JP"/>
+                            </datePicker>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -269,12 +274,96 @@
                     <connections>
                         <outlet property="datePicker" destination="qFj-AS-Nki" id="IEw-tY-qEM"/>
                         <outlet property="testTable" destination="tTy-Ys-afP" id="iUw-rk-9aP"/>
+                        <segue destination="khs-L8-5B0" kind="presentation" identifier="toRepeatViewController" id="n21-8W-3Lh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RX5-jw-Yf2" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Fk1-X3-siz" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1443.5" y="706.5"/>
+            <point key="canvasLocation" x="1434.5" y="706.5"/>
+        </scene>
+        <!--Sound View Controller-->
+        <scene sceneID="4Xm-MP-04X">
+            <objects>
+                <viewController id="VhD-uV-IyU" customClass="SoundViewController" customModule="PandaNotif" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="anf-in-cmW"/>
+                        <viewControllerLayoutGuide type="bottom" id="b3M-dy-Ix5"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="CYc-H1-HF0">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Zy2-HR-N2m">
+                                <rect key="frame" x="0.0" y="83" width="375" height="584"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NSd-YQ-UWH">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <items>
+                                    <navigationItem title="Sound" id="k5e-fJ-HZM">
+                                        <barButtonItem key="leftBarButtonItem" title="&gt;戻る" id="GPa-xG-Ms8">
+                                            <connections>
+                                                <segue destination="Aci-B7-LIO" kind="unwind" unwindAction="backFromSoundView:" id="ant-in-Tau"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="soundTable" destination="Zy2-HR-N2m" id="hfR-Eh-ekA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eW2-cn-pn9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Aci-B7-LIO" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2051.5" y="1886.5"/>
+        </scene>
+        <!--Label View Controller-->
+        <scene sceneID="bDo-3E-a7O">
+            <objects>
+                <viewController id="hdf-v2-KZr" customClass="LabelViewController" customModule="PandaNotif" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="8mO-wc-rV9"/>
+                        <viewControllerLayoutGuide type="bottom" id="GzW-z5-BGJ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="UTg-PZ-7h7">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kvt-6p-1ll">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <items>
+                                    <navigationItem title="Label" id="rS8-og-sTQ">
+                                        <barButtonItem key="leftBarButtonItem" title="&gt;戻る" id="A4X-hh-UTQ">
+                                            <connections>
+                                                <segue destination="y9Q-pw-TBA" kind="unwind" unwindAction="backFromLabelView:" id="7El-eV-itr"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GBM-9N-3xF">
+                                <rect key="frame" x="0.0" y="313" width="375" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="myTextField" destination="GBM-9N-3xF" id="XCU-pF-TBq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uIO-2w-koh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="y9Q-pw-TBA" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2051.5" y="1128.5"/>
         </scene>
     </scenes>
 </document>
