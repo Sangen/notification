@@ -8,13 +8,20 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
 
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var addButton: UIBarButtonItem!
     @IBOutlet weak var alarmTableView: UITableView!
     @IBOutlet weak var minuteTableView: UITableView!
+  //  var custom:CustomCell!
     
+ /*   required init(coder aDecoder: NSCoder){
+        super.init(coder: aDecoder)
+        self.custom = CustomCell()
+        self.custom.delegate = self
+    }
+ */
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -75,6 +82,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return cell
         }else{
             var customCell = tableView.dequeueReusableCellWithIdentifier("cell") as CustomCell
+            //customCell.delegate = self
             
             if enabled[indexPath.row]{
                 customCell.enabledSwitch.on = true
@@ -82,15 +90,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 customCell.timeLabel?.font = UIFont.systemFontOfSize(40.0)
                 customCell.timeLabel?.textColor = UIColor.blackColor()
                 customCell.descriptionLabel?.text = descriptions[indexPath.row]
+                customCell.descriptionLabel?.textColor = UIColor.blackColor()
             }else{
                 customCell.enabledSwitch.on = false
                 customCell.timeLabel?.text = right(alarmTimes[indexPath.row],length: 5)
                 customCell.timeLabel?.font = UIFont.systemFontOfSize(40.0)
                 customCell.timeLabel?.textColor = UIColor.grayColor()
                 customCell.descriptionLabel?.text = descriptions[indexPath.row]
+                customCell.descriptionLabel?.textColor = UIColor.grayColor()
             }
-            customCell.enabledSwitch.addTarget(self, action: "onClickEnabledSwicth:", forControlEvents: UIControlEvents.ValueChanged)
-            
+            customCell.enabledSwitch.addTarget(self, action: "onClickEnabledSwicth:", forControlEvents: .ValueChanged)
+
             return customCell
         }
     }
@@ -145,9 +155,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
     }
-    
+   
     func onClickEnabledSwicth(sender: UISwitch){
-      //  alarmTableView.reloadData()
+        let pointInTable: CGPoint = sender.convertPoint(sender.bounds.origin, toView: self.alarmTableView)
+        let cellIndexPath = self.alarmTableView.indexPathForRowAtPoint(pointInTable)
+        let row = cellIndexPath?.row
+        if enabled[row!] {
+                self.enabled[row!] = false
+        }else{
+                self.enabled[row!] = true
+        }
+        let delay = 0.2 * Double(NSEC_PER_SEC)
+        let time  = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        dispatch_after(time, dispatch_get_main_queue(), {
+            self.alarmTableView.reloadData()
+        })
     }
     
     //有効なNotificationか確認する
@@ -280,6 +302,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         snoozes.append(true)
         enabled.append(false)
         alarmTableView.reloadData()
+    }
+    
+    func tableView(changeSwitchValue: NSIndexPath){
+        println("testman")
     }
     
     @IBAction func leftBarButtonItem(sender: UIBarButtonItem) {
