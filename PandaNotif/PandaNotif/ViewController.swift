@@ -9,19 +9,25 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
-
+/*
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+*/
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var addButton: UIBarButtonItem!
     @IBOutlet weak var alarmTableView: UITableView!
     @IBOutlet weak var minuteTableView: UITableView!
-  //  var custom:CustomCell!
+
+    var texts = ["3 min", "5 min", "10 min", "15 min", "30 min", "60 min"]
     
- /*   required init(coder aDecoder: NSCoder){
-        super.init(coder: aDecoder)
-        self.custom = CustomCell()
-        self.custom.delegate = self
-    }
- */
+    var alarmTimes : NSArray = []
+    var descriptions : NSArray = []  // Label
+    var repeats : NSArray = [] // repeat
+    var sounds : NSArray = [] // sound
+    var snoozes : NSArray = []  // snooze
+    var enabled : NSArray = [] // enable
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -42,15 +48,50 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         var nib = UINib(nibName: "CustomCell", bundle: nil)
         alarmTableView.registerNib(nib, forCellReuseIdentifier:"cell")
+        
+        var myUserDafault:NSUserDefaults = NSUserDefaults()
+        var alarm : AnyObject! = myUserDafault.objectForKey("alarmTimes")
+        var description : AnyObject! = myUserDafault.objectForKey("descriptions")
+        var repeat : AnyObject! = myUserDafault.objectForKey("repeats")
+        var sound : AnyObject! = myUserDafault.objectForKey("sounds")
+        var snooze : AnyObject! = myUserDafault.objectForKey("snoozes")
+        var enable : AnyObject! = myUserDafault.objectForKey("enabled")
+        
+        alarmTimes = alarm as NSArray
+        descriptions = description as NSArray
+        repeats = repeat as NSArray
+        sounds = sound as NSArray
+        snoozes = snooze as NSArray
+        enabled = enable as NSArray
+        
+        if alarmTimes == []{
+            println("空だよ")
+        }else{
+            println("空じゃないよ")
+        }
+        
+        /*
+        var test: NSArray = udId as NSArray
+        println(test[0])
+        println(test[1])
+        var destest: NSArray = des as NSArray
+        println(destest[0])
+        println(destest[1])
+        var reptest: NSArray = repeat as NSArray
+        println(reptest[0])
+        println(reptest[1])
+        var soundtest: NSArray = sound as NSArray
+        println(soundtest[0])
+        println(soundtest[1])
+        println(soundtest[2])
+        var snoozetest: NSArray = snooze as NSArray
+        println(snoozetest[0])
+        println(snoozetest[1])
+        var enabletest: NSArray = enable as NSArray
+        println(enabletest[0])
+        println(enabletest[1])
+        */
     }
-    
-    var texts = ["3 min", "5 min", "10 min", "15 min", "30 min", "60 min"]
-    var alarmTimes : [ String ] = [ "17:05", "18:15" ]
-    var descriptions : [ String ] = [ "アラーム", "マル秘" ] // Label
-    var repeats : [ String ] = [ "0","1","1","1","0","0","0",  "1","1","1","1","1","1","1"  ] // repeat
-    var sounds : [ String? ] = [ UILocalNotificationDefaultSoundName, nil, "sample" ] // sound
-    var snoozes : [ Bool ] = [ true,false ] // snooze
-    var enabled : [ Bool ] = [ true,true ]
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
     {
@@ -76,7 +117,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }else{
             var customCell = tableView.dequeueReusableCellWithIdentifier("cell") as CustomCell
             //customCell.delegate = self
-            
+        /*
             if enabled[indexPath.row]{
                 customCell.enabledSwitch.on = true
                 customCell.timeLabel?.text = right(alarmTimes[indexPath.row],length: 5)
@@ -92,6 +133,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 customCell.descriptionLabel?.text = descriptions[indexPath.row]
                 customCell.descriptionLabel?.textColor = UIColor.grayColor()
             }
+*/
             customCell.enabledSwitch.addTarget(self, action: "onClickEnabledSwicth:", forControlEvents: .ValueChanged)
 
             return customCell
@@ -103,11 +145,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if tableView.tag == 0 {
             switch texts[indexPath.row]{
                 case "3 min":
-                    minuteSet(.Minute,number:3,date: NSDate())
-                    
-                    for i in 1...30 {
-                        let days = makeDate(.Day,number: i,date: NSDate())
+                    println(localDate())
+                    minuteSet(.Minute,number:3,date: localDate())
+                   
+                    for i in 1...7 {
+                        let now = NSDate() // 現在日時の取得
+                        let dateFormatter = NSDateFormatter()
+                        dateFormatter.timeStyle = .FullStyle // 時刻だけ表示させない
+                        dateFormatter.dateStyle = .FullStyle
+                        let days = makeDate(.Day,number: i,date: now)
                         var calender = NSCalendar.currentCalendar()
+                        calender.timeZone = NSTimeZone.systemTimeZone()
+                        
                         var components = calender.components(NSCalendarUnit.YearCalendarUnit|NSCalendarUnit.MonthCalendarUnit|NSCalendarUnit.DayCalendarUnit|NSCalendarUnit.WeekdayCalendarUnit, fromDate: days)
                         var weekday = components.weekday
                         
@@ -148,56 +197,34 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
     }
+    
+    func localDate() -> NSDate {
+        var date:NSDate = NSDate()
+        
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
+        let timeZone = NSTimeZone(name: NSTimeZone.systemTimeZone().name)
+        dateFormatter.timeZone = timeZone
+        
+        var dStr = dateFormatter.stringFromDate(date)
+        return dateFormatter.dateFromString(dStr)!
+    }
    
     func onClickEnabledSwicth(sender: UISwitch){
         let pointInTable: CGPoint = sender.convertPoint(sender.bounds.origin, toView: self.alarmTableView)
         let cellIndexPath = self.alarmTableView.indexPathForRowAtPoint(pointInTable)
         let row = cellIndexPath?.row
-        if enabled[row!] {
+      /*  if enabled[row!] {
                 self.enabled[row!] = false
         }else{
                 self.enabled[row!] = true
         }
+        */
         let delay = 0.2 * Double(NSEC_PER_SEC)
         let time  = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         dispatch_after(time, dispatch_get_main_queue(), {
             self.alarmTableView.reloadData()
         })
-    }
-    
-    //有効なNotificationか確認する
-    private func makeNotification(time:NSString, repeat:String, snooze:Bool, label:String, sound:String, enabled:Bool) {
-        
-        //スイッチ無効の場合は何もせず終了
-        if enabled == false {
-            return
-        }
-
-        var dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
-        let dateFromString = dateFormatter.dateFromString(time)
-        let now = NSDate()
-        
-        // 現在より過去の時刻を指定した場合は通知しない
-        if (dateFromString!.compare(now) == NSComparisonResult.OrderedAscending || repeat == "no repeat"){
-            return
-        }
-        
-        showNotificationFire(dateFromString!, repeat: repeat, snooze: snooze, label: label, sound: sound)
-    }
-
-    //notification 全部発火？
-    private func showNotificationFire(time:NSDate, repeat:String, snooze:Bool, label:String, sound:String){
-        // Notificationの生成
-        let myNotification: UILocalNotification = UILocalNotification()
-        myNotification.alertBody = label
-        myNotification.soundName = sound
-        myNotification.timeZone = NSTimeZone.defaultTimeZone()
-        myNotification.fireDate = time
-        
-        //repeat時は繰り返し（繰り返し期間は1ヶ月くらい？）
-
-        UIApplication.sharedApplication().scheduleLocalNotification(myNotification)
     }
     
     private func right(str : String, length : Int) -> String {
@@ -286,7 +313,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let alarmTime = calendar.dateByAddingComponents(comp, toDate: date, options: nil)!
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
-
+/*
         alarmTimes.append(dateFormatter.stringFromDate(alarmTime))
         descriptions.append("アラーム")
         for i in 1...7 {
@@ -294,6 +321,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         snoozes.append(true)
         enabled.append(true)
+*/
         alarmTableView.reloadData()
     }
     
