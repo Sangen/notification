@@ -31,13 +31,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 categories: nil)
         )
         
-        var myUserDafault:NSUserDefaults = NSUserDefaults()
-        myUserDafault.setObject(["0","0","0","0","0","0","0"], forKey: "NewRepeat")
-        myUserDafault.setObject("アラーム", forKey: "NewLabel")
-        myUserDafault.setObject(["レーザー",UILocalNotificationDefaultSoundName], forKey: "NewSound")
-        myUserDafault.setObject(true, forKey: "NewSnooze")
-        myUserDafault.synchronize()
-        
         minuteTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
         minuteTableView.delegate = self
         minuteTableView.dataSource = self
@@ -300,7 +293,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             repeats.append("0")
         }
         snoozes.append(true)
-        enabled.append(false)
+        enabled.append(true)
         alarmTableView.reloadData()
     }
     
