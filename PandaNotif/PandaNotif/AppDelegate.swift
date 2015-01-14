@@ -20,17 +20,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: UIUserNotificationType.Sound | UIUserNotificationType.Alert | UIUserNotificationType.Badge, categories: nil))
         UIApplication.sharedApplication().cancelAllLocalNotifications()
         
-        myUserDafault.setObject("0000000", forKey: "NewRepeat")
+        myUserDafault.setObject(["0","0","0","0","0","0","0"], forKey: "NewRepeat")
         myUserDafault.setObject("アラーム", forKey: "NewLabel")
         myUserDafault.setObject(UILocalNotificationDefaultSoundName, forKey: "NewSound")
-        myUserDafault.setObject(true, forKey: "NewSnooze")
+        myUserDafault.setObject("1", forKey: "NewSnooze")
+
+        myUserDafault.setObject(["04:38","04:38","04:38"], forKey: "alarmTimes")
+        myUserDafault.setObject(["アラーム","PANDA","あれ"], forKey: "descriptions")
+        myUserDafault.setObject(["1010101","0101010","1111111"], forKey: "repeats")
+        myUserDafault.setObject([UILocalNotificationDefaultSoundName,"レーザー","nil"], forKey: "sounds")
+        myUserDafault.setObject(["1","0","1"], forKey: "snoozes")
+        myUserDafault.setObject(["1","1","1"], forKey: "enabled")
         
-        myUserDafault.setObject(["17:30","20:45","21:00"], forKey: "alarmTimes")
-        myUserDafault.setObject(["アラーム","あいうえお","ハッフルパフ"], forKey: "descriptions")
-        myUserDafault.setObject(["0000000","1111111","1010101"], forKey: "repeats")
-        myUserDafault.setObject([UILocalNotificationDefaultSoundName,"nil","sample"], forKey: "sounds")
-        myUserDafault.setObject([1,1,0], forKey: "snoozes")
-        myUserDafault.setObject([1,1,1], forKey: "enabled")
         myUserDafault.synchronize()
         
         return true
@@ -42,39 +43,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
         UIApplication.sharedApplication().cancelAllLocalNotifications()
 
-        var alarm : AnyObject! = myUserDafault.objectForKey("alarmTimes")
-        var description : AnyObject! = myUserDafault.objectForKey("descriptions")
-        var repeat : AnyObject! = myUserDafault.objectForKey("repeats")
-        var sound : AnyObject! = myUserDafault.objectForKey("sounds")
-        var snooze : AnyObject! = myUserDafault.objectForKey("snoozes")
-        var enable : AnyObject! = myUserDafault.objectForKey("enabled")
-        
-        var alarmTimes:NSArray = alarm as NSArray
-        var descriptions:NSArray = description as NSArray
-        var repeats:NSArray = repeat as NSArray
-        var sounds:NSArray = sound as NSArray
-        var snoozes:NSArray = snooze as NSArray
-        var enabled:NSArray = enable as NSArray
-        
-        var check:Bool = false
-        var enabledIndex:[Int] = []
+        let alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
+        let descriptions = myUserDafault.objectForKey("descriptions") as [String]
+        let repeats = myUserDafault.objectForKey("repeats") as [String]
+        let sounds = myUserDafault.objectForKey("sounds") as [String]
+        let snoozes = myUserDafault.objectForKey("snoozes") as [String]
+        let enabled = myUserDafault.objectForKey("enabled") as [String]
         
         for (var i = 0; i < enabled.count; i++) {
-            if enabled[i] as NSObject == 1{
-                //println("有効な通知があったからcheckをtrueにしてindex番号を記録するよ")
-                check = true
-                enabledIndex.append(i)
-                //println(enabledIndex)
-            }
-        }
-        
-        if check == true{
-            for(var i = 0; i < enabledIndex.count; i++){
-                println(alarmTimes[enabledIndex[i]])
-                println(descriptions[enabledIndex[i]])
-                println(repeats[enabledIndex[i]])
-                println(sounds[enabledIndex[i]])
-                println(snoozes[enabledIndex[i]])
+            if enabled[i] == "1" {
+                makeNotification(alarmTimes[i], repeat: repeats[i], snooze: snoozes[i], label: descriptions[i], sound: sounds[i])
             }
         }
     }
@@ -101,47 +79,102 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        // 通知登録
-        var alarm : AnyObject! = myUserDafault.objectForKey("alarmTimes")
-        var description : AnyObject! = myUserDafault.objectForKey("descriptions")
-        var repeat : AnyObject! = myUserDafault.objectForKey("repeats")
-        var sound : AnyObject! = myUserDafault.objectForKey("sounds")
-        var snooze : AnyObject! = myUserDafault.objectForKey("snoozes")
-        var enable : AnyObject! = myUserDafault.objectForKey("enabled")
         
-        var alarmTimes:NSArray = alarm as NSArray
+        let alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
+        let descriptions = myUserDafault.objectForKey("descriptions") as [String]
+        let repeats = myUserDafault.objectForKey("repeats") as [String]
+        let sounds = myUserDafault.objectForKey("sounds") as [String]
+        let snoozes = myUserDafault.objectForKey("snoozes") as [String]
+        let enabled = myUserDafault.objectForKey("enabled") as [String]
+        
+        for (var i = 0; i < enabled.count; i++) {
+            if enabled[i] == "1" {
+                makeNotification(alarmTimes[i], repeat: repeats[i], snooze: snoozes[i], label: descriptions[i], sound: sounds[i])
+            }
+        }
     }
 
-    private func makeNotification(time:NSString, repeat:String, snooze:String, label:String, sound:String) {
-        
-        var dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
-        let dateFromString = dateFormatter.dateFromString(time)
+    //notification内容確認
+    private func makeNotification(time:String, repeat:String, snooze:String, label:String, sound:String) {
         let now = NSDate()
+        let todayTime = stringForFireDate(time)
         
-        // 現在より過去の時刻を指定した場合は通知しない
-        if (dateFromString!.compare(now) == NSComparisonResult.OrderedAscending || repeat == "no repeat"){
-            return
+        // 現在より過去の時間を指定＆リピートなし＝通知しない
+        if (todayTime.compare(now) == NSComparisonResult.OrderedAscending && repeat == "0000000"){
+            println("NO GO")
+        }else if (todayTime.compare(now) == NSComparisonResult.OrderedAscending && repeat != "0000000"){
+            println("Repeat GO")
+            showNotificationFire(time, repeat: repeat, snooze: snooze, label: label, sound: sound)
+        }else if (todayTime.compare(now) == NSComparisonResult.OrderedDescending){
+            println("GO")
+            showNotificationFire(time, repeat: repeat, snooze: snooze, label: label, sound: sound)
+        }else{
+            //現在と同じ時間は通知しない…が同じだと最初に弾かれてる感じかも
+            println("NO THANK YOU")
         }
-        
-        showNotificationFire(dateFromString!, repeat: repeat, snooze: snooze, label: label, sound: sound)
     }
     
-    //notification 全部発火
-    private func showNotificationFire(time:NSDate, repeat:String, snooze:String, label:String, sound:String){
-        // Notificationの生成
-        let myNotification: UILocalNotification = UILocalNotification()
-        myNotification.alertBody = label
-        myNotification.soundName = sound
-        myNotification.timeZone = NSTimeZone.systemTimeZone()
-        myNotification.fireDate = time
+    // Notification Fire
+    private func showNotificationFire(time:String, repeat:String, snooze:String, label:String, sound:String){
+        let PNDNotification: UILocalNotification = UILocalNotification()
+        PNDNotification.alertBody = label
+        PNDNotification.soundName = sound
+        PNDNotification.timeZone = NSTimeZone.systemTimeZone()
+        let now = NSDate()
+        let todayTime = stringForFireDate(time)
+        let calendar = NSCalendar(identifier: NSGregorianCalendar)!
         
-        //repeat時は繰り返し（繰り返し期間は暫定1週間）
+        // Notification Fire Today
+        if (todayTime.compare(now) == NSComparisonResult.OrderedDescending){
+            println(todayTime,"Today Fire")
+            PNDNotification.fireDate = todayTime
+            UIApplication.sharedApplication().scheduleLocalNotification(PNDNotification)
+        }
         
-        UIApplication.sharedApplication().scheduleLocalNotification(myNotification)
+        // Notification Fire Weekday
+        if repeat != "0000000"{
+            var weekdays = [Character]()
+            for ch in repeat{
+                weekdays.append(ch)
+            }
+            for (var i = 0 ;i < 7 ;i++) {
+                if weekdays[i] == "1"{
+                    let nextWeekday = calendar.nextDateAfterDate(now, matchingUnit: .WeekdayCalendarUnit, value: i + 1, options: NSCalendarOptions.MatchNextTime)!
+                    let nextWeekdayFire = calendar.dateBySettingHour(stringForHour(time), minute: stringForMinute(time), second:0, ofDate: nextWeekday, options: nil)!
+                    println(nextWeekdayFire,"Weekday Fire")
+                    PNDNotification.fireDate = nextWeekdayFire
+                    UIApplication.sharedApplication().scheduleLocalNotification(PNDNotification)
+                }
+            }
+        }
     }
 
-
-
+    private func stringForFireDate(time: String) -> NSDate{
+        let startIndex = advance(time.startIndex, 0)
+        let endIndex = advance(time.startIndex, 2)
+        let hour = time.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
+        
+        let startIndex2 = advance(time.startIndex, 3)
+        let endIndex2 = advance(time.startIndex, 2)
+        let minute = time.substringFromIndex(startIndex2).substringToIndex(endIndex2).toInt()!
+        
+        let calendar = NSCalendar(identifier: NSGregorianCalendar)!
+        
+        return calendar.dateBySettingHour(hour, minute: minute, second: 0, ofDate:NSDate(), options: nil)!
+    }
+    
+    private func stringForHour(hour: String) -> Int{
+        let startIndex = advance(hour.startIndex, 0)
+        let endIndex = advance(hour.startIndex, 2)
+        
+        return hour.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
+    }
+    
+    private func stringForMinute(minute: String) -> Int{
+        let startIndex = advance(minute.startIndex, 3)
+        let endIndex = advance(minute.startIndex, 2)
+        
+        return minute.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
+    }
 }
 
