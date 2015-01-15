@@ -30,12 +30,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        UIApplication.sharedApplication().registerUserNotificationSettings(
-            UIUserNotificationSettings(
-                forTypes:UIUserNotificationType.Sound | UIUserNotificationType.Alert,
-                categories: nil)
-        )
         
         minuteTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
         minuteTableView.delegate = self

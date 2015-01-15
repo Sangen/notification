@@ -17,6 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // 起動時
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        UIApplication.sharedApplication().registerUserNotificationSettings(
+            UIUserNotificationSettings(
+                forTypes:UIUserNotificationType.Sound | UIUserNotificationType.Alert | UIUserNotificationType.Badge,
+                categories: nil)
+        )
         application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: UIUserNotificationType.Sound | UIUserNotificationType.Alert | UIUserNotificationType.Badge, categories: nil))
         UIApplication.sharedApplication().cancelAllLocalNotifications()
         
@@ -25,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         myUserDafault.setObject(UILocalNotificationDefaultSoundName, forKey: "NewSound")
         myUserDafault.setObject("1", forKey: "NewSnooze")
 
-        myUserDafault.setObject(["04:38","04:38","04:38"], forKey: "alarmTimes")
+        myUserDafault.setObject(["02:49","01:28","04:38"], forKey: "alarmTimes")
         myUserDafault.setObject(["アラーム","PANDA","あれ"], forKey: "descriptions")
         myUserDafault.setObject(["1010101","0101010","1111111"], forKey: "repeats")
         myUserDafault.setObject([UILocalNotificationDefaultSoundName,"レーザー","nil"], forKey: "sounds")
@@ -93,7 +98,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-
+    
+    /*
+    func application(application: UIApplication!, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings!) {
+        var allowedType = notificationSettings
+        NSLog("allowedType : %@",allowedType)
+    }
+    */
+    
     //notification内容確認
     private func makeNotification(time:String, repeat:String, snooze:String, label:String, sound:String) {
         let now = NSDate()
@@ -101,16 +113,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // 現在より過去の時間を指定＆リピートなし＝通知しない
         if (todayTime.compare(now) == NSComparisonResult.OrderedAscending && repeat == "0000000"){
-            println("NO GO")
+            NSLog("NO GO")
         }else if (todayTime.compare(now) == NSComparisonResult.OrderedAscending && repeat != "0000000"){
-            println("Repeat GO")
+            NSLog("Repeat GO")
             showNotificationFire(time, repeat: repeat, snooze: snooze, label: label, sound: sound)
         }else if (todayTime.compare(now) == NSComparisonResult.OrderedDescending){
-            println("GO")
+            NSLog("GO")
             showNotificationFire(time, repeat: repeat, snooze: snooze, label: label, sound: sound)
         }else{
             //現在と同じ時間は通知しない…が同じだと最初に弾かれてる感じかも
-            println("NO THANK YOU")
+            NSLog("NO THANK YOU")
         }
     }
     
@@ -120,13 +132,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PNDNotification.alertBody = label
         PNDNotification.soundName = sound
         PNDNotification.timeZone = NSTimeZone.systemTimeZone()
+        if snooze == "1"{
+            PNDNotification.alertAction = "スヌーズ"
+        }else{
+            PNDNotification.alertAction = "OK!Let's Stand Up!"
+        }
         let now = NSDate()
         let todayTime = stringForFireDate(time)
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
         
         // Notification Fire Today
         if (todayTime.compare(now) == NSComparisonResult.OrderedDescending){
-            println(todayTime,"Today Fire")
+            NSLog("Today Fire : %@", todayTime)
             PNDNotification.fireDate = todayTime
             UIApplication.sharedApplication().scheduleLocalNotification(PNDNotification)
         }
@@ -141,7 +158,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 if weekdays[i] == "1"{
                     let nextWeekday = calendar.nextDateAfterDate(now, matchingUnit: .WeekdayCalendarUnit, value: i + 1, options: NSCalendarOptions.MatchNextTime)!
                     let nextWeekdayFire = calendar.dateBySettingHour(stringForHour(time), minute: stringForMinute(time), second:0, ofDate: nextWeekday, options: nil)!
-                    println(nextWeekdayFire,"Weekday Fire")
+                    NSLog("Weekday Fire : %@",nextWeekdayFire)
                     PNDNotification.fireDate = nextWeekdayFire
                     UIApplication.sharedApplication().scheduleLocalNotification(PNDNotification)
                 }
