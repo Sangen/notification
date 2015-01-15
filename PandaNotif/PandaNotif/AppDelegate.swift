@@ -15,28 +15,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var myUserDafault:NSUserDefaults = NSUserDefaults()
 
     // 起動時
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary!) -> Bool {
         // Override point for customization after application launch.
-        UIApplication.sharedApplication().registerUserNotificationSettings(
-            UIUserNotificationSettings(
-                forTypes:UIUserNotificationType.Sound | UIUserNotificationType.Alert | UIUserNotificationType.Badge,
-                categories: nil)
-        )
-        application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: UIUserNotificationType.Sound | UIUserNotificationType.Alert | UIUserNotificationType.Badge, categories: nil))
         UIApplication.sharedApplication().cancelAllLocalNotifications()
+        
+        let settings = createInteractiveNotificationSettings()
+        application.registerUserNotificationSettings(settings)
+        
+        if let options = launchOptions{
+            let notification = launchOptions.objectForKey(UIApplicationLaunchOptionsLocalNotificationKey) as? UILocalNotification
+            if let notif = notification {
+                // 通知を受け取った時の処理
+                NSLog("通知されてアプリ起動したよ")
+                // 最後に通知を消す
+                UIApplication.sharedApplication().cancelLocalNotification(notification!)
+            }
+        }
         
         myUserDafault.setObject(["0","0","0","0","0","0","0"], forKey: "NewRepeat")
         myUserDafault.setObject("アラーム", forKey: "NewLabel")
         myUserDafault.setObject(UILocalNotificationDefaultSoundName, forKey: "NewSound")
         myUserDafault.setObject("1", forKey: "NewSnooze")
 
-        myUserDafault.setObject(["02:49","01:28","04:38"], forKey: "alarmTimes")
+        myUserDafault.setObject(["17:45","17:45","13:20"], forKey: "alarmTimes")
         myUserDafault.setObject(["アラーム","PANDA","あれ"], forKey: "descriptions")
         myUserDafault.setObject(["1010101","0101010","1111111"], forKey: "repeats")
         myUserDafault.setObject([UILocalNotificationDefaultSoundName,"レーザー","nil"], forKey: "sounds")
         myUserDafault.setObject(["1","0","1"], forKey: "snoozes")
         myUserDafault.setObject(["1","1","1"], forKey: "enabled")
         
+        //0     ❌1     2    → 0     1?
+        //user0 ❌user1 user2  user0 user2
         myUserDafault.synchronize()
         
         return true
@@ -56,7 +65,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let enabled = myUserDafault.objectForKey("enabled") as [String]
         
         for (var i = 0; i < enabled.count; i++) {
-            if enabled[i] == "1" {
+            let flg: Bool = enabled[i] == "1"
+            if flg {
                 makeNotification(alarmTimes[i], repeat: repeats[i], snooze: snoozes[i], label: descriptions[i], sound: sounds[i])
             }
         }
@@ -93,18 +103,67 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let enabled = myUserDafault.objectForKey("enabled") as [String]
         
         for (var i = 0; i < enabled.count; i++) {
-            if enabled[i] == "1" {
+            let flg: Bool = enabled[i] == "1"
+            if flg {
                 makeNotification(alarmTimes[i], repeat: repeats[i], snooze: snoozes[i], label: descriptions[i], sound: sounds[i])
             }
         }
     }
     
-    /*
-    func application(application: UIApplication!, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings!) {
-        var allowedType = notificationSettings
-        NSLog("allowedType : %@",allowedType)
+    private func createInteractiveNotificationSettings() -> UIUserNotificationSettings {
+        
+        // ## アクションを作成する ##
+        let snooze = UIMutableUserNotificationAction()
+        snooze.title = "スヌーズ";
+        snooze.identifier = "SNOOZE"
+        snooze.activationMode = .Foreground;
+        snooze.destructive = true;
+        snooze.authenticationRequired = false
+        
+        let ok = UIMutableUserNotificationAction()
+        ok.title = "OK";
+        ok.identifier = "OK"
+        ok.activationMode = .Background;
+        ok.destructive = false;
+        ok.authenticationRequired = false
+        
+        // ## 通知カテゴリにアクションをセットする ##
+        // 残念なことにカテゴリを複数セットするのは無理っぽい…
+        let interactiveCategory = UIMutableUserNotificationCategory()
+        interactiveCategory.identifier = "NOTIFICATION_SNOOZE_CATEGORY"
+        interactiveCategory.setActions([snooze, ok], forContext:.Minimal)
+        interactiveCategory.setActions([snooze, ok], forContext:.Default)
+        
+        let categories: NSSet? = NSSet(object:interactiveCategory);
+        let notificationSettings =  UIUserNotificationSettings(forTypes: .Alert | .Sound, categories: categories)
+
+        return notificationSettings
     }
-    */
+    
+    // アプリがバックグラウンド状態で通知発火したとき
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
+        if let actionId = identifier{
+            switch actionId {
+            case "SNOOZE":
+                let fireDate = notification.fireDate!
+                let description = notification.alertBody!
+                let calendar = NSCalendar(identifier: NSGregorianCalendar)!
+                let snoozeFireDate = calendar.dateByAddingUnit(.MinuteCalendarUnit, value: +9, toDate: fireDate, options: nil)!
+                var comps = (0, 0, 0, 0)
+                calendar.getHour(&comps.0, minute: &comps.1, second: &comps.2, nanosecond: &comps.3, fromDate: snoozeFireDate)
+                let hour = String(comps.0)
+                let minute = String(comps.1)
+                let time = hour + ":" + minute as String
+                makeNotification(time, repeat:"0000000", snooze:"1", label:description, sound:UILocalNotificationDefaultSoundName)
+            case "OK":
+                NSLog("OK : %@",notification)
+                // 何もしない
+            default:
+                NSLog("")
+            }
+        }
+        completionHandler()
+    }
     
     //notification内容確認
     private func makeNotification(time:String, repeat:String, snooze:String, label:String, sound:String) {
@@ -129,14 +188,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Notification Fire
     private func showNotificationFire(time:String, repeat:String, snooze:String, label:String, sound:String){
         let PNDNotification: UILocalNotification = UILocalNotification()
+        let userInfo:Dictionary<NSObject, AnyObject> = ["key0" : "pushInfomation", "key1" : repeat];
+        PNDNotification.userInfo = userInfo
         PNDNotification.alertBody = label
         PNDNotification.soundName = sound
+        
+        PNDNotification.category = "NOTIFICATION_POPUP_CATEGORY"
         PNDNotification.timeZone = NSTimeZone.systemTimeZone()
-        if snooze == "1"{
-            PNDNotification.alertAction = "スヌーズ"
-        }else{
-            PNDNotification.alertAction = "OK!Let's Stand Up!"
-        }
+
         let now = NSDate()
         let todayTime = stringForFireDate(time)
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
