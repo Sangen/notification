@@ -35,17 +35,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         myUserDafault.setObject(["0","0","0","0","0","0","0"], forKey: "NewRepeat")
         myUserDafault.setObject("アラーム", forKey: "NewLabel")
         myUserDafault.setObject(UILocalNotificationDefaultSoundName, forKey: "NewSound")
-        myUserDafault.setObject("1", forKey: "NewSnooze")
+        myUserDafault.setObject(true, forKey: "NewSnooze")
 
-        myUserDafault.setObject(["17:45","17:45","13:20"], forKey: "alarmTimes")
+        /*
+        myUserDafault.setObject(["11:50","11:51","11:52"], forKey: "alarmTimes")
         myUserDafault.setObject(["アラーム","PANDA","あれ"], forKey: "descriptions")
         myUserDafault.setObject(["1010101","0101010","1111111"], forKey: "repeats")
         myUserDafault.setObject([UILocalNotificationDefaultSoundName,"レーザー","nil"], forKey: "sounds")
-        myUserDafault.setObject(["1","0","1"], forKey: "snoozes")
+        myUserDafault.setObject(["0","0","0"], forKey: "snoozes")
         myUserDafault.setObject(["1","1","1"], forKey: "enabled")
-        
-        //0     ❌1     2    → 0     1?
-        //user0 ❌user1 user2  user0 user2
+        */
         myUserDafault.synchronize()
         
         return true
@@ -55,27 +54,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-        UIApplication.sharedApplication().cancelAllLocalNotifications()
-
-        let alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
-        let descriptions = myUserDafault.objectForKey("descriptions") as [String]
-        let repeats = myUserDafault.objectForKey("repeats") as [String]
-        let sounds = myUserDafault.objectForKey("sounds") as [String]
-        let snoozes = myUserDafault.objectForKey("snoozes") as [String]
-        let enabled = myUserDafault.objectForKey("enabled") as [String]
-        
-        for (var i = 0; i < enabled.count; i++) {
-            let flg: Bool = enabled[i] == "1"
-            if flg {
-                makeNotification(alarmTimes[i], repeat: repeats[i], snooze: snoozes[i], label: descriptions[i], sound: sounds[i])
-            }
-        }
     }
 
     // アプリが非Activeになりバックグラウンド実行になった際
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        UIApplication.sharedApplication().cancelAllLocalNotifications()
+        let check: AnyObject? = myUserDafault.objectForKey("alarmTimes")
+        if check != nil {
+            NSLog("Exist value")
+            let alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
+            let descriptions = myUserDafault.objectForKey("descriptions") as [String]
+            let repeats = myUserDafault.objectForKey("repeats") as [String]
+            let sounds = myUserDafault.objectForKey("sounds") as [String]
+            let snoozes = myUserDafault.objectForKey("snoozes") as [Bool]
+            let enabled = myUserDafault.objectForKey("enabled") as [Bool]
+            
+            for (var i = 0; i < enabled.count; i++) {
+                let flg: Bool = enabled[i] == true
+                if flg {
+                    makeNotification(alarmTimes[i], repeat: repeats[i], snooze: snoozes[i], label: descriptions[i], sound: sounds[i])
+                }
+            }
+        }else{
+            NSLog("There isn't value")
+        }
     }
 
     // 2回目以降の起動時（バックグラウンドにアプリがある場合）
@@ -94,29 +98,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        
-        let alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
-        let descriptions = myUserDafault.objectForKey("descriptions") as [String]
-        let repeats = myUserDafault.objectForKey("repeats") as [String]
-        let sounds = myUserDafault.objectForKey("sounds") as [String]
-        let snoozes = myUserDafault.objectForKey("snoozes") as [String]
-        let enabled = myUserDafault.objectForKey("enabled") as [String]
-        
-        for (var i = 0; i < enabled.count; i++) {
-            let flg: Bool = enabled[i] == "1"
-            if flg {
-                makeNotification(alarmTimes[i], repeat: repeats[i], snooze: snoozes[i], label: descriptions[i], sound: sounds[i])
+        let check: AnyObject? = myUserDafault.objectForKey("alarmTimes")
+        if check != nil {
+            NSLog("Exist value")
+            let alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
+            let descriptions = myUserDafault.objectForKey("descriptions") as [String]
+            let repeats = myUserDafault.objectForKey("repeats") as [String]
+            let sounds = myUserDafault.objectForKey("sounds") as [String]
+            let snoozes = myUserDafault.objectForKey("snoozes") as [Bool]
+            let enabled = myUserDafault.objectForKey("enabled") as [Bool]
+            
+            for (var i = 0; i < enabled.count; i++) {
+                let flg: Bool = enabled[i] == true
+                if flg {
+                    makeNotification(alarmTimes[i], repeat: repeats[i], snooze: snoozes[i], label: descriptions[i], sound: sounds[i])
+                }
             }
+        }else{
+            NSLog("There isn't value")
         }
     }
     
     private func createInteractiveNotificationSettings() -> UIUserNotificationSettings {
-        
-        // ## アクションを作成する ##
         let snooze = UIMutableUserNotificationAction()
         snooze.title = "スヌーズ";
         snooze.identifier = "SNOOZE"
-        snooze.activationMode = .Foreground;
+        snooze.activationMode = .Background;
         snooze.destructive = true;
         snooze.authenticationRequired = false
         
@@ -127,14 +134,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ok.destructive = false;
         ok.authenticationRequired = false
         
-        // ## 通知カテゴリにアクションをセットする ##
-        // 残念なことにカテゴリを複数セットするのは無理っぽい…
-        let interactiveCategory = UIMutableUserNotificationCategory()
-        interactiveCategory.identifier = "NOTIFICATION_SNOOZE_CATEGORY"
-        interactiveCategory.setActions([snooze, ok], forContext:.Minimal)
-        interactiveCategory.setActions([snooze, ok], forContext:.Default)
+        let snoozeOnCategory = UIMutableUserNotificationCategory()
+        snoozeOnCategory.identifier = "NOTIFICATION_SNOOZE_ON_CATEGORY"
+        snoozeOnCategory.setActions([snooze, ok], forContext:.Minimal)
+        snoozeOnCategory.setActions([snooze, ok], forContext:.Default)
         
-        let categories: NSSet? = NSSet(object:interactiveCategory);
+        let snoozeOffCategory = UIMutableUserNotificationCategory()
+        snoozeOffCategory.identifier = "NOTIFICATION_SNOOZE_OFF_CATEGORY"
+        snoozeOffCategory.setActions([ok], forContext: .Minimal)
+        snoozeOffCategory.setActions([ok], forContext: .Default)
+        
+        let categories: NSSet? = NSSet(objects:snoozeOnCategory,snoozeOffCategory);
         let notificationSettings =  UIUserNotificationSettings(forTypes: .Alert | .Sound, categories: categories)
 
         return notificationSettings
@@ -154,19 +164,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let hour = String(comps.0)
                 let minute = String(comps.1)
                 let time = hour + ":" + minute as String
-                makeNotification(time, repeat:"0000000", snooze:"1", label:description, sound:UILocalNotificationDefaultSoundName)
+                makeNotification(time, repeat:"0000000", snooze:true, label:description, sound:UILocalNotificationDefaultSoundName)
             case "OK":
                 NSLog("OK : %@",notification)
-                // 何もしない
             default:
-                NSLog("")
+                NSLog("What?")
             }
         }
         completionHandler()
     }
     
     //notification内容確認
-    private func makeNotification(time:String, repeat:String, snooze:String, label:String, sound:String) {
+    private func makeNotification(time:String, repeat:String, snooze:Bool, label:String, sound:String) {
         let now = NSDate()
         let todayTime = stringForFireDate(time)
         
@@ -186,15 +195,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     // Notification Fire
-    private func showNotificationFire(time:String, repeat:String, snooze:String, label:String, sound:String){
+    private func showNotificationFire(time:String, repeat:String, snooze:Bool, label:String, sound:String){
         let PNDNotification: UILocalNotification = UILocalNotification()
-        let userInfo:Dictionary<NSObject, AnyObject> = ["key0" : "pushInfomation", "key1" : repeat];
-        PNDNotification.userInfo = userInfo
         PNDNotification.alertBody = label
         PNDNotification.soundName = sound
-        
-        PNDNotification.category = "NOTIFICATION_POPUP_CATEGORY"
         PNDNotification.timeZone = NSTimeZone.systemTimeZone()
+        
+        let flg:Bool = snooze == true
+        if flg {
+            PNDNotification.category = "NOTIFICATION_SNOOZE_ON_CATEGORY"
+            NSLog("SNOOZE ON")
+        }else{
+            PNDNotification.category = "NOTIFICATION_SNOOZE_OFF_CATEGORY"
+            NSLog("SNOOZE OFF")
+        }
 
         let now = NSDate()
         let todayTime = stringForFireDate(time)

@@ -12,20 +12,21 @@ class SoundViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
     @IBOutlet weak var soundTable: UITableView!
     
-    var selectedSounds = ["",""]
+    var selectedSounds = ""
     var sounds = ["0","0"]
-    var getSound :AnyObject = ""
-    let texts = ["レーザー(デフォルト)", "なし"]
+    var getSound = ""
+    let texts = ["レーザー", "なし"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        var getSound2 = getSound as [String]
-        if getSound2[0]  == "なし"{
-            selectedSounds = ["なし","nil"]
+        let getSound2 = getSound
+        let flg:Bool = getSound2 == "nil"
+        if flg {
+            selectedSounds = "nil"
             sounds = ["0","1"]
         }else{
-            selectedSounds = ["レーザー",UILocalNotificationDefaultSoundName]
+            selectedSounds = UILocalNotificationDefaultSoundName
             sounds = ["1","0"]
         }
         
@@ -64,15 +65,17 @@ class SoundViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!)
     {
         switch texts[indexPath.row]{
-            case "レーザー(デフォルト)":
-                if sounds[0] == "0" {
-                    selectedSounds = ["レーザー",UILocalNotificationDefaultSoundName]
+            case "レーザー":
+                let flg:Bool = sounds[0] == "0"
+                if flg {
+                    selectedSounds = UILocalNotificationDefaultSoundName
                     sounds[0] = "1"
                     sounds[1] = "0"
                 }
             case "なし":
-                if sounds[1] == "0" {
-                    selectedSounds = ["なし","nil"]
+                let flg:Bool = sounds[1] == "0"
+                if flg {
+                    selectedSounds = "nil"
                     sounds[1] = "1"
                     sounds[0] = "0"
                 }

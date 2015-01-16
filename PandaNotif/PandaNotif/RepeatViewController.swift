@@ -35,7 +35,8 @@ class RepeatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         var cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
         cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "data")
         cell.textLabel?.text = texts[indexPath.row]
-        if repeats[indexPath.row] == "1"{
+        let flg:Bool = repeats[indexPath.row] == "1"
+        if flg {
             cell.detailTextLabel?.text = "✔︎"
         }else{
             cell.detailTextLabel?.text = ""
@@ -46,43 +47,50 @@ class RepeatViewController: UIViewController, UITableViewDelegate, UITableViewDa
     {
         switch texts[indexPath.row]{
         case "毎日曜日":
-            if repeats[0] == "0" {
+            let flg:Bool = repeats[0] == "0"
+            if flg {
                 repeats[0] = "1"
             }else{
                 repeats[0] = "0"
             }
         case "毎月曜日":
-            if repeats[1] == "0" {
+            let flg:Bool = repeats[1] == "0"
+            if flg {
                 repeats[1] = "1"
             }else{
                 repeats[1] = "0"
             }
         case "毎火曜日":
-            if repeats[2] == "0" {
+            let flg:Bool = repeats[2] == "0"
+            if flg {
                 repeats[2] = "1"
             }else{
                 repeats[2] = "0"
             }
         case "毎水曜日":
-            if repeats[3] == "0" {
+            let flg:Bool = repeats[3] == "0"
+            if flg {
                 repeats[3] = "1"
             }else{
                 repeats[3] = "0"
             }
         case "毎木曜日":
-            if repeats[4] == "0" {
+            let flg:Bool = repeats[4] == "0"
+            if flg {
                 repeats[4] = "1"
             }else{
                 repeats[4] = "0"
             }
         case "毎金曜日":
-            if repeats[5] == "0" {
+            let flg:Bool = repeats[5] == "0"
+            if flg {
                 repeats[5] = "1"
             }else{
                 repeats[5] = "0"
             }
         case "毎土曜日":
-            if repeats[6] == "0" {
+            let flg:Bool = repeats[6] == "0"
+            if flg {
                 repeats[6] = "1"
             }else{
                 repeats[6] = "0"

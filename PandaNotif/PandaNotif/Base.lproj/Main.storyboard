@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C99d" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
@@ -21,7 +21,7 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             </tableView>
                             <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="mco-7V-ZGU">
-                                <rect key="frame" x="158" y="63" width="444" height="537"/>
+                                <rect key="frame" x="158" y="63" width="220" height="537"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="Dd0-ou-hfg">
@@ -45,11 +45,6 @@
                                 <rect key="frame" x="0.0" y="19" width="382" height="44"/>
                                 <items>
                                     <navigationItem title="アラーム" id="inJ-SU-nZA">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="iFo-AK-6BC">
-                                            <connections>
-                                                <action selector="leftBarButtonItem:" destination="BYZ-38-t0r" id="PPL-zS-gej"/>
-                                            </connections>
-                                        </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="itT-hB-9z4">
                                             <connections>
                                                 <action selector="rightBarButtonItem:" destination="BYZ-38-t0r" id="Cgv-vQ-FHE"/>
@@ -68,7 +63,6 @@
                     <connections>
                         <outlet property="addButton" destination="itT-hB-9z4" id="veC-4v-6LJ"/>
                         <outlet property="alarmTableView" destination="mco-7V-ZGU" id="Qei-R0-nE2"/>
-                        <outlet property="editButton" destination="iFo-AK-6BC" id="wR7-n0-QSw"/>
                         <outlet property="minuteTableView" destination="rkH-cI-t1M" id="sms-KG-8fL"/>
                     </connections>
                 </viewController>

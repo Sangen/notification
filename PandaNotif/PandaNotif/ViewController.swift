@@ -9,8 +9,6 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
-
-    @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var addButton: UIBarButtonItem!
     @IBOutlet weak var alarmTableView: UITableView!
     @IBOutlet weak var minuteTableView: UITableView!
@@ -21,8 +19,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var descriptions = [String]() // Label
     var repeats = [String]() // repeat
     var sounds = [String]()// sound
-    var snoozes = [String]()  // snooze
-    var enabled = [String]() // enable
+    var snoozes = [Bool]()  // snooze
+    var enabled = [Bool]() // enable
+    let myUserDafault:NSUserDefaults = NSUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,13 +38,34 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var nib = UINib(nibName: "CustomCell", bundle: nil)
         alarmTableView.registerNib(nib, forCellReuseIdentifier:"cell")
         
-        var myUserDafault:NSUserDefaults = NSUserDefaults()
-        alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
-        descriptions = myUserDafault.objectForKey("descriptions") as [String]
-        repeats = myUserDafault.objectForKey("repeats") as [String]
-        sounds = myUserDafault.objectForKey("sounds") as [String]
-        snoozes = myUserDafault.objectForKey("snoozes") as [String]
-        enabled = myUserDafault.objectForKey("enabled") as [String]
+        let check: AnyObject? = myUserDafault.objectForKey("alarmTimes")
+        if check != nil {
+            NSLog("Exist value")
+            alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
+            descriptions = myUserDafault.objectForKey("descriptions") as [String]
+            repeats = myUserDafault.objectForKey("repeats") as [String]
+            sounds = myUserDafault.objectForKey("sounds") as [String]
+            snoozes = myUserDafault.objectForKey("snoozes") as [Bool]
+            enabled = myUserDafault.objectForKey("enabled") as [Bool]
+        }else{
+            NSLog("There isn't value")
+        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        let check: AnyObject? = myUserDafault.objectForKey("alarmTimes")
+        if check != nil {
+            NSLog("Exist value")
+            alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
+            descriptions = myUserDafault.objectForKey("descriptions") as [String]
+            repeats = myUserDafault.objectForKey("repeats") as [String]
+            sounds = myUserDafault.objectForKey("sounds") as [String]
+            snoozes = myUserDafault.objectForKey("snoozes") as [Bool]
+            enabled = myUserDafault.objectForKey("enabled") as [Bool]
+        }else{
+            NSLog("There isn't value")
+        }
+        alarmTableView.reloadData()
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
@@ -73,9 +93,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             var customCell = tableView.dequeueReusableCellWithIdentifier("cell") as CustomCell
             //customCell.delegate = self
             let alarm = alarmTimes[indexPath.row]
-            let desciption = descriptions[indexPath.row]
+            let description = descriptions[indexPath.row]
             
-            if enabled[indexPath.row] as NSObject == 1{
+            let flg:Bool = enabled[indexPath.row] == true
+            if flg {
                 customCell.enabledSwitch.on = true
                 customCell.timeLabel?.text = right(alarm,length: 5)
                 customCell.timeLabel?.font = UIFont.systemFontOfSize(40.0)
@@ -98,7 +119,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!)
     {
-        if tableView.tag == 0 {
+        let flg:Bool = tableView.tag == 0
+        if flg {
+            minuteTableView.deselectRowAtIndexPath(indexPath, animated: true)
             switch texts[indexPath.row]{
                 case "3 min":
                     minuteSet(.Minute,number:3,date: localDate())
@@ -115,7 +138,86 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 default:
                     break
             }
+        }else{
+            //Edit code needs here
         }
+    }
+    
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+        let flg:Bool = tableView.tag == 1
+        if flg {
+            var deleteAlarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
+            var deleteDescriptions = myUserDafault.objectForKey("descriptions") as [String]
+            var deleteRepeats = myUserDafault.objectForKey("repeats") as [String]
+            var deleteSounds = myUserDafault.objectForKey("sounds") as [String]
+            var deleteSnoozes = myUserDafault.objectForKey("snoozes") as [Bool]
+            var deleteEnabled = myUserDafault.objectForKey("enabled") as [Bool]
+            
+            let delete = UITableViewRowAction(style: .Default,
+                title: "delete"){(action, indexPath) in
+                    self.alarmTimes.removeAtIndex(indexPath.row)
+                    self.descriptions.removeAtIndex(indexPath.row)
+                    self.repeats.removeAtIndex(indexPath.row)
+                    self.sounds.removeAtIndex(indexPath.row)
+                    self.snoozes.removeAtIndex(indexPath.row)
+                    self.enabled.removeAtIndex(indexPath.row)
+                    deleteAlarmTimes.removeAtIndex(indexPath.row)
+                    deleteDescriptions.removeAtIndex(indexPath.row)
+                    deleteRepeats.removeAtIndex(indexPath.row)
+                    deleteSounds.removeAtIndex(indexPath.row)
+                    deleteSnoozes.removeAtIndex(indexPath.row)
+                    deleteEnabled.removeAtIndex(indexPath.row)
+                    self.myUserDafault.setObject(deleteAlarmTimes, forKey: "alarmTimes")
+                    self.myUserDafault.setObject(deleteDescriptions, forKey: "descriptions")
+                    self.myUserDafault.setObject(deleteRepeats, forKey: "repeats")
+                    self.myUserDafault.setObject(deleteSounds, forKey: "sounds")
+                    self.myUserDafault.setObject(deleteSnoozes, forKey: "snoozes")
+                    self.myUserDafault.setObject(deleteEnabled, forKey: "enabled")
+                    self.myUserDafault.synchronize()
+                    self.alarmTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    println("\(indexPath) deleted")}
+            delete.backgroundColor = UIColor.redColor()
+            return [delete]
+        }else{
+            return nil
+        }
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        let flg:Bool = tableView.tag == 1
+        if flg {
+            return true
+        }else{
+            return false
+        }
+    }
+    
+    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        let flg:Bool = tableView.tag == 1
+        if flg {
+            return true
+        }else{
+            return false
+        }
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        let flg:Bool = tableView.tag == 1
+        if flg {
+            switch editingStyle {
+            case .Delete:
+                self.alarmTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+            default:
+                return
+            }
+        }
+    }
+    
+    func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+      /*  let tmp = [sourceIndexPath.row]
+        itemArray.removeAtIndex(sourceIndexPath.row)
+        itemArray.insert(tmp, atIndex: destinationIndexPath.row)
+      */
     }
     
     func localDate() -> NSDate {
@@ -134,16 +236,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let pointInTable: CGPoint = sender.convertPoint(sender.bounds.origin, toView: self.alarmTableView)
         let cellIndexPath = self.alarmTableView.indexPathForRowAtPoint(pointInTable)
         let row = cellIndexPath?.row
-        var myUserDafault:NSUserDefaults = NSUserDefaults()
         
-        if enabled[row!] == "1" {
-            enabled[row!] = "0"
+        let flg:Bool = enabled[row!] == true
+        if flg {
+            enabled[row!] = false
             myUserDafault.setObject(enabled, forKey:"enabled")
-            //println(myUserDafault.objectForKey("enabled"))
         }else{
-            enabled[row!] = "1"
+            enabled[row!] = true
             myUserDafault.setObject(enabled, forKey:"enabled")
-            //println(myUserDafault.objectForKey("enabled"))
         }
         myUserDafault.synchronize()
         
@@ -216,28 +316,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let alarmTime = calendar.dateByAddingComponents(comp, toDate: date, options: nil)!
         let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
+        dateFormatter.dateFormat = "HH:mm"
 
         alarmTimes.append(dateFormatter.stringFromDate(alarmTime))
         descriptions.append("アラーム")
         repeats.append("0000000")
-        snoozes.append("1")
-        enabled.append("1")
-
+        snoozes.append(true)
+        enabled.append(true)
+        sounds.append(UILocalNotificationDefaultSoundName)
+        
+        myUserDafault.setObject(alarmTimes, forKey: "alarmTimes")
+        myUserDafault.setObject(descriptions, forKey: "descriptions")
+        myUserDafault.setObject(repeats, forKey: "repeats")
+        myUserDafault.setObject(snoozes, forKey: "snoozes")
+        myUserDafault.setObject(sounds, forKey: "sounds")
+        myUserDafault.setObject(enabled, forKey: "enabled")
+        myUserDafault.synchronize()
+        
         alarmTableView.reloadData()
-    }
-    
-    func tableView(changeSwitchValue: NSIndexPath){
-        println("testman")
-    }
-    
-    @IBAction func leftBarButtonItem(sender: UIBarButtonItem) {
-        //編集
-        println("edit push")
     }
     
     @IBAction func backFromAddView(segue:UIStoryboardSegue){
         NSLog("I'll　Be　Back")
+        alarmTableView.reloadData()
     }
     
     override func didReceiveMemoryWarning() {

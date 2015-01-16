@@ -21,6 +21,7 @@ class LabelViewController: UIViewController, UITextFieldDelegate {
         myTextField.text = self.label
         myTextField.delegate = self
         myTextField.borderStyle = UITextBorderStyle.RoundedRect
+        myTextField.keyboardType = UIKeyboardType.Default
     }
 
     override func didReceiveMemoryWarning() {
@@ -28,12 +29,13 @@ class LabelViewController: UIViewController, UITextFieldDelegate {
     }
 
     func textFieldDidBeginEditing(textField: UITextField){
-      //  println("textFieldDidBeginEditing:" + textField.text)
+       //println("textFieldDidBeginEditing:" + textField.text)
     }
  
     func textFieldShouldEndEditing(textField: UITextField) -> Bool {
         var myUserDafault:NSUserDefaults = NSUserDefaults()
-        if textField.text == ""{
+        let flg:Bool = textField.text == ""
+        if flg {
             myUserDafault.setObject("アラーム", forKey: "NewLabel")
         }else{
             myUserDafault.setObject(textField.text, forKey: "NewLabel")
@@ -43,10 +45,8 @@ class LabelViewController: UIViewController, UITextFieldDelegate {
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        
         return true
     }
-
 }
 
     /*
