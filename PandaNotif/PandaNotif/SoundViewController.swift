@@ -9,13 +9,13 @@
 import UIKit
 
 class SoundViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
     @IBOutlet weak var soundTable: UITableView!
-    
-    var selectedSounds = ""
+    var selectedSounds = String()
     var sounds = ["0","0"]
-    var getSound = ""
+    var getSound = String()
+    var from = Int()
     let texts = ["レーザー", "なし"]
+    let myUserDafault = NSUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,28 +33,23 @@ class SoundViewController: UIViewController, UITableViewDelegate, UITableViewDat
         self.soundTable.delegate = self
         self.soundTable.dataSource = self
         self.soundTable.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
-
-        // Do any additional setup after loading the view.
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
-    {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         return 44
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
-    {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         return texts.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
-    {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         var cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
-        
         cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "data")
         cell.textLabel?.text = texts[indexPath.row]
         
-        if sounds[indexPath.row] == "1"{
+        let flg:Bool = sounds[indexPath.row] == "1"
+        if flg {
             cell.detailTextLabel?.text = "✔︎"
         }else{
             cell.detailTextLabel?.text = ""
@@ -64,6 +59,7 @@ class SoundViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!)
     {
+        soundTable.deselectRowAtIndexPath(indexPath, animated: true)
         switch texts[indexPath.row]{
             case "レーザー":
                 let flg:Bool = sounds[0] == "0"
@@ -82,28 +78,25 @@ class SoundViewController: UIViewController, UITableViewDelegate, UITableViewDat
             default:
                 break
         }
-        soundTable.reloadData()
+        let delay = 0.2 * Double(NSEC_PER_SEC)
+        let time  = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        dispatch_after(time, dispatch_get_main_queue(), {
+            self.soundTable.reloadData()
+        })
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!){
-        var myUserDafault:NSUserDefaults = NSUserDefaults()
-        myUserDafault.setObject(selectedSounds, forKey: "NewSound")
+        let flg:Bool = from == 0
+        if flg {
+            myUserDafault.setObject(selectedSounds, forKey:"newSound")
+        }else{
+            myUserDafault.setObject(selectedSounds, forKey:"editSound")
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

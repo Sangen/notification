@@ -11,6 +11,8 @@ import UIKit
 class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var testTable: UITableView!
+    let texts = ["Repeat", "Label", "Sound", "Snooze"]
+    let myUserDafault = NSUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,25 +22,21 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         self.testTable.backgroundColor = UIColor.clearColor()
     }
     
-    let texts = ["Repeat", "Label", "Sound", "Snooze"]
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
-    {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         return 44
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
-    {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         return 4
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
-    {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         var cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
-        if indexPath.row == 3 {
-            let mySwicth: UISwitch = UISwitch()
-            var myUserDafault:NSUserDefaults = NSUserDefaults()
-            if myUserDafault.boolForKey("NewSnooze"){
+        let flg:Bool = indexPath.row == 3
+        if flg {
+            let mySwicth = UISwitch()
+            let flg:Bool = myUserDafault.boolForKey("newSnooze") == true
+            if flg {
                 mySwicth.on = true
             }else{
                 mySwicth.on = false
@@ -50,10 +48,13 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "data")
             cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
         }
+        
         if indexPath.row == 0{
-            var myUserDafault:NSUserDefaults = NSUserDefaults()
-            var repeatCheck:Array = myUserDafault.arrayForKey("NewRepeat")!
-            var repeats = repeatCheck as [String]
+            let repeatCheck = myUserDafault.stringForKey("newRepeat")!
+            var repeats = [String]()
+            for i in repeatCheck{
+                repeats.append(String(i))
+            }
             if repeats == ["1","1","1","1","1","1","1"]{
                 cell.detailTextLabel?.text = "毎日"
             }else if repeats == ["1","0","0","0","0","0","1"]{
@@ -88,12 +89,10 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 cell.detailTextLabel?.text = weekDay
             }
         }else if indexPath.row == 1{
-            var myUserDafault:NSUserDefaults = NSUserDefaults()
-            cell.detailTextLabel?.text = myUserDafault.stringForKey("NewLabel")
+            cell.detailTextLabel?.text = myUserDafault.stringForKey("newLabel")
         }else if indexPath.row == 2{
-            var myUserDafault:NSUserDefaults = NSUserDefaults()
-            let soundMan = myUserDafault.stringForKey("NewSound")
-            if soundMan == UILocalNotificationDefaultSoundName {
+            let flg:Bool = myUserDafault.stringForKey("newSound") == UILocalNotificationDefaultSoundName
+            if flg {
                 cell.detailTextLabel?.text = "レーザー"
             }else{
                 cell.detailTextLabel?.text = "なし"
@@ -118,11 +117,11 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     func onClickMySwicth(sender: UISwitch){
-        let myUserDafault:NSUserDefaults = NSUserDefaults()
-        if sender.on == true {
-            myUserDafault.setObject(true, forKey: "NewSnooze")
-        } else {
-            myUserDafault.setObject(false, forKey: "NewSnooze")
+        let flg:Bool = sender.on == true
+        if flg {
+            myUserDafault.setObject(true, forKey: "newSnooze")
+        }else{
+            myUserDafault.setObject(false, forKey: "newSnooze")
         }
     }
     
@@ -135,42 +134,33 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         if (segue.identifier == "toRepeatViewController"){
             let vc = segue.destinationViewController as RepeatViewController
             var myUserDafault:NSUserDefaults = NSUserDefaults()
-            var newRepeat = myUserDafault.arrayForKey("NewRepeat")!
-            vc.getRepeats = newRepeat
+            vc.getRepeats = myUserDafault.stringForKey("newRepeat")!
+            vc.from = 0
         }else if (segue.identifier == "toViewController"){
-            var myUserDafault:NSUserDefaults = NSUserDefaults()
-            myUserDafault.setObject(["0","0","0","0","0","0","0"], forKey: "NewRepeat")
-            myUserDafault.setObject("アラーム", forKey: "NewLabel")
-            myUserDafault.setObject(UILocalNotificationDefaultSoundName, forKey: "NewSound")
-            myUserDafault.setObject(true, forKey: "NewSnooze")
+            myUserDafault.setObject("0000000", forKey: "newRepeat")
+            myUserDafault.setObject("アラーム", forKey: "newLabel")
+            myUserDafault.setObject(UILocalNotificationDefaultSoundName, forKey: "newSound")
+            myUserDafault.setObject(true, forKey: "newSnooze")
         }else if (segue.identifier == "toLabelViewController"){
             let vc = segue.destinationViewController as LabelViewController
-            var myUserDafault:NSUserDefaults = NSUserDefaults()
-            var newLabel = myUserDafault.stringForKey("NewLabel")!
+            var newLabel = myUserDafault.stringForKey("newLabel")!
             vc.getLabel = newLabel
+            vc.from = 0
         }else if (segue.identifier == "toSoundViewController"){
             let vc = segue.destinationViewController as SoundViewController
-            var myUserDafault:NSUserDefaults = NSUserDefaults()
-            var newSound = myUserDafault.stringForKey("NewSound")!
+            var newSound = myUserDafault.stringForKey("newSound")!
             vc.getSound = newSound
+            vc.from = 0
         }
     }
     
     @IBAction func saveButton(sender: UIBarButtonItem) {
-        let myUserDafault:NSUserDefaults = NSUserDefaults()
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         let selectedTime = dateFormatter.stringFromDate(datePicker.date)
         
-        var joinRepeats = ""
-        var newRepeat = myUserDafault.objectForKey("NewRepeat") as [String]
-        for i in 0...6{
-            joinRepeats = joinRepeats + newRepeat[i]
-        }
-        let newSound = myUserDafault.objectForKey("NewSound") as String
-        
-        let check: AnyObject? = myUserDafault.objectForKey("alarmTimes")
-        if check != nil {
+        let flg:Bool = myUserDafault.objectForKey("alarmTimes") != nil
+        if flg {
             NSLog("Exist value")
             var alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
             var descriptions = myUserDafault.objectForKey("descriptions") as [String]
@@ -180,16 +170,10 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             var enabled = myUserDafault.objectForKey("enabled") as [Bool]
 
             alarmTimes.append(selectedTime)
-            descriptions.append(myUserDafault.objectForKey("NewLabel") as String)
-            repeats.append(joinRepeats)
-            
-            let flg:Bool = newSound == UILocalNotificationDefaultSoundName
-            if flg {
-                sounds.append(UILocalNotificationDefaultSoundName)
-            }else{
-                sounds.append("nil")
-            }
-            snoozes.append(myUserDafault.boolForKey("NewSnooze"))
+            descriptions.append(myUserDafault.stringForKey("newLabel")!)
+            repeats.append(myUserDafault.stringForKey("newRepeat")!)
+            sounds.append(myUserDafault.stringForKey("newSound")!)
+            snoozes.append(myUserDafault.boolForKey("newSnooze"))
             enabled.append(true)
             
             myUserDafault.setObject(alarmTimes, forKey: "alarmTimes")
@@ -200,23 +184,18 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             myUserDafault.setObject(enabled, forKey: "enabled")
         }else{
             NSLog("There isn't value")
-            var alarmTimes:[String] = []
-            var descriptions:[String] = []
-            var repeats:[String] = []
-            var sounds:[String] = []
-            var snoozes:[Bool] = []
-            var enabled:[Bool] = []
+            var alarmTimes = [String]()
+            var descriptions = [String]()
+            var repeats = [String]()
+            var sounds = [String]()
+            var snoozes = [Bool]()
+            var enabled = [Bool]()
             
             alarmTimes.append(selectedTime)
-            descriptions.append(myUserDafault.objectForKey("NewLabel") as String)
-            repeats.append(joinRepeats)
-            let flg:Bool = newSound == UILocalNotificationDefaultSoundName
-            if flg {
-                sounds.append(UILocalNotificationDefaultSoundName)
-            }else{
-                sounds.append("nil")
-            }
-            snoozes.append(myUserDafault.boolForKey("NewSnooze"))
+            descriptions.append(myUserDafault.stringForKey("newLabel")!)
+            repeats.append(myUserDafault.stringForKey("newRepeat")!)
+            sounds.append(myUserDafault.stringForKey("newSound")!)
+            snoozes.append(myUserDafault.boolForKey("newSnooze"))
             enabled.append(true)
             
             myUserDafault.setObject(alarmTimes, forKey: "alarmTimes")
@@ -226,11 +205,10 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             myUserDafault.setObject(snoozes, forKey: "snoozes")
             myUserDafault.setObject(enabled, forKey: "enabled")
         }
-
-        myUserDafault.setObject(["0","0","0","0","0","0","0"], forKey: "NewRepeat")
-        myUserDafault.setObject("アラーム", forKey: "NewLabel")
-        myUserDafault.setObject(UILocalNotificationDefaultSoundName, forKey: "NewSound")
-        myUserDafault.setObject(true, forKey: "NewSnooze")
+        myUserDafault.setObject("0000000", forKey: "newRepeat")
+        myUserDafault.setObject("アラーム", forKey: "newLabel")
+        myUserDafault.setObject(UILocalNotificationDefaultSoundName, forKey: "newSound")
+        myUserDafault.setObject(true, forKey: "newSnooze")
         myUserDafault.synchronize()
         
         dismissViewControllerAnimated(true, completion: nil)

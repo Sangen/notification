@@ -23,6 +23,8 @@ class CustomCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var enabledSwitch: UISwitch!
+    @IBOutlet weak var repeatLabel: UILabel!
+    @IBOutlet weak var snoozeLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

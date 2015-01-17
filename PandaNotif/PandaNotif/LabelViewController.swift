@@ -9,19 +9,19 @@
 import UIKit
 
 class LabelViewController: UIViewController, UITextFieldDelegate {
-    
     @IBOutlet weak var myTextField: UITextField!
-    var label : String = ""
+    var label = String()
     var getLabel : AnyObject = ""
+    var from = Int()
+    let myUserDafault = NSUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.label = self.getLabel as String
-
-        myTextField.text = self.label
-        myTextField.delegate = self
-        myTextField.borderStyle = UITextBorderStyle.RoundedRect
-        myTextField.keyboardType = UIKeyboardType.Default
+        self.myTextField.text = self.label
+        self.myTextField.delegate = self
+        self.myTextField.borderStyle = UITextBorderStyle.RoundedRect
+        self.myTextField.keyboardType = UIKeyboardType.Default
     }
 
     override func didReceiveMemoryWarning() {
@@ -33,12 +33,20 @@ class LabelViewController: UIViewController, UITextFieldDelegate {
     }
  
     func textFieldShouldEndEditing(textField: UITextField) -> Bool {
-        var myUserDafault:NSUserDefaults = NSUserDefaults()
-        let flg:Bool = textField.text == ""
+        let flg:Bool = from == 0
+        let flg2:Bool = textField.text == ""
         if flg {
-            myUserDafault.setObject("アラーム", forKey: "NewLabel")
+            if flg2 {
+                myUserDafault.setObject("アラーム", forKey: "newLabel")
+            }else{
+                myUserDafault.setObject(textField.text, forKey: "newLabel")
+            }
         }else{
-            myUserDafault.setObject(textField.text, forKey: "NewLabel")
+            if flg2 {
+                myUserDafault.setObject("アラーム", forKey: "editLabel")
+            }else{
+                myUserDafault.setObject(textField.text, forKey: "editLabel")
+            }
         }
         return true
     }
@@ -48,14 +56,3 @@ class LabelViewController: UIViewController, UITextFieldDelegate {
         return true
     }
 }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
