@@ -8,13 +8,22 @@
 
 import UIKit
 
-class EditViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+protocol EditViewControllerDelegate : class{
+    func editDidSaved(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,indexPath:Int)
+    func editDidDeleted(indexPath:Int)
+}
+
+class EditViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, RepeatViewControllerDelegate, LabelViewControllerDelegate, SoundViewControllerDelegate {
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var editTable: UITableView!
-    
+    weak var delegate: EditViewControllerDelegate? = nil
     let texts = ["Repeat", "Label", "Sound", "Snooze"]
-    let myUserDafault = NSUserDefaults()
-    var editIndexPath = String()
+    var alarmTime = String()
+    var repeat = String()
+    var label = String()
+    var snooze = Bool()
+    var sound = String()
+    var editIndexPath = Int()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +32,7 @@ class EditViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.editTable.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
         self.editTable.backgroundColor = UIColor.clearColor()
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
-        let currentDate = calendar.dateBySettingHour(stringForHour(myUserDafault.stringForKey("editTime")!), minute:         stringForMinute(myUserDafault.stringForKey("editTime")!), second: 0, ofDate: NSDate(), options: nil)!
+        let currentDate = calendar.dateBySettingHour(stringForHour(alarmTime), minute:stringForMinute(alarmTime), second: 0, ofDate: NSDate(), options: nil)!
         datePicker.setDate(currentDate, animated: false)
     }
     
@@ -39,7 +48,7 @@ class EditViewController: UIViewController, UITableViewDelegate, UITableViewData
         var cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
         if indexPath.row == 3 {
             let mySwicth = UISwitch()
-            let flg:Bool = myUserDafault.boolForKey("editSnooze")
+            let flg:Bool = snooze
             if flg {
                 mySwicth.on = true
             }else{
@@ -53,50 +62,48 @@ class EditViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
         }
         if indexPath.row == 0{
-            var editRepeat = myUserDafault.stringForKey("editRepeat")!
-            var repeats = [String]()
-            
-            for i in editRepeat{
-                repeats.append(String(i))
+            var repeatStatuses = [String]()
+            for i in repeat{
+                repeatStatuses.append(String(i))
             }
 
-            if repeats == ["1","1","1","1","1","1","1"]{
+            if repeatStatuses == ["1","1","1","1","1","1","1"]{
                 cell.detailTextLabel?.text = "毎日"
-            }else if repeats == ["1","0","0","0","0","0","1"]{
+            }else if repeatStatuses == ["1","0","0","0","0","0","1"]{
                 cell.detailTextLabel?.text = "週末"
-            }else if repeats == ["0","1","1","1","1","1","0"]{
+            }else if repeatStatuses == ["0","1","1","1","1","1","0"]{
                 cell.detailTextLabel?.text = "平日"
-            }else if repeats == ["0","0","0","0","0","0","0"]{
+            }else if repeatStatuses == ["0","0","0","0","0","0","0"]{
                 cell.detailTextLabel?.text = "しない"
             }else{
                 var weekDay = ""
-                if repeats[1] == "1"{
+                if repeatStatuses[1] == "1"{
                     weekDay += "月 "
                 }
-                if repeats[2] == "1"{
+                if repeatStatuses[2] == "1"{
                     weekDay += "火 "
                 }
-                if repeats[3] == "1"{
+                if repeatStatuses[3] == "1"{
                     weekDay += "水 "
                 }
-                if repeats[4] == "1"{
+                if repeatStatuses[4] == "1"{
                     weekDay += "木 "
                 }
-                if repeats[5] == "1"{
+                if repeatStatuses[5] == "1"{
                     weekDay += "金 "
                 }
-                if repeats[6] == "1"{
+                if repeatStatuses[6] == "1"{
                     weekDay += "土 "
                 }
-                if repeats[0] == "1"{
+                if repeatStatuses[0] == "1"{
                     weekDay += "日"
                 }
                 cell.detailTextLabel?.text = weekDay
             }
         }else if indexPath.row == 1{
-            cell.detailTextLabel?.text = myUserDafault.stringForKey("editLabel")
+            cell.detailTextLabel?.text = label
         }else if indexPath.row == 2{
-            let flg:Bool = myUserDafault.stringForKey("editSound") == UILocalNotificationDefaultSoundName
+            let flg:Bool = sound == UILocalNotificationDefaultSoundName
             if flg {
                 cell.detailTextLabel?.text = "レーザー"
             }else{
@@ -123,9 +130,9 @@ class EditViewController: UIViewController, UITableViewDelegate, UITableViewData
     func onClickMySwicth(sender: UISwitch){
         let flg:Bool = sender.on == true
         if flg {
-            myUserDafault.setObject(true, forKey: "editSnooze")
+            snooze = true
         } else {
-            myUserDafault.setObject(false, forKey: "editSnooze")
+            snooze = false
         }
     }
     
@@ -137,24 +144,16 @@ class EditViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!){
         if (segue.identifier == "toRepeatViewController"){
             let vc = segue.destinationViewController as RepeatViewController
-            vc.getRepeats = myUserDafault.stringForKey("editRepeat")!
-            vc.from = 1
-        }else if (segue.identifier == "toViewController"){
-            myUserDafault.setObject("", forKey:"editTime")
-            myUserDafault.setObject("", forKey:"editRepeat")
-            myUserDafault.setObject("", forKey:"editLabel")
-            myUserDafault.setObject("", forKey: "editSound")
-            myUserDafault.setObject(true, forKey: "editSnooze")
+            vc.repeat = repeat
+            vc.delegate = self
         }else if (segue.identifier == "toLabelViewController"){
             let vc = segue.destinationViewController as LabelViewController
-            var editLabel = myUserDafault.stringForKey("editLabel")!
-            vc.getLabel = editLabel
-            vc.from = 1
+            vc.label = label
+            vc.delegate = self
         }else if (segue.identifier == "toSoundViewController"){
             let vc = segue.destinationViewController as SoundViewController
-            var editSound = myUserDafault.stringForKey("editSound")!
-            vc.getSound = editSound
-            vc.from = 1
+            vc.sound = sound
+            vc.delegate = self
         }
     }
     
@@ -162,72 +161,40 @@ class EditViewController: UIViewController, UITableViewDelegate, UITableViewData
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         let selectedTime = dateFormatter.stringFromDate(datePicker.date)
-        
-        var alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
-        var descriptions = myUserDafault.objectForKey("descriptions") as [String]
-        var repeats = myUserDafault.objectForKey("repeats") as [String]
-        var sounds = myUserDafault.objectForKey("sounds") as [String]
-        var snoozes = myUserDafault.objectForKey("snoozes") as [Bool]
-        var enabled = myUserDafault.objectForKey("enabled") as [Bool]
-        
-        let indexPath = editIndexPath.toInt()!
-        alarmTimes[indexPath] = selectedTime
-        descriptions[indexPath] = myUserDafault.stringForKey("editLabel")!
-        repeats[indexPath] = myUserDafault.stringForKey("editRepeat")!
-        sounds[indexPath] = myUserDafault.stringForKey("editSound")!
-        snoozes[indexPath] = myUserDafault.boolForKey("editSnooze")
-        
-        myUserDafault.setObject(alarmTimes, forKey: "alarmTimes")
-        myUserDafault.setObject(descriptions, forKey: "descriptions")
-        myUserDafault.setObject(repeats, forKey: "repeats")
-        myUserDafault.setObject(sounds, forKey: "sounds")
-        myUserDafault.setObject(snoozes, forKey: "snoozes")
-        myUserDafault.setObject("", forKey:"editTime")
-        myUserDafault.setObject("", forKey:"editLabel")
-        myUserDafault.setObject("", forKey:"editRepeat")
-        myUserDafault.setObject("", forKey:"editSound")
-        myUserDafault.setObject(true, forKey:"editSnooze")
-        myUserDafault.setObject("", forKey: "editIndexPath")
-        myUserDafault.synchronize()
-        
+        self.delegate?.editDidSaved(selectedTime,label:self.label,repeat:self.repeat,sound:self.sound,snooze:self.snooze,indexPath:self.editIndexPath)
         dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBAction func deleteButton(sender: UIButton) {
-        var alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
-        var descriptions = myUserDafault.objectForKey("descriptions") as [String]
-        var repeats = myUserDafault.objectForKey("repeats") as [String]
-        var sounds = myUserDafault.objectForKey("sounds") as [String]
-        var snoozes = myUserDafault.objectForKey("snoozes") as [Bool]
-        var enabled = myUserDafault.objectForKey("enabled") as [Bool]
-        let indexPath = editIndexPath.toInt()!
-        alarmTimes.removeAtIndex(indexPath)
-        descriptions.removeAtIndex(indexPath)
-        repeats.removeAtIndex(indexPath)
-        sounds.removeAtIndex(indexPath)
-        snoozes.removeAtIndex(indexPath)
-        enabled.removeAtIndex(indexPath)
-        myUserDafault.setObject(alarmTimes, forKey: "alarmTimes")
-        myUserDafault.setObject(descriptions, forKey: "descriptions")
-        myUserDafault.setObject(repeats, forKey: "repeats")
-        myUserDafault.setObject(sounds, forKey: "sounds")
-        myUserDafault.setObject(snoozes, forKey: "snoozes")
-        myUserDafault.setObject(enabled, forKey: "enabled")
-        myUserDafault.synchronize()
-        
+        self.delegate?.editDidDeleted(editIndexPath)
         dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBAction func backFromRepeatView(segue:UIStoryboardSegue){
-        editTable.reloadData()
+        self.editTable.reloadData()
     }
     
     @IBAction func backFromLabelView(segue:UIStoryboardSegue){
-        editTable.reloadData()
+        self.editTable.reloadData()
     }
     
     @IBAction func backFromSoundView(segue:UIStoryboardSegue){
-        editTable.reloadData()
+        self.editTable.reloadData()
+    }
+    
+    func repeatChange(repeat:String){
+        NSLog("repeat changed fire")
+        self.repeat = repeat
+    }
+    
+    func labelChange(label:String){
+        NSLog("label changed fire")
+        self.label = label
+    }
+    
+    func soundChange(sound:String){
+        NSLog("sound changed fire")
+        self.sound = sound
     }
     
     private func stringForHour(hour: String) -> Int{

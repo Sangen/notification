@@ -8,26 +8,24 @@
 
 import UIKit
 
+protocol SoundViewControllerDelegate : class{
+    func soundChange(sound:String)
+}
+
 class SoundViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var soundTable: UITableView!
-    var selectedSounds = String()
-    var sounds = ["0","0"]
-    var getSound = String()
-    var from = Int()
+    weak var delegate: SoundViewControllerDelegate? = nil
+    var soundStatuses = ["0","0"]
+    var sound = String()
     let texts = ["レーザー", "なし"]
-    let myUserDafault = NSUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let getSound2 = getSound
-        let flg:Bool = getSound2 == "nil"
+        let flg:Bool = sound == "nil"
         if flg {
-            selectedSounds = "nil"
-            sounds = ["0","1"]
+            self.soundStatuses = ["0","1"]
         }else{
-            selectedSounds = UILocalNotificationDefaultSoundName
-            sounds = ["1","0"]
+            self.soundStatuses = ["1","0"]
         }
         
         self.soundTable.delegate = self
@@ -46,9 +44,9 @@ class SoundViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         var cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
         cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "data")
-        cell.textLabel?.text = texts[indexPath.row]
+        cell.textLabel?.text = self.texts[indexPath.row]
         
-        let flg:Bool = sounds[indexPath.row] == "1"
+        let flg:Bool = self.soundStatuses[indexPath.row] == "1"
         if flg {
             cell.detailTextLabel?.text = "✔︎"
         }else{
@@ -59,21 +57,21 @@ class SoundViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!)
     {
-        soundTable.deselectRowAtIndexPath(indexPath, animated: true)
-        switch texts[indexPath.row]{
+        self.soundTable.deselectRowAtIndexPath(indexPath, animated: true)
+        switch self.texts[indexPath.row]{
             case "レーザー":
-                let flg:Bool = sounds[0] == "0"
+                let flg:Bool = self.soundStatuses[0] == "0"
                 if flg {
-                    selectedSounds = UILocalNotificationDefaultSoundName
-                    sounds[0] = "1"
-                    sounds[1] = "0"
+                    self.sound = UILocalNotificationDefaultSoundName
+                    self.soundStatuses[0] = "1"
+                    self.soundStatuses[1] = "0"
                 }
             case "なし":
-                let flg:Bool = sounds[1] == "0"
+                let flg:Bool = self.soundStatuses[1] == "0"
                 if flg {
-                    selectedSounds = "nil"
-                    sounds[1] = "1"
-                    sounds[0] = "0"
+                    self.sound = "nil"
+                    self.soundStatuses[1] = "1"
+                    self.soundStatuses[0] = "0"
                 }
             default:
                 break
@@ -86,12 +84,7 @@ class SoundViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!){
-        let flg:Bool = from == 0
-        if flg {
-            myUserDafault.setObject(selectedSounds, forKey:"newSound")
-        }else{
-            myUserDafault.setObject(selectedSounds, forKey:"editSound")
-        }
+        self.delegate?.soundChange(sound)
     }
 
     override func didReceiveMemoryWarning() {

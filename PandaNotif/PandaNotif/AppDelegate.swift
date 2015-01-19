@@ -12,7 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    let myUserDafault = NSUserDefaults()
+    let PNDUserDafault = NSUserDefaults()
 
     // 起動時
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary!) -> Bool {
@@ -29,19 +29,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 UIApplication.sharedApplication().cancelLocalNotification(notification!)
             }
         }
-        myUserDafault.setObject("0000000", forKey:"newRepeat")
-        myUserDafault.setObject("アラーム", forKey:"newLabel")
-        myUserDafault.setObject(UILocalNotificationDefaultSoundName, forKey:"newSound")
-        myUserDafault.setObject(true, forKey:"newSnooze")
-
-        myUserDafault.setObject("", forKey:"editTime")
-        myUserDafault.setObject("", forKey:"editLabel")
-        myUserDafault.setObject("", forKey:"editRepeat")
-        myUserDafault.setObject("", forKey:"editSound")
-        myUserDafault.setObject(true, forKey:"editSnooze")
-        myUserDafault.setObject("", forKey: "editIndexPath")
-        myUserDafault.synchronize()
-        
         return true
     }
     
@@ -55,25 +42,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        NSNotificationCenter.defaultCenter().postNotificationName("applicationDidEnterBackground", object: nil)
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        let flg:Bool = myUserDafault.objectForKey("alarmTimes") != nil
+        let flg:Bool = self.PNDUserDafault.objectForKey("alarmTimes") != nil
         if flg {
-            NSLog("Exist value")
-            let alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
-            let descriptions = myUserDafault.objectForKey("descriptions") as [String]
-            let repeats = myUserDafault.objectForKey("repeats") as [String]
-            let sounds = myUserDafault.objectForKey("sounds") as [String]
-            let snoozes = myUserDafault.objectForKey("snoozes") as [Bool]
-            let enabled = myUserDafault.objectForKey("enabled") as [Bool]
+            NSLog("UserDefalts exist")
+            let alarmTimes = self.PNDUserDafault.objectForKey("alarmTimes") as [String]
+            let labels = self.PNDUserDafault.objectForKey("labels") as [String]
+            let repeats = self.PNDUserDafault.objectForKey("repeats") as [String]
+            let sounds = self.PNDUserDafault.objectForKey("sounds") as [String]
+            let snoozes = self.PNDUserDafault.objectForKey("snoozes") as [Bool]
+            let enabled = self.PNDUserDafault.objectForKey("enabled") as [Bool]
             
             for var i = 0; i < enabled.count; i++ {
                 let flg: Bool = enabled[i] == true
                 if flg {
-                    makeNotification(alarmTimes[i], repeat: repeats[i], snooze: snoozes[i], label: descriptions[i], sound: sounds[i])
+                    makeNotification(alarmTimes[i],repeat:repeats[i],snooze:snoozes[i],label:labels[i],sound:sounds[i])
                 }
             }
         }else{
-            NSLog("There isn't value")
+            NSLog("UserDefaults does not exist")
         }
     }
 
@@ -93,24 +81,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        let flg:Bool = myUserDafault.objectForKey("alarmTimes") != nil
+        let flg:Bool = self.PNDUserDafault.objectForKey("alarmTimes") != nil
         if flg {
-            NSLog("Exist value")
-            let alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
-            let descriptions = myUserDafault.objectForKey("descriptions") as [String]
-            let repeats = myUserDafault.objectForKey("repeats") as [String]
-            let sounds = myUserDafault.objectForKey("sounds") as [String]
-            let snoozes = myUserDafault.objectForKey("snoozes") as [Bool]
-            let enabled = myUserDafault.objectForKey("enabled") as [Bool]
+            NSLog("UserDefaults exist")
+            let alarmTimes = self.PNDUserDafault.objectForKey("alarmTimes") as [String]
+            let labels = self.PNDUserDafault.objectForKey("labels") as [String]
+            let repeats = self.PNDUserDafault.objectForKey("repeats") as [String]
+            let sounds = self.PNDUserDafault.objectForKey("sounds") as [String]
+            let snoozes = self.PNDUserDafault.objectForKey("snoozes") as [Bool]
+            let enabled = self.PNDUserDafault.objectForKey("enabled") as [Bool]
             
             for var i = 0; i < enabled.count; i++ {
                 let flg: Bool = enabled[i] == true
                 if flg {
-                    makeNotification(alarmTimes[i], repeat: repeats[i], snooze: snoozes[i], label: descriptions[i], sound: sounds[i])
+                    makeNotification(alarmTimes[i],repeat:repeats[i],snooze:snoozes[i],label:labels[i],sound:sounds[i])
                 }
             }
         }else{
-            NSLog("There isn't value")
+            NSLog("UserDefaults does not exist")
         }
     }
     
@@ -118,15 +106,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let snooze = UIMutableUserNotificationAction()
         snooze.title = "スヌーズ";
         snooze.identifier = "SNOOZE"
-        snooze.activationMode = .Background;
-        snooze.destructive = true;
+        snooze.activationMode = .Background
+        snooze.destructive = true
         snooze.authenticationRequired = false
         
         let ok = UIMutableUserNotificationAction()
-        ok.title = "OK";
+        ok.title = "OK"
         ok.identifier = "OK"
-        ok.activationMode = .Background;
-        ok.destructive = false;
+        ok.activationMode = .Background
+        ok.destructive = false
         ok.authenticationRequired = false
         
         let snoozeOnCategory = UIMutableUserNotificationCategory()
@@ -139,7 +127,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         snoozeOffCategory.setActions([ok], forContext: .Minimal)
         snoozeOffCategory.setActions([ok], forContext: .Default)
         
-        let categories: NSSet? = NSSet(objects:snoozeOnCategory,snoozeOffCategory);
+        let categories: NSSet? = NSSet(objects:snoozeOnCategory,snoozeOffCategory)
         let notificationSettings =  UIUserNotificationSettings(forTypes: .Alert | .Sound, categories: categories)
 
         return notificationSettings
@@ -151,15 +139,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             switch actionId {
             case "SNOOZE":
                 let fireDate = notification.fireDate!
-                let description = notification.alertBody!
+                let label = notification.alertBody!
                 let calendar = NSCalendar(identifier: NSGregorianCalendar)!
                 let snoozeFireDate = calendar.dateByAddingUnit(.MinuteCalendarUnit, value: +9, toDate: fireDate, options: nil)!
                 var comps = (0, 0, 0, 0)
                 calendar.getHour(&comps.0, minute: &comps.1, second: &comps.2, nanosecond: &comps.3, fromDate: snoozeFireDate)
-                let hour = String(comps.0)
+                var hour = String(comps.0)
                 let minute = String(comps.1)
+                let flg:Bool = countElements(hour) == 1
+                if flg {
+                    hour = "0" + hour
+                }
                 let time = hour + ":" + minute as String
-                makeNotification(time, repeat:"0000000", snooze:true, label:description, sound:UILocalNotificationDefaultSoundName)
+                makeNotification(time, repeat:"0000000", snooze:true, label:label, sound:UILocalNotificationDefaultSoundName)
             case "OK":
                 NSLog("OK : %@",notification)
             default:
@@ -232,7 +224,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-    private func stringForFireDate(time: String) -> NSDate{
+    private func stringForFireDate(time:String) -> NSDate{
         let startIndex = advance(time.startIndex, 0)
         let endIndex = advance(time.startIndex, 2)
         let hour = time.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
@@ -246,14 +238,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return calendar.dateBySettingHour(hour, minute: minute, second: 0, ofDate:NSDate(), options: nil)!
     }
     
-    private func stringForHour(hour: String) -> Int{
+    private func stringForHour(hour:String) -> Int{
         let startIndex = advance(hour.startIndex, 0)
         let endIndex = advance(hour.startIndex, 2)
         
         return hour.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
     }
     
-    private func stringForMinute(minute: String) -> Int{
+    private func stringForMinute(minute:String) -> Int{
         let startIndex = advance(minute.startIndex, 3)
         let endIndex = advance(minute.startIndex, 2)
         

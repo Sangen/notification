@@ -8,11 +8,23 @@
 
 import UIKit
 
-class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+protocol AddViewControllerDelegate : class{
+    func addDidSaved(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool)
+}
+
+class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, RepeatViewControllerDelegate, LabelViewControllerDelegate, SoundViewControllerDelegate {
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var testTable: UITableView!
+    weak var delegate: AddViewControllerDelegate? = nil
+    let repeatView = RepeatViewController()
+    let labelView = LabelViewController()
+    let soundView = SoundViewController()
     let texts = ["Repeat", "Label", "Sound", "Snooze"]
-    let myUserDafault = NSUserDefaults()
+    let mySwicth = UISwitch()
+    var repeat = String()
+    var label = String()
+    var snooze = Bool()
+    var sound = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,25 +46,23 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         var cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
         let flg:Bool = indexPath.row == 3
         if flg {
-            let mySwicth = UISwitch()
-            let flg:Bool = myUserDafault.boolForKey("newSnooze") == true
+            let flg:Bool = self.snooze == true
             if flg {
-                mySwicth.on = true
+                self.mySwicth.on = true
             }else{
-                mySwicth.on = false
+                self.mySwicth.on = false
             }
-            cell.accessoryView = mySwicth
+            cell.accessoryView = self.mySwicth
             cell.selectionStyle = UITableViewCellSelectionStyle.None
-            mySwicth.addTarget(self, action: "onClickMySwicth:", forControlEvents: UIControlEvents.ValueChanged)
+            self.mySwicth.addTarget(self, action: "onClickMySwicth:", forControlEvents: UIControlEvents.ValueChanged)
         }else{
             cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "data")
             cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
         }
         
         if indexPath.row == 0{
-            let repeatCheck = myUserDafault.stringForKey("newRepeat")!
             var repeats = [String]()
-            for i in repeatCheck{
+            for i in repeat{
                 repeats.append(String(i))
             }
             if repeats == ["1","1","1","1","1","1","1"]{
@@ -64,7 +74,7 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             }else if repeats == ["0","0","0","0","0","0","0"]{
                 cell.detailTextLabel?.text = "しない"
             }else{
-                var weekDay = ""
+                var weekDay = String()
                 if repeats[1] == "1"{
                     weekDay += "月 "
                 }
@@ -89,16 +99,16 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 cell.detailTextLabel?.text = weekDay
             }
         }else if indexPath.row == 1{
-            cell.detailTextLabel?.text = myUserDafault.stringForKey("newLabel")
+            cell.detailTextLabel?.text = self.label
         }else if indexPath.row == 2{
-            let flg:Bool = myUserDafault.stringForKey("newSound") == UILocalNotificationDefaultSoundName
+            let flg:Bool = self.sound == UILocalNotificationDefaultSoundName
             if flg {
                 cell.detailTextLabel?.text = "レーザー"
             }else{
                 cell.detailTextLabel?.text = "なし"
             }
         }
-        cell.textLabel?.text = texts[indexPath.row]
+        cell.textLabel?.text = self.texts[indexPath.row]
         return cell
     }
     
@@ -119,9 +129,9 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     func onClickMySwicth(sender: UISwitch){
         let flg:Bool = sender.on == true
         if flg {
-            myUserDafault.setObject(true, forKey: "newSnooze")
+            self.snooze = true
         }else{
-            myUserDafault.setObject(false, forKey: "newSnooze")
+            self.snooze = false
         }
     }
     
@@ -133,24 +143,16 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!){
         if (segue.identifier == "toRepeatViewController"){
             let vc = segue.destinationViewController as RepeatViewController
-            var myUserDafault:NSUserDefaults = NSUserDefaults()
-            vc.getRepeats = myUserDafault.stringForKey("newRepeat")!
-            vc.from = 0
-        }else if (segue.identifier == "toViewController"){
-            myUserDafault.setObject("0000000", forKey: "newRepeat")
-            myUserDafault.setObject("アラーム", forKey: "newLabel")
-            myUserDafault.setObject(UILocalNotificationDefaultSoundName, forKey: "newSound")
-            myUserDafault.setObject(true, forKey: "newSnooze")
+            vc.repeat = self.repeat
+            vc.delegate = self
         }else if (segue.identifier == "toLabelViewController"){
             let vc = segue.destinationViewController as LabelViewController
-            var newLabel = myUserDafault.stringForKey("newLabel")!
-            vc.getLabel = newLabel
-            vc.from = 0
+            vc.label = self.label
+            vc.delegate = self
         }else if (segue.identifier == "toSoundViewController"){
             let vc = segue.destinationViewController as SoundViewController
-            var newSound = myUserDafault.stringForKey("newSound")!
-            vc.getSound = newSound
-            vc.from = 0
+            vc.sound = self.sound
+            vc.delegate = self
         }
     }
     
@@ -158,71 +160,34 @@ class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         let selectedTime = dateFormatter.stringFromDate(datePicker.date)
-        
-        let flg:Bool = myUserDafault.objectForKey("alarmTimes") != nil
-        if flg {
-            NSLog("Exist value")
-            var alarmTimes = myUserDafault.objectForKey("alarmTimes") as [String]
-            var descriptions = myUserDafault.objectForKey("descriptions") as [String]
-            var repeats = myUserDafault.objectForKey("repeats") as [String]
-            var sounds = myUserDafault.objectForKey("sounds") as [String]
-            var snoozes = myUserDafault.objectForKey("snoozes") as [Bool]
-            var enabled = myUserDafault.objectForKey("enabled") as [Bool]
-
-            alarmTimes.append(selectedTime)
-            descriptions.append(myUserDafault.stringForKey("newLabel")!)
-            repeats.append(myUserDafault.stringForKey("newRepeat")!)
-            sounds.append(myUserDafault.stringForKey("newSound")!)
-            snoozes.append(myUserDafault.boolForKey("newSnooze"))
-            enabled.append(true)
-            
-            myUserDafault.setObject(alarmTimes, forKey: "alarmTimes")
-            myUserDafault.setObject(descriptions, forKey: "descriptions")
-            myUserDafault.setObject(repeats, forKey: "repeats")
-            myUserDafault.setObject(sounds, forKey: "sounds")
-            myUserDafault.setObject(snoozes, forKey: "snoozes")
-            myUserDafault.setObject(enabled, forKey: "enabled")
-        }else{
-            NSLog("There isn't value")
-            var alarmTimes = [String]()
-            var descriptions = [String]()
-            var repeats = [String]()
-            var sounds = [String]()
-            var snoozes = [Bool]()
-            var enabled = [Bool]()
-            
-            alarmTimes.append(selectedTime)
-            descriptions.append(myUserDafault.stringForKey("newLabel")!)
-            repeats.append(myUserDafault.stringForKey("newRepeat")!)
-            sounds.append(myUserDafault.stringForKey("newSound")!)
-            snoozes.append(myUserDafault.boolForKey("newSnooze"))
-            enabled.append(true)
-            
-            myUserDafault.setObject(alarmTimes, forKey: "alarmTimes")
-            myUserDafault.setObject(descriptions, forKey: "descriptions")
-            myUserDafault.setObject(repeats, forKey: "repeats")
-            myUserDafault.setObject(sounds, forKey: "sounds")
-            myUserDafault.setObject(snoozes, forKey: "snoozes")
-            myUserDafault.setObject(enabled, forKey: "enabled")
-        }
-        myUserDafault.setObject("0000000", forKey: "newRepeat")
-        myUserDafault.setObject("アラーム", forKey: "newLabel")
-        myUserDafault.setObject(UILocalNotificationDefaultSoundName, forKey: "newSound")
-        myUserDafault.setObject(true, forKey: "newSnooze")
-        myUserDafault.synchronize()
-        
-        dismissViewControllerAnimated(true, completion: nil)
+        self.delegate?.addDidSaved(selectedTime,label:self.label,repeat:self.repeat,sound:self.sound,snooze:self.snooze)
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func repeatChange(repeat:String){
+        NSLog("repeat changed fire")
+        self.repeat = repeat
+    }
+    
+    func labelChange(label:String){
+        NSLog("label changed fire")
+        self.label = label
+    }
+    
+    func soundChange(sound:String){
+        NSLog("sound changed fire")
+        self.sound = sound
     }
     
     @IBAction func backFromRepeatView(segue:UIStoryboardSegue){
-        testTable.reloadData()
+        self.testTable.reloadData()
     }
     
     @IBAction func backFromLabelView(segue:UIStoryboardSegue){
-        testTable.reloadData()
+        self.testTable.reloadData()
     }
     
     @IBAction func backFromSoundView(segue:UIStoryboardSegue){
-        testTable.reloadData()
+        self.testTable.reloadData()
     }
 }

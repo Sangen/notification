@@ -8,16 +8,17 @@
 
 import UIKit
 
+protocol LabelViewControllerDelegate : class{
+    func labelChange(label:String)
+}
+
 class LabelViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var myTextField: UITextField!
+    weak var delegate: LabelViewControllerDelegate? = nil
     var label = String()
-    var getLabel : AnyObject = ""
-    var from = Int()
-    let myUserDafault = NSUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.label = self.getLabel as String
         self.myTextField.text = self.label
         self.myTextField.delegate = self
         self.myTextField.borderStyle = UITextBorderStyle.RoundedRect
@@ -33,22 +34,17 @@ class LabelViewController: UIViewController, UITextFieldDelegate {
     }
  
     func textFieldShouldEndEditing(textField: UITextField) -> Bool {
-        let flg:Bool = from == 0
-        let flg2:Bool = textField.text == ""
+        let flg:Bool = textField.text == ""
         if flg {
-            if flg2 {
-                myUserDafault.setObject("アラーム", forKey: "newLabel")
-            }else{
-                myUserDafault.setObject(textField.text, forKey: "newLabel")
-            }
+            self.label = "アラーム"
         }else{
-            if flg2 {
-                myUserDafault.setObject("アラーム", forKey: "editLabel")
-            }else{
-                myUserDafault.setObject(textField.text, forKey: "editLabel")
-            }
+            self.label = textField.text
         }
         return true
+    }
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!){
+        self.delegate?.labelChange(label)
     }
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {

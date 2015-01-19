@@ -34,8 +34,8 @@
                                     <navigationItem title="アラーム" id="inJ-SU-nZA">
                                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="itT-hB-9z4">
                                             <connections>
-                                                <action selector="rightBarButtonItem:" destination="BYZ-38-t0r" id="Cgv-vQ-FHE"/>
-                                                <segue destination="QWA-hQ-ZiF" kind="show" id="PKX-68-JMT"/>
+                                                <action selector="addButton:" destination="BYZ-38-t0r" id="ILj-9b-aUg"/>
+                                                <segue destination="QWA-hQ-ZiF" kind="show" identifier="toAddViewController" id="PKX-68-JMT"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -235,7 +235,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZOp-S5-CB2" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="cgz-gK-u9n" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="111.5" y="566.5"/>
+            <point key="canvasLocation" x="251.5" y="1542.5"/>
         </scene>
         <!--Repeat View Controller-->
         <scene sceneID="QJ7-PV-8cR">
@@ -317,6 +317,7 @@
                                     <navigationItem title="アラームの追加" id="T8J-KE-95o">
                                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="r2T-I2-vol">
                                             <connections>
+                                                <action selector="cancelButton:" destination="QWA-hQ-ZiF" id="Kzc-oc-s4m"/>
                                                 <segue destination="Fk1-X3-siz" kind="unwind" identifier="toViewController" unwindAction="backFromAddView:" id="xuw-po-fMR"/>
                                             </connections>
                                         </barButtonItem>
@@ -528,8 +529,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="PKw-6a-S17"/>
-        <segue reference="VBd-T7-3hc"/>
-        <segue reference="BDT-1u-RlG"/>
+        <segue reference="n21-8W-3Lh"/>
+        <segue reference="bw6-Ks-RVg"/>
+        <segue reference="q4z-DU-xAb"/>
     </inferredMetricsTieBreakers>
 </document>
