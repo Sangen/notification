@@ -12,7 +12,7 @@ protocol RepeatViewControllerDelegate : class{
 }
 
 class RepeatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    @IBOutlet weak var repeatTable: UITableView!
+    @IBOutlet private weak var repeatTable: UITableView!
     weak var delegate: RepeatViewControllerDelegate? = nil
     var repeat = String()
     var repeatStatuses = [String]()

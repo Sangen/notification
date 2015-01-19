@@ -17,11 +17,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="center" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="30" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="rkH-cI-t1M">
+                            <tableView clipsSubviews="YES" contentMode="center" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="30" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="rkH-cI-t1M">
                                 <rect key="frame" x="0.0" y="0.0" width="110" height="600"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             </tableView>
-                            <tableView clipsSubviews="YES" tag="1" contentMode="center" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="55" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="mco-7V-ZGU">
+                            <tableView clipsSubviews="YES" tag="1" contentMode="center" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="55" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="mco-7V-ZGU">
                                 <rect key="frame" x="118" y="64" width="220" height="536"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
@@ -50,6 +50,13 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="mco-7V-ZGU" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottomMargin" id="HYU-kX-g2h"/>
+                            <constraint firstItem="mco-7V-ZGU" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="MAS-GF-rgZ"/>
+                            <constraint firstItem="rkH-cI-t1M" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottomMargin" id="S4R-Jy-CNN"/>
+                            <constraint firstItem="rkH-cI-t1M" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="VXL-XD-GyC"/>
+                            <constraint firstItem="mco-7V-ZGU" firstAttribute="leading" secondItem="rkH-cI-t1M" secondAttribute="trailing" constant="8" id="pLm-Vz-x1s"/>
+                        </constraints>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="アラーム" id="f2X-df-k92"/>
@@ -535,8 +542,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="q4z-DU-xAb"/>
         <segue reference="n21-8W-3Lh"/>
-        <segue reference="PKw-6a-S17"/>
-        <segue reference="BDT-1u-RlG"/>
+        <segue reference="bw6-Ks-RVg"/>
     </inferredMetricsTieBreakers>
 </document>

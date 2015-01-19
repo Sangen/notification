@@ -15,16 +15,15 @@ protocol CustomCellDelegate{
 }
 
 class CustomCell: UITableViewCell {
-    
     //デリゲートの依頼
     let delegate:CustomCellDelegate!
     
     var _delegate:AnyObject!
-    @IBOutlet weak var timeLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
-    @IBOutlet weak var enabledSwitch: UISwitch!
-    @IBOutlet weak var repeatLabel: UILabel!
-    @IBOutlet weak var snoozeLabel: UILabel!
+    @IBOutlet private weak var timeLabel: UILabel!
+    @IBOutlet private weak var descriptionLabel: UILabel!
+    @IBOutlet private weak var enabledSwitch: UISwitch!
+    @IBOutlet private weak var repeatLabel: UILabel!
+    @IBOutlet private weak var snoozeLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

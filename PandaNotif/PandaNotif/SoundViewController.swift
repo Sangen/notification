@@ -13,7 +13,7 @@ protocol SoundViewControllerDelegate : class{
 }
 
 class SoundViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    @IBOutlet weak var soundTable: UITableView!
+    @IBOutlet private weak var soundTable: UITableView!
     weak var delegate: SoundViewControllerDelegate? = nil
     var soundStatuses = ["0","0"]
     var sound = String()

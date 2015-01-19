@@ -13,8 +13,8 @@ protocol AddViewControllerDelegate : class{
 }
 
 class AddViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, RepeatViewControllerDelegate, LabelViewControllerDelegate, SoundViewControllerDelegate {
-    @IBOutlet weak var datePicker: UIDatePicker!
-    @IBOutlet weak var testTable: UITableView!
+    @IBOutlet private weak var datePicker: UIDatePicker!
+    @IBOutlet private weak var testTable: UITableView!
     weak var delegate: AddViewControllerDelegate? = nil
     let repeatView = RepeatViewController()
     let labelView = LabelViewController()

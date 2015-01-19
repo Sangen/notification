@@ -13,7 +13,7 @@ protocol LabelViewControllerDelegate : class{
 }
 
 class LabelViewController: UIViewController, UITextFieldDelegate {
-    @IBOutlet weak var myTextField: UITextField!
+    @IBOutlet private weak var myTextField: UITextField!
     weak var delegate: LabelViewControllerDelegate? = nil
     var label = String()
     

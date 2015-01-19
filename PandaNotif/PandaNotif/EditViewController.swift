@@ -14,8 +14,8 @@ protocol EditViewControllerDelegate : class{
 }
 
 class EditViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, RepeatViewControllerDelegate, LabelViewControllerDelegate, SoundViewControllerDelegate {
-    @IBOutlet weak var datePicker: UIDatePicker!
-    @IBOutlet weak var editTable: UITableView!
+    @IBOutlet private weak var datePicker: UIDatePicker!
+    @IBOutlet private weak var editTable: UITableView!
     weak var delegate: EditViewControllerDelegate? = nil
     let texts = ["Repeat", "Label", "Sound", "Snooze"]
     var alarmTime = String()

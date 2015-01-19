@@ -9,9 +9,9 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AddViewControllerDelegate, EditViewControllerDelegate {
-    @IBOutlet weak var addButton: UIBarButtonItem!
-    @IBOutlet weak var alarmTableView: UITableView!
-    @IBOutlet weak var minuteTableView: UITableView!
+    @IBOutlet private weak var addButton: UIBarButtonItem!
+    @IBOutlet private weak var alarmTableView: UITableView!
+    @IBOutlet private weak var minuteTableView: UITableView!
     let texts = ["3 min", "5 min", "10 min", "15 min", "30 min", "60 min"]
     var alarmTimes = [String]()
     var labels = [String]()
@@ -31,12 +31,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.minuteTableView.dataSource = self
         self.minuteTableView.backgroundColor = UIColor.clearColor()
         self.minuteTableView.estimatedRowHeight = 80.0
-        self.minuteTableView.rowHeight = UITableViewAutomaticDimension
         self.alarmTableView.delegate = self
         self.alarmTableView.dataSource = self
         self.alarmTableView.backgroundColor = UIColor.clearColor()
         self.alarmTableView.estimatedRowHeight = 80.0
-        self.alarmTableView.rowHeight = UITableViewAutomaticDimension
         
         let nib = UINib(nibName: "CustomCell", bundle: nil)
         self.alarmTableView.registerNib(nib, forCellReuseIdentifier:"cell")
@@ -54,19 +52,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             NSLog("UserDefaults not exist value")
         }
     }
-/*
+
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         return 80
-        let cell = self.tableView(tableView, cellForRowAtIndexPath: indexPath) as UITableViewCell
-        var newBounds = cell.bounds
-        newBounds.size.width = tableView.bounds.width
-        cell.bounds = newBounds
-        
-        cell.setNeedsLayout()
-        cell.layoutIfNeeded()
-        return cell.bounds.height
     }
-*/
+
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         let flg:Bool = tableView.tag == 0
         if flg {
