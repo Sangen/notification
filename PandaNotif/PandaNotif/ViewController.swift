@@ -9,7 +9,6 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AddViewControllerDelegate, EditViewControllerDelegate {
-    @IBOutlet private weak var addButton: UIBarButtonItem!
     @IBOutlet private weak var alarmTableView: UITableView!
     @IBOutlet private weak var minuteTableView: UITableView!
     let texts = ["3 min", "5 min", "10 min", "15 min", "30 min", "60 min"]
@@ -26,6 +25,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "enterBackground:", name:"applicationDidEnterBackground", object: nil)
         NSLog("viewDidLoad")
+        self.navigationItem.title = "アラーム"
         self.minuteTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
         self.minuteTableView.delegate = self
         self.minuteTableView.dataSource = self
@@ -137,7 +137,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }else{
             self.alarmTableView.deselectRowAtIndexPath(indexPath, animated: true)
             self.editIndexPath = indexPath.row
-            performSegueWithIdentifier("toEditViewController",sender: nil)
+            performSegueWithIdentifier("toEditTableViewController",sender: nil)
         }
     }
     
@@ -195,22 +195,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if segue.identifier == "toEditViewController" {
-            let editVC = segue.destinationViewController as EditViewController
-            editVC.alarmTime = self.alarmTimes[editIndexPath]
+        if segue.identifier == "toEditTableViewController" {
+            let editVC = segue.destinationViewController as EditTableViewController
+            /*editVC.alarmTime = self.alarmTimes[editIndexPath]
             editVC.label = self.labels[editIndexPath]
             editVC.repeat = self.repeats[editIndexPath]
             editVC.snooze = self.snoozes[editIndexPath]
             editVC.sound = self.sounds[editIndexPath]
             editVC.editIndexPath = self.editIndexPath
-            editVC.delegate = self
-        }else if segue.identifier == "toAddViewController" {
-            let addVC = segue.destinationViewController as AddViewController
-            addVC.repeat = "0000000"
+*/
+            editVC.navigationTitle = "アラームの編集"
+         //   editVC.delegate = self
+        }else if segue.identifier == "toEditTableViewControllerAdd" {
+            let editVC = segue.destinationViewController as EditTableViewController
+          /*  addVC.repeat = "0000000"
             addVC.label = "アラーム"
             addVC.snooze = true
             addVC.sound = UILocalNotificationDefaultSoundName
             addVC.delegate = self
+*/
+            editVC.navigationTitle = "アラームの追加"
         }
     }
     
@@ -298,7 +302,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     @IBAction func addButton(sender: UIBarButtonItem) {
-        performSegueWithIdentifier("toAddViewController",sender: nil)
+        performSegueWithIdentifier("toEditTableViewControllerAdd",sender: nil)
     }
     
     func addDidSaved(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool){

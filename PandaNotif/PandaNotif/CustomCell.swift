@@ -8,22 +8,12 @@
 
 import UIKit
 
-// 依頼したい処理の名前と引数を書く
-protocol CustomCellDelegate{
-    func tableView(tableView: UITableView, changeSwitchValue: Bool, indexPath:NSIndexPath!)
- //   func tableView(changeSwitchValue: NSIndexPath)
-}
-
 class CustomCell: UITableViewCell {
-    //デリゲートの依頼
-    let delegate:CustomCellDelegate!
-    
-    var _delegate:AnyObject!
-    @IBOutlet private weak var timeLabel: UILabel!
-    @IBOutlet private weak var descriptionLabel: UILabel!
-    @IBOutlet private weak var enabledSwitch: UISwitch!
-    @IBOutlet private weak var repeatLabel: UILabel!
-    @IBOutlet private weak var snoozeLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var enabledSwitch: UISwitch!
+    @IBOutlet weak var repeatLabel: UILabel!
+    @IBOutlet weak var snoozeLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -34,23 +24,4 @@ class CustomCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
     }
-    
-// switch押された時の処理
-    @IBAction func switchPush(sender: UISwitch){
-
-        /*var tableView:AnyObject = sender.superview!
-        while tableView.isKindOfClass(UITableView)  {
-            tableView = tableView.superview!!
-        }
-        */
-       // let pointInTable: CGPoint = sender.convertPoint(sender.bounds.origin, toView: tableView)
-       // let cellIndexPath = self.tableView.indexPathForRowAtPoint(pointInTable)
-        
-       // let indexPath:NSIndexPath = tableView.indexPathForCell(cell)
-      //  [_delegate, tableView:tableView changeSwitchValue:self.ValueSwitch.on indexPath:indexPath]
-
-        // 依頼書に書いた機能の実行をお願いする
-        //self.delegate?.tableView()
-    }
-
 }
