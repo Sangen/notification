@@ -108,6 +108,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             customCell.timeLabel?.font = UIFont.systemFontOfSize(40.0)
             customCell.descriptionLabel?.text = self.labels[indexPath.row]
             customCell.enabledSwitch.addTarget(self, action: "onClickEnabledSwicth:", forControlEvents: .ValueChanged)
+            //customCell.layoutIfNeeded()
+            customCell.setNeedsLayout()
             customCell.layoutIfNeeded()
 
             return customCell
@@ -203,7 +205,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             editVC.snooze = self.snoozes[editIndexPath]
             editVC.sound = self.sounds[editIndexPath]
             editVC.editIndexPath = self.editIndexPath
-*/
+            */
             editVC.navigationTitle = "アラームの編集"
          //   editVC.delegate = self
         }else if segue.identifier == "toEditTableViewControllerAdd" {
@@ -213,7 +215,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             addVC.snooze = true
             addVC.sound = UILocalNotificationDefaultSoundName
             addVC.delegate = self
-*/
+          */
             editVC.navigationTitle = "アラームの追加"
         }
     }
