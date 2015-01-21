@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C99d" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -24,25 +24,25 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TJL-gC-UBb">
-                        <rect key="frame" x="148" y="14" width="51" height="31"/>
+                        <rect key="frame" x="148" y="23" width="51" height="31"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="49" id="OYQ-ap-Ve4"/>
                             <constraint firstAttribute="height" constant="31" id="ZEw-Nz-uvj"/>
                         </constraints>
                     </switch>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="R" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6EN-xK-gT2">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="R" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6EN-xK-gT2">
                         <rect key="frame" x="8" y="52" width="20" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                         <color key="textColor" red="0.0" green="0.50196081399917603" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="S" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VzO-D9-zf6">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="S" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VzO-D9-zf6">
                         <rect key="frame" x="28" y="52" width="20" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                         <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l5P-RM-t2l">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l5P-RM-t2l">
                         <rect key="frame" x="51" y="51" width="146" height="24"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -50,10 +50,15 @@
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="TJL-gC-UBb" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="6" id="2cc-Uy-gfe"/>
                     <constraint firstItem="j4q-79-3mF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="IcI-7S-qfn"/>
+                    <constraint firstItem="6EN-xK-gT2" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="RRL-1o-HWZ"/>
                     <constraint firstAttribute="trailingMargin" secondItem="j4q-79-3mF" secondAttribute="trailing" constant="-24" id="YBs-vG-zx3"/>
+                    <constraint firstItem="l5P-RM-t2l" firstAttribute="leading" secondItem="VzO-D9-zf6" secondAttribute="trailing" constant="3" id="cie-Ye-MvH"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="l5P-RM-t2l" secondAttribute="trailing" constant="5" id="gFI-uX-hpf"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="l5P-RM-t2l" secondAttribute="bottom" constant="-4" id="gPg-1Q-yme"/>
                     <constraint firstAttribute="trailingMargin" secondItem="TJL-gC-UBb" secondAttribute="trailing" constant="5" id="gQg-tT-fh1"/>
+                    <constraint firstItem="TJL-gC-UBb" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="15" id="h6c-4k-q41"/>
+                    <constraint firstItem="VzO-D9-zf6" firstAttribute="leading" secondItem="6EN-xK-gT2" secondAttribute="trailing" id="sEQ-BM-aDu"/>
                     <constraint firstItem="j4q-79-3mF" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="t4W-TF-uC4"/>
                 </constraints>
             </tableViewCellContentView>
