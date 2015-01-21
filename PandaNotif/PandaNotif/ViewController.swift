@@ -74,7 +74,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             cell.textLabel?.font = UIFont.systemFontOfSize(25.0)
             return cell
         }else{
-            var customCell = tableView.dequeueReusableCellWithIdentifier("cell") as CustomCell
+            let customCell = tableView.dequeueReusableCellWithIdentifier("cell") as CustomCell
             //customCell.delegate = self
             let flg:Bool = self.enabled[indexPath.row] == true
             if flg {
@@ -109,6 +109,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             customCell.descriptionLabel?.text = self.labels[indexPath.row]
             customCell.enabledSwitch.addTarget(self, action: "onClickEnabledSwicth:", forControlEvents: .ValueChanged)
             //customCell.layoutIfNeeded()
+            //customCell. = self.alarmTableView.contentSize.width
             customCell.setNeedsLayout()
             customCell.layoutIfNeeded()
 
