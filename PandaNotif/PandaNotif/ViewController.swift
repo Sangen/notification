@@ -11,7 +11,8 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AddViewControllerDelegate, EditViewControllerDelegate {
     @IBOutlet private weak var alarmTableView: UITableView!
     @IBOutlet private weak var minuteTableView: UITableView!
-    let texts = ["3 min", "5 min", "10 min", "15 min", "30 min", "60 min"]
+    let calculate = PNDAlarmCalculateClass()
+    let texts = ["3分後", "5分後", "10分後", "15分後", "30分後", "60分後"]
     var alarmTimes = [String]()
     var labels = [String]()
     var repeats = [String]()
@@ -39,15 +40,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let nib = UINib(nibName: "CustomCell", bundle: nil)
         self.alarmTableView.registerNib(nib, forCellReuseIdentifier:"cell")
         
-        let flg:Bool = self.PNDUserDafault.objectForKey("alarmTimes") != nil
-        if flg {
+        if PNDUserDafault.arrayForKey("alarmEntities") != nil{
             NSLog("UserDefaults exist value")
-            self.alarmTimes = self.PNDUserDafault.objectForKey("alarmTimes") as [String]
-            self.labels = self.PNDUserDafault.objectForKey("labels") as [String]
-            self.repeats = self.PNDUserDafault.objectForKey("repeats") as [String]
-            self.sounds = self.PNDUserDafault.objectForKey("sounds") as [String]
-            self.snoozes = self.PNDUserDafault.objectForKey("snoozes") as [Bool]
-            self.enabled = self.PNDUserDafault.objectForKey("enabled") as [Bool]
+            let alarmEntities = PNDUserDefaults.alarmEntities()
+            for a in 1...alarmEntities.count{
+                self.alarmTimes.append(alarmEntities[a-1].alarmTime)
+                self.labels.append(alarmEntities[a-1].label)
+                self.repeats.append(alarmEntities[a-1].repeat)
+                self.sounds.append(alarmEntities[a-1].sound)
+                self.snoozes.append(alarmEntities[a-1].snooze)
+                self.enabled.append(alarmEntities[a-1].enabled)
+            }
         }else{
             NSLog("UserDefaults not exist value")
         }
@@ -58,8 +61,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        let flg:Bool = tableView.tag == 0
-        if flg {
+        if tableView.tag == 0{
             return self.texts.count
         }else{
             return self.alarmTimes.count
@@ -67,8 +69,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        let flg:Bool = tableView.tag == 0
-        if flg {
+        if tableView.tag == 0{
             var cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
             cell.textLabel?.text = self.texts[indexPath.row]
             cell.textLabel?.font = UIFont.systemFontOfSize(25.0)
@@ -76,8 +77,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }else{
             let customCell = tableView.dequeueReusableCellWithIdentifier("cell") as CustomCell
             //customCell.delegate = self
-            let flg:Bool = self.enabled[indexPath.row] == true
-            if flg {
+            if self.enabled[indexPath.row] == true{
                 customCell.enabledSwitch.on = true
                 customCell.repeatLabel.enabled = true
                 customCell.snoozeLabel.enabled = true
@@ -91,15 +91,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 customCell.descriptionLabel?.textColor = UIColor.grayColor()
             }
             
-            let flg2:Bool = self.repeats[indexPath.row] != "0000000"
-            if flg2 {
+            if self.repeats[indexPath.row] != "0000000"{
                 customCell.repeatLabel.alpha = 1.0
             }else{
                 customCell.repeatLabel.alpha = 0
             }
             
-            let flg3:Bool = self.snoozes[indexPath.row] == true
-            if flg3 {
+            if self.snoozes[indexPath.row] == true{
                 customCell.snoozeLabel.alpha = 1.0
             }else{
                 customCell.snoozeLabel.alpha = 0
@@ -108,8 +106,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             customCell.timeLabel?.font = UIFont.systemFontOfSize(40.0)
             customCell.descriptionLabel?.text = self.labels[indexPath.row]
             customCell.enabledSwitch.addTarget(self, action: "onClickEnabledSwicth:", forControlEvents: .ValueChanged)
-            //customCell.layoutIfNeeded()
-            //customCell. = self.alarmTableView.contentSize.width
             customCell.setNeedsLayout()
             customCell.layoutIfNeeded()
 
@@ -118,22 +114,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!){
-        let flg:Bool = tableView.tag == 0
-        if flg {
+        if tableView.tag == 0{
             self.minuteTableView.deselectRowAtIndexPath(indexPath, animated: true)
             switch self.texts[indexPath.row]{
-                case "3 min":
-                    minuteSet(.Minute,number:3,date: localDate())
-                case "5 min":
-                    minuteSet(.Minute,number:5,date: localDate())
-                case "10 min":
-                    minuteSet(.Minute,number:10,date: localDate())
-                case "15 min":
-                    minuteSet(.Minute,number:15,date: localDate())
-                case "30 min":
-                    minuteSet(.Minute,number:30,date: localDate())
-                case "60 min":
-                    minuteSet(.Minute,number:60,date: localDate())
+                case "3分後":
+                    minuteSet(.Minute,number:3,date: calculate.localDate())
+                case "5分後":
+                    minuteSet(.Minute,number:5,date: calculate.localDate())
+                case "10分後":
+                    minuteSet(.Minute,number:10,date: calculate.localDate())
+                case "15分後":
+                    minuteSet(.Minute,number:15,date: calculate.localDate())
+                case "30分後":
+                    minuteSet(.Minute,number:30,date: calculate.localDate())
+                case "60分後":
+                    minuteSet(.Minute,number:60,date: calculate.localDate())
                 default:
                     break
             }
@@ -145,8 +140,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
-        let flg:Bool = tableView.tag == 1
-        if flg {
+        if tableView.tag == 1{
             let delete = UITableViewRowAction(style: .Default,
                 title: "delete"){(action, indexPath) in
                     self.alarmTimes.removeAtIndex(indexPath.row)
@@ -165,8 +159,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        let flg:Bool = tableView.tag == 1
-        if flg {
+        if tableView.tag == 1{
             return true
         }else{
             return false
@@ -174,8 +167,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        let flg:Bool = tableView.tag == 1
-        if flg {
+        if tableView.tag == 1{
             return true
         }else{
             return false
@@ -183,8 +175,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        let flg:Bool = tableView.tag == 1
-        if flg {
+        if tableView.tag == 1{
             switch editingStyle {
             case .Delete:
                 self.alarmTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
@@ -198,39 +189,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if segue.identifier == "toEditTableViewController" {
-            let editVC = segue.destinationViewController as EditTableViewController
+        if segue.identifier == "toEditTableViewController"{
+            let VC = segue.destinationViewController as EditTableViewController
             /*editVC.alarmTime = self.alarmTimes[editIndexPath]
-            editVC.label = self.labels[editIndexPath]
-            editVC.repeat = self.repeats[editIndexPath]
-            editVC.snooze = self.snoozes[editIndexPath]
-            editVC.sound = self.sounds[editIndexPath]
-            editVC.editIndexPath = self.editIndexPath
+            VC.label = self.labels[editIndexPath]
+            VC.repeat = self.repeats[editIndexPath]
+            VC.snooze = self.snoozes[editIndexPath]
+            VC.sound = self.sounds[editIndexPath]
+            VC.editIndexPath = self.editIndexPath
             */
-            editVC.navigationTitle = "アラームの編集"
-         //   editVC.delegate = self
+            VC.navigationTitle = "アラームの編集"
+         // VC.delegate = self
         }else if segue.identifier == "toEditTableViewControllerAdd" {
-            let editVC = segue.destinationViewController as EditTableViewController
-          /*  addVC.repeat = "0000000"
-            addVC.label = "アラーム"
-            addVC.snooze = true
-            addVC.sound = UILocalNotificationDefaultSoundName
-            addVC.delegate = self
+            let VC = segue.destinationViewController as EditTableViewController
+          /*  VC.repeat = "0000000"
+            VC.label = "アラーム"
+            VC.snooze = true
+            VC.sound = UILocalNotificationDefaultSoundName
+            VC.delegate = self
           */
-            editVC.navigationTitle = "アラームの追加"
+            VC.navigationTitle = "アラームの追加"
         }
-    }
-    
-    func localDate() -> NSDate {
-        let date = NSDate()
-        
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
-        let timeZone = NSTimeZone(name: NSTimeZone.systemTimeZone().name)
-        dateFormatter.timeZone = timeZone
-        
-        let dStr = dateFormatter.stringFromDate(date)
-        return dateFormatter.dateFromString(dStr)!
     }
    
     func onClickEnabledSwicth(sender: UISwitch){
@@ -238,8 +217,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let cellIndexPath = self.alarmTableView.indexPathForRowAtPoint(pointInTable)
         let row = cellIndexPath?.row
         
-        let flg:Bool = self.enabled[row!] == true
-        if flg {
+        if self.enabled[row!] == true{
             self.enabled[row!] = false
         }else{
             self.enabled[row!] = true
@@ -261,7 +239,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case Second = "ss"
     }
     
-    private func minuteSet(interval: Interval, number: Int, date: NSDate)  {
+    func minuteSet(interval: Interval, number: Int, date: NSDate)  {
         let calendar = NSCalendar.currentCalendar()
         var comp = NSDateComponents()
         
@@ -281,7 +259,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             default:
                 comp.day = 0
         }
-        
         let alarmTime = calendar.dateByAddingComponents(comp, toDate: date, options: nil)!
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
@@ -296,15 +273,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.alarmTableView.reloadData()
     }
 
-    @IBAction func backFromAddView(segue:UIStoryboardSegue){
+    @IBAction private func backFromAddView(segue:UIStoryboardSegue){
         NSLog("backFromAddView")
     }
     
-    @IBAction func backFromEditView(segue:UIStoryboardSegue){
+    @IBAction private func backFromEditView(segue:UIStoryboardSegue){
         NSLog("backFromEditView")
     }
 
-    @IBAction func addButton(sender: UIBarButtonItem) {
+    @IBAction private func addButton(sender: UIBarButtonItem) {
         performSegueWithIdentifier("toEditTableViewControllerAdd",sender: nil)
     }
     
@@ -343,13 +320,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func enterBackground(notification: NSNotification){
         NSLog("applicationDidEnterBackground")
-        self.PNDUserDafault.setObject(alarmTimes, forKey: "alarmTimes")
-        self.PNDUserDafault.setObject(labels, forKey: "labels")
-        self.PNDUserDafault.setObject(repeats, forKey: "repeats")
-        self.PNDUserDafault.setObject(snoozes, forKey: "snoozes")
-        self.PNDUserDafault.setObject(sounds, forKey: "sounds")
-        self.PNDUserDafault.setObject(enabled, forKey: "enabled")
-        self.PNDUserDafault.synchronize()
+        var entity = PNDAlarmEntity()
+        var entityArray = [PNDAlarmEntity]()
+        if self.alarmTimes.isEmpty != true{
+            for a in 1...alarmTimes.count{
+                entity.alarmTime = self.alarmTimes[a-1]
+                entity.label = self.labels[a-1]
+                entity.repeat = self.repeats[a-1]
+                entity.snooze = self.snoozes[a-1]
+                entity.sound = self.sounds[a-1]
+                entity.enabled = self.enabled[a-1]
+                entityArray.append(entity)
+            }
+            PNDUserDefaults.setAlarmEntities(entityArray)
+        }
     }
     
     override func didReceiveMemoryWarning() {

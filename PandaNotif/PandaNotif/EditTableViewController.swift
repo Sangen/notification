@@ -13,7 +13,10 @@ class EditTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = navigationTitle
-
+        var v = UIView(frame: CGRectZero)
+        v.backgroundColor = UIColor.clearColor()
+        tableView.tableFooterView = v
+        tableView.tableHeaderView = v
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -37,7 +40,7 @@ class EditTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        return 6
+        return 5
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

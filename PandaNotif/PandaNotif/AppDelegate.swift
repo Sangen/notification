@@ -10,17 +10,15 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
     let PNDUserDafault = NSUserDefaults()
+    let calculate = PNDAlarmCalculateClass()
+    let fire = PNDAlarmFireClass()
 
-    // 起動時
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary!) -> Bool {
         // Override point for customization after application launch.
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        
-        let settings = createInteractiveNotificationSettings()
-        application.registerUserNotificationSettings(settings)
+        application.registerUserNotificationSettings(fire.createInteractiveNotificationSettings())
         
         if let options = launchOptions{
             let notification = launchOptions.objectForKey(UIApplicationLaunchOptionsLocalNotificationKey) as? UILocalNotification
@@ -44,20 +42,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         NSNotificationCenter.defaultCenter().postNotificationName("applicationDidEnterBackground", object: nil)
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        let flg:Bool = self.PNDUserDafault.objectForKey("alarmTimes") != nil
-        if flg {
-            NSLog("UserDefalts exist")
-            let alarmTimes = self.PNDUserDafault.objectForKey("alarmTimes") as [String]
-            let labels = self.PNDUserDafault.objectForKey("labels") as [String]
-            let repeats = self.PNDUserDafault.objectForKey("repeats") as [String]
-            let sounds = self.PNDUserDafault.objectForKey("sounds") as [String]
-            let snoozes = self.PNDUserDafault.objectForKey("snoozes") as [Bool]
-            let enabled = self.PNDUserDafault.objectForKey("enabled") as [Bool]
-            
-            for var i = 0; i < enabled.count; i++ {
-                let flg: Bool = enabled[i] == true
-                if flg {
-                    makeNotification(alarmTimes[i],repeat:repeats[i],snooze:snoozes[i],label:labels[i],sound:sounds[i])
+        if PNDUserDafault.arrayForKey("alarmEntities") != nil{
+            NSLog("UserDefalts exist value. Alarm enabled check start")
+            let alarmEntities = PNDUserDefaults.alarmEntities()
+            for a in 1...alarmEntities.count{
+                if alarmEntities[a-1].enabled == true{
+                    fire.makeNotification(alarmEntities[a-1].alarmTime,repeat:alarmEntities[a-1].repeat,snooze:alarmEntities[a-1].snooze,label:alarmEntities[a-1].label,sound:alarmEntities[a-1].sound)
                 }
             }
         }else{
@@ -81,20 +71,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        let flg:Bool = self.PNDUserDafault.objectForKey("alarmTimes") != nil
-        if flg {
-            NSLog("UserDefaults exist")
-            let alarmTimes = self.PNDUserDafault.objectForKey("alarmTimes") as [String]
-            let labels = self.PNDUserDafault.objectForKey("labels") as [String]
-            let repeats = self.PNDUserDafault.objectForKey("repeats") as [String]
-            let sounds = self.PNDUserDafault.objectForKey("sounds") as [String]
-            let snoozes = self.PNDUserDafault.objectForKey("snoozes") as [Bool]
-            let enabled = self.PNDUserDafault.objectForKey("enabled") as [Bool]
-            
-            for var i = 0; i < enabled.count; i++ {
-                let flg: Bool = enabled[i] == true
-                if flg {
-                    makeNotification(alarmTimes[i],repeat:repeats[i],snooze:snoozes[i],label:labels[i],sound:sounds[i])
+        if PNDUserDafault.arrayForKey("alarmEntities") != nil{
+            NSLog("UserDefalts exist value alarm enabled check start")
+            let alarmEntities = PNDUserDefaults.alarmEntities()
+            for a in 1...alarmEntities.count{
+                if alarmEntities[a-1].enabled == true{
+                    fire.makeNotification(alarmEntities[a-1].alarmTime,repeat:alarmEntities[a-1].repeat,snooze:alarmEntities[a-1].snooze,label:alarmEntities[a-1].label,sound:alarmEntities[a-1].sound)
                 }
             }
         }else{
@@ -102,56 +84,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    private func createInteractiveNotificationSettings() -> UIUserNotificationSettings {
-        let snooze = UIMutableUserNotificationAction()
-        snooze.title = "スヌーズ";
-        snooze.identifier = "SNOOZE"
-        snooze.activationMode = .Background
-        snooze.destructive = true
-        snooze.authenticationRequired = false
-        
-        let ok = UIMutableUserNotificationAction()
-        ok.title = "OK"
-        ok.identifier = "OK"
-        ok.activationMode = .Background
-        ok.destructive = false
-        ok.authenticationRequired = false
-        
-        let snoozeOnCategory = UIMutableUserNotificationCategory()
-        snoozeOnCategory.identifier = "NOTIFICATION_SNOOZE_ON_CATEGORY"
-        snoozeOnCategory.setActions([snooze, ok], forContext:.Minimal)
-        snoozeOnCategory.setActions([snooze, ok], forContext:.Default)
-        
-        let snoozeOffCategory = UIMutableUserNotificationCategory()
-        snoozeOffCategory.identifier = "NOTIFICATION_SNOOZE_OFF_CATEGORY"
-        snoozeOffCategory.setActions([ok], forContext: .Minimal)
-        snoozeOffCategory.setActions([ok], forContext: .Default)
-        
-        let categories: NSSet? = NSSet(objects:snoozeOnCategory,snoozeOffCategory)
-        let notificationSettings =  UIUserNotificationSettings(forTypes: .Alert | .Sound, categories: categories)
-
-        return notificationSettings
-    }
-    
     // アプリがバックグラウンド状態で通知発火したとき
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
         if let actionId = identifier{
             switch actionId {
             case "SNOOZE":
-                let fireDate = notification.fireDate!
-                let label = notification.alertBody!
                 let calendar = NSCalendar(identifier: NSGregorianCalendar)!
-                let snoozeFireDate = calendar.dateByAddingUnit(.MinuteCalendarUnit, value: +9, toDate: fireDate, options: nil)!
+                let snoozeFireDate = calendar.dateByAddingUnit(.MinuteCalendarUnit, value: +9, toDate:notification.fireDate!, options: nil)!
                 var comps = (0, 0, 0, 0)
                 calendar.getHour(&comps.0, minute: &comps.1, second: &comps.2, nanosecond: &comps.3, fromDate: snoozeFireDate)
                 var hour = String(comps.0)
                 let minute = String(comps.1)
-                let flg:Bool = countElements(hour) == 1
-                if flg {
+                if countElements(hour) == 1{
                     hour = "0" + hour
                 }
                 let time = hour + ":" + minute as String
-                makeNotification(time, repeat:"0000000", snooze:true, label:label, sound:UILocalNotificationDefaultSoundName)
+                fire.makeNotification(time, repeat:"0000000", snooze:true, label:notification.alertBody!, sound:notification.soundName!)
             case "OK":
                 NSLog("OK : %@",notification)
             default:
@@ -159,97 +107,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         completionHandler()
-    }
-    
-    //notification内容確認
-    private func makeNotification(time:String, repeat:String, snooze:Bool, label:String, sound:String) {
-        let now = NSDate()
-        let todayTime = stringForFireDate(time)
-        
-        // 現在より過去の時間を指定＆リピートなし＝通知しない
-        if (todayTime.compare(now) == NSComparisonResult.OrderedAscending && repeat == "0000000"){
-            NSLog("NO GO")
-        }else if (todayTime.compare(now) == NSComparisonResult.OrderedAscending && repeat != "0000000"){
-            NSLog("Repeat GO")
-            showNotificationFire(time, repeat: repeat, snooze: snooze, label: label, sound: sound)
-        }else if (todayTime.compare(now) == NSComparisonResult.OrderedDescending){
-            NSLog("GO")
-            showNotificationFire(time, repeat: repeat, snooze: snooze, label: label, sound: sound)
-        }else{
-            //現在と同じ時間は通知しない…が同じだと最初に弾かれてる感じかも
-            NSLog("NO THANK YOU")
-        }
-    }
-    
-    // Notification Fire
-    private func showNotificationFire(time:String, repeat:String, snooze:Bool, label:String, sound:String){
-        let PNDNotification = UILocalNotification()
-        PNDNotification.alertBody = label
-        PNDNotification.soundName = sound
-        PNDNotification.timeZone = NSTimeZone.systemTimeZone()
-        
-        let flg:Bool = snooze == true
-        if flg {
-            PNDNotification.category = "NOTIFICATION_SNOOZE_ON_CATEGORY"
-        }else{
-            PNDNotification.category = "NOTIFICATION_SNOOZE_OFF_CATEGORY"
-        }
-
-        let now = NSDate()
-        let todayTime = stringForFireDate(time)
-        let calendar = NSCalendar(identifier: NSGregorianCalendar)!
-        
-        // Notification Fire Today
-        if (todayTime.compare(now) == NSComparisonResult.OrderedDescending){
-            NSLog("Today Fire : %@", todayTime)
-            PNDNotification.fireDate = todayTime
-            UIApplication.sharedApplication().scheduleLocalNotification(PNDNotification)
-        }
-        
-        // Notification Fire Weekday
-        if repeat != "0000000"{
-            var weekdays = [Character]()
-            for i in repeat{
-                weekdays.append(i)
-            }
-            for i in 0...6 {
-                if weekdays[i] == "1"{
-                    let nextWeekday = calendar.nextDateAfterDate(now, matchingUnit: .WeekdayCalendarUnit, value: i + 1, options: NSCalendarOptions.MatchNextTime)!
-                    let nextWeekdayFire = calendar.dateBySettingHour(stringForHour(time), minute: stringForMinute(time), second:0, ofDate: nextWeekday, options: nil)!
-                    NSLog("Weekday Fire : %@",nextWeekdayFire)
-                    PNDNotification.fireDate = nextWeekdayFire
-                    UIApplication.sharedApplication().scheduleLocalNotification(PNDNotification)
-                }
-            }
-        }
-    }
-
-    private func stringForFireDate(time:String) -> NSDate{
-        let startIndex = advance(time.startIndex, 0)
-        let endIndex = advance(time.startIndex, 2)
-        let hour = time.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
-        
-        let startIndex2 = advance(time.startIndex, 3)
-        let endIndex2 = advance(time.startIndex, 2)
-        let minute = time.substringFromIndex(startIndex2).substringToIndex(endIndex2).toInt()!
-        
-        let calendar = NSCalendar(identifier: NSGregorianCalendar)!
-        
-        return calendar.dateBySettingHour(hour, minute: minute, second: 0, ofDate:NSDate(), options: nil)!
-    }
-    
-    private func stringForHour(hour:String) -> Int{
-        let startIndex = advance(hour.startIndex, 0)
-        let endIndex = advance(hour.startIndex, 2)
-        
-        return hour.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
-    }
-    
-    private func stringForMinute(minute:String) -> Int{
-        let startIndex = advance(minute.startIndex, 3)
-        let endIndex = advance(minute.startIndex, 2)
-        
-        return minute.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
     }
 }
 
