@@ -9,8 +9,9 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AddViewControllerDelegate, EditViewControllerDelegate {
-    @IBOutlet private weak var alarmTableView: UITableView!
-    @IBOutlet private weak var minuteTableView: UITableView!
+    @IBOutlet weak var alarmTableView: UITableView!
+    @IBOutlet weak var minuteTableView: UITableView!
+    let dataSource = PNDTableViewDataSource.self
     let calculate = PNDAlarmCalculateClass()
     let texts = ["3分後", "5分後", "10分後", "15分後", "30分後", "60分後"]
     var alarmTimes = [String]()
@@ -27,6 +28,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "enterBackground:", name:"applicationDidEnterBackground", object: nil)
         NSLog("viewDidLoad")
         self.navigationItem.title = "アラーム"
+        let nib = UINib(nibName: "CustomCell", bundle: nil)
+        self.alarmTableView.registerNib(nib, forCellReuseIdentifier:"cell")
+        if PNDUserDafault.arrayForKey("alarmEntities") != nil{
+            NSLog("UserDefaults exist value")
+            let alarmEntities = PNDUserDefaults.alarmEntities()
+            for a in 0...alarmEntities.count-1{
+                self.alarmTimes.append(alarmEntities[a].alarmTime)
+                self.labels.append(alarmEntities[a].label)
+                self.repeats.append(alarmEntities[a].repeat)
+                self.sounds.append(alarmEntities[a].sound)
+                self.snoozes.append(alarmEntities[a].snooze)
+                self.enabled.append(alarmEntities[a].enabled)
+            }
+        }else{
+            NSLog("UserDefaults not exist value")
+        }
         self.minuteTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
         self.minuteTableView.delegate = self
         self.minuteTableView.dataSource = self
@@ -36,24 +53,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.alarmTableView.dataSource = self
         self.alarmTableView.backgroundColor = UIColor.clearColor()
         self.alarmTableView.estimatedRowHeight = 80.0
-        
-        let nib = UINib(nibName: "CustomCell", bundle: nil)
-        self.alarmTableView.registerNib(nib, forCellReuseIdentifier:"cell")
-        
-        if PNDUserDafault.arrayForKey("alarmEntities") != nil{
-            NSLog("UserDefaults exist value")
-            let alarmEntities = PNDUserDefaults.alarmEntities()
-            for a in 1...alarmEntities.count{
-                self.alarmTimes.append(alarmEntities[a-1].alarmTime)
-                self.labels.append(alarmEntities[a-1].label)
-                self.repeats.append(alarmEntities[a-1].repeat)
-                self.sounds.append(alarmEntities[a-1].sound)
-                self.snoozes.append(alarmEntities[a-1].snooze)
-                self.enabled.append(alarmEntities[a-1].enabled)
-            }
-        }else{
-            NSLog("UserDefaults not exist value")
-        }
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
@@ -323,13 +322,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var entity = PNDAlarmEntity()
         var entityArray = [PNDAlarmEntity]()
         if self.alarmTimes.isEmpty != true{
-            for a in 1...alarmTimes.count{
-                entity.alarmTime = self.alarmTimes[a-1]
-                entity.label = self.labels[a-1]
-                entity.repeat = self.repeats[a-1]
-                entity.snooze = self.snoozes[a-1]
-                entity.sound = self.sounds[a-1]
-                entity.enabled = self.enabled[a-1]
+            for a in 0...alarmTimes.count-1{
+                entity.alarmTime = self.alarmTimes[a]
+                entity.label = self.labels[a]
+                entity.repeat = self.repeats[a]
+                entity.snooze = self.snoozes[a]
+                entity.sound = self.sounds[a]
+                entity.enabled = self.enabled[a]
                 entityArray.append(entity)
             }
             PNDUserDefaults.setAlarmEntities(entityArray)

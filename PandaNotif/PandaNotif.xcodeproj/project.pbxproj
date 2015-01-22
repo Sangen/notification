@@ -14,6 +14,8 @@
 		8BB0FE141A70D97C00231E1A /* PNDAlarmEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB0FE131A70D97C00231E1A /* PNDAlarmEntity.swift */; };
 		8BB0FE161A70DB0A00231E1A /* PNDAlarmCalculateClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB0FE151A70DB0A00231E1A /* PNDAlarmCalculateClass.swift */; };
 		8BB0FE181A70E04400231E1A /* PNDAlarmFireClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB0FE171A70E04400231E1A /* PNDAlarmFireClass.swift */; };
+		8BB0FE1E1A7106D300231E1A /* PNDTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB0FE1D1A7106D300231E1A /* PNDTableViewDataSource.swift */; };
+		8BB0FE201A71096D00231E1A /* PNDTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB0FE1F1A71096D00231E1A /* PNDTableViewDelegate.swift */; };
 		8BB2C54D1A6A5AB500767657 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB2C54C1A6A5AB500767657 /* EditViewController.swift */; };
 		8BD3B61B1A2C5D7000AFF19E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD3B61A1A2C5D7000AFF19E /* ViewController.swift */; };
 		8BF035D51A36F99B006B83F4 /* RepeatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF035D31A36F99B006B83F4 /* RepeatViewController.swift */; };
@@ -46,6 +48,8 @@
 		8BB0FE131A70D97C00231E1A /* PNDAlarmEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDAlarmEntity.swift; sourceTree = "<group>"; };
 		8BB0FE151A70DB0A00231E1A /* PNDAlarmCalculateClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDAlarmCalculateClass.swift; sourceTree = "<group>"; };
 		8BB0FE171A70E04400231E1A /* PNDAlarmFireClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDAlarmFireClass.swift; sourceTree = "<group>"; };
+		8BB0FE1D1A7106D300231E1A /* PNDTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDTableViewDataSource.swift; sourceTree = "<group>"; };
+		8BB0FE1F1A71096D00231E1A /* PNDTableViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDTableViewDelegate.swift; sourceTree = "<group>"; };
 		8BB2C54C1A6A5AB500767657 /* EditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		8BD3B61A1A2C5D7000AFF19E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		8BF035D31A36F99B006B83F4 /* RepeatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatViewController.swift; sourceTree = "<group>"; };
@@ -122,6 +126,8 @@
 				8BB0FE131A70D97C00231E1A /* PNDAlarmEntity.swift */,
 				8BB0FE151A70DB0A00231E1A /* PNDAlarmCalculateClass.swift */,
 				8BB0FE171A70E04400231E1A /* PNDAlarmFireClass.swift */,
+				8BB0FE1D1A7106D300231E1A /* PNDTableViewDataSource.swift */,
+				8BB0FE1F1A71096D00231E1A /* PNDTableViewDelegate.swift */,
 			);
 			path = PandaNotif;
 			sourceTree = "<group>";
@@ -257,12 +263,14 @@
 				8BD3B61B1A2C5D7000AFF19E /* ViewController.swift in Sources */,
 				8B63F58C1A3561EC00C4A022 /* CustomCell.swift in Sources */,
 				E8AF74741A6E438700583747 /* SoundTableViewController.swift in Sources */,
+				8BB0FE201A71096D00231E1A /* PNDTableViewDelegate.swift in Sources */,
 				E8AF74721A6E42BA00583747 /* RepeatTableViewController.swift in Sources */,
 				8BF696D21A36B790008FD264 /* AddViewController.swift in Sources */,
 				8BB0FE141A70D97C00231E1A /* PNDAlarmEntity.swift in Sources */,
 				8BF035D51A36F99B006B83F4 /* RepeatViewController.swift in Sources */,
 				8B5092A01A41124900C582D1 /* SoundViewController.swift in Sources */,
 				E893636F1A1F0F6D009A0259 /* AppDelegate.swift in Sources */,
+				8BB0FE1E1A7106D300231E1A /* PNDTableViewDataSource.swift in Sources */,
 				8BB0FE161A70DB0A00231E1A /* PNDAlarmCalculateClass.swift in Sources */,
 				8B623B321A4028FD00EE9FB3 /* LabelViewController.swift in Sources */,
 				8BB0FE181A70E04400231E1A /* PNDAlarmFireClass.swift in Sources */,

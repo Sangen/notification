@@ -12,7 +12,6 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     let PNDUserDafault = NSUserDefaults()
-    let calculate = PNDAlarmCalculateClass()
     let fire = PNDAlarmFireClass()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary!) -> Bool {
@@ -43,11 +42,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSNotificationCenter.defaultCenter().postNotificationName("applicationDidEnterBackground", object: nil)
         UIApplication.sharedApplication().cancelAllLocalNotifications()
         if PNDUserDafault.arrayForKey("alarmEntities") != nil{
-            NSLog("UserDefalts exist value. Alarm enabled check start")
+            NSLog("UserDefalts exist value. Alarms enabled check start")
             let alarmEntities = PNDUserDefaults.alarmEntities()
-            for a in 1...alarmEntities.count{
-                if alarmEntities[a-1].enabled == true{
-                    fire.makeNotification(alarmEntities[a-1].alarmTime,repeat:alarmEntities[a-1].repeat,snooze:alarmEntities[a-1].snooze,label:alarmEntities[a-1].label,sound:alarmEntities[a-1].sound)
+            for a in 0...alarmEntities.count-1{
+                if alarmEntities[a].enabled == true{
+                    fire.makeNotification(alarmEntities[a].alarmTime,repeat:alarmEntities[a].repeat,snooze:alarmEntities[a].snooze,label:alarmEntities[a].label,sound:alarmEntities[a].sound)
                 }
             }
         }else{
@@ -74,9 +73,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if PNDUserDafault.arrayForKey("alarmEntities") != nil{
             NSLog("UserDefalts exist value alarm enabled check start")
             let alarmEntities = PNDUserDefaults.alarmEntities()
-            for a in 1...alarmEntities.count{
-                if alarmEntities[a-1].enabled == true{
-                    fire.makeNotification(alarmEntities[a-1].alarmTime,repeat:alarmEntities[a-1].repeat,snooze:alarmEntities[a-1].snooze,label:alarmEntities[a-1].label,sound:alarmEntities[a-1].sound)
+            for a in 0...alarmEntities.count-1{
+                if alarmEntities[a].enabled == true{
+                    fire.makeNotification(alarmEntities[a].alarmTime,repeat:alarmEntities[a].repeat,snooze:alarmEntities[a].snooze,label:alarmEntities[a].label,sound:alarmEntities[a].sound)
                 }
             }
         }else{
