@@ -62,4 +62,11 @@ class PNDAlarmCalculateClass: NSObject {
         }
         return hour + ":" + minute
     }
+    
+    func currentTime() -> String {
+        let calendar = NSCalendar(identifier: NSGregorianCalendar)!
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        return dateFormatter.stringFromDate(NSDate())
+    }
 }

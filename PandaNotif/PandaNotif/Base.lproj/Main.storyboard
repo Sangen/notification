@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="LiH-Yd-FPO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C99d" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="LiH-Yd-FPO">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -224,8 +224,19 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Title" id="vIJ-eU-Mv3">
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="oTx-UH-e6v"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="oTx-UH-e6v">
+                            <connections>
+                                <action selector="saveButtonPush:" destination="3oq-zh-jPk" id="wEa-Ia-U0W"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="datePicker" destination="6h1-yv-pXf" id="wME-ZO-W32"/>
+                        <outlet property="label" destination="8Hr-ec-oVU" id="YgQ-9s-Wd0"/>
+                        <outlet property="repeatLabel" destination="Ij5-uk-X6W" id="9fB-n8-80Q"/>
+                        <outlet property="snoozeSwitch" destination="h9b-yt-e4w" id="cuJ-Md-JQc"/>
+                        <outlet property="sound" destination="gbh-tr-hiG" id="Lrl-zv-0ai"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="box-4f-47f" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

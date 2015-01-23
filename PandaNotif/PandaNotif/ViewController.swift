@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSourceDelegate, AddViewControllerDelegate, EditViewControllerDelegate {
+class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSourceDelegate, EditTableViewControllerDelegate {
     @IBOutlet weak var alarmTableView: UITableView!
     @IBOutlet weak var minuteTableView: UITableView!
     let dataSource = PNDTableViewDataSource()
@@ -85,25 +85,25 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if segue.identifier == "toEditTableViewController" {
-            let VC = segue.destinationViewController as EditTableViewController
-            /*editVC.alarmTime = self.alarmTimes[editIndexPath]
-            VC.label = self.labels[editIndexPath]
-            VC.repeat = self.repeats[editIndexPath]
-            VC.snooze = self.snoozes[editIndexPath]
-            VC.sound = self.sounds[editIndexPath]
-            VC.editIndexPath = self.editIndexPath
-            */
-            VC.navigationTitle = "アラームの編集"
-         // VC.delegate = self
+            let vc = segue.destinationViewController as EditTableViewController
+            vc.navigationItem.title = "アラームの編集"
+            vc.alarmEntity = self.dataSource.alarmEntities[editIndexPath]
+            vc.editIndexPath = self.editIndexPath
+            vc.delegate = self
+            vc.from = "edit"
         }else if segue.identifier == "toEditTableViewControllerAdd" {
-            let VC = segue.destinationViewController as EditTableViewController
-          /*  VC.repeat = "0000000"
-            VC.label = "アラーム"
-            VC.snooze = true
-            VC.sound = UILocalNotificationDefaultSoundName
-            VC.delegate = self
-          */
-            VC.navigationTitle = "アラームの追加"
+            let vc = segue.destinationViewController as EditTableViewController
+            vc.navigationItem.title = "アラームの追加"
+            var alarmEntity = PNDAlarmEntity()
+            alarmEntity.alarmTime = calculate.currentTime()
+            alarmEntity.label = "アラーム"
+            alarmEntity.repeat = "0000000"
+            alarmEntity.snooze = true
+            alarmEntity.enabled = true
+            alarmEntity.sound = UILocalNotificationDefaultSoundName
+            vc.alarmEntity = alarmEntity
+            vc.delegate = self
+            vc.from = "add"
         }
     }
     
@@ -166,10 +166,6 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.reloadData()
     }
 
-    @IBAction private func backFromAddView(segue:UIStoryboardSegue) {
-        NSLog("backFromAddView")
-    }
-    
     @IBAction private func backFromEditView(segue:UIStoryboardSegue) {
         NSLog("backFromEditView")
     }
@@ -178,8 +174,8 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         performSegueWithIdentifier("toEditTableViewControllerAdd",sender: nil)
     }
     
-    func addDidSaved(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool) {
-        NSLog("addDidSaved fire")
+    func savedNewAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool) {
+        NSLog("saved New Alarm fire")
         var alarmEntity = PNDAlarmEntity()
         alarmEntity.alarmTime = alarmTime
         alarmEntity.label = label
@@ -193,9 +189,8 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.reloadData()
     }
     
-    func editDidSaved(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,indexPath:Int) {
-        NSLog("editDidSaved fire")
-        NSLog("editalarmTimes : %@", alarmTime)
+    func savedEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,indexPath:Int) {
+        NSLog("saved Edit Alarm fire")
 
         var alarmEntity = self.dataSource.alarmEntities[indexPath]
         alarmEntity.alarmTime = alarmTime
@@ -207,8 +202,8 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.reloadData()
     }
     
-    func editDidDeleted(indexPath:Int) {
-        NSLog("editDidDeleted fire")
+    func deletedAlarm(indexPath:Int) {
+        NSLog("Deleted fire")
 
         self.dataSource.alarmEntities.removeAtIndex(indexPath)
 

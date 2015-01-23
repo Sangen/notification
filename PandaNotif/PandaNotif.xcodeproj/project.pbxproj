@@ -118,16 +118,16 @@
 				E893636C1A1F0F6D009A0259 /* Supporting Files */,
 				8B63F58A1A3561EC00C4A022 /* CustomCell.swift */,
 				8B63F58B1A3561EC00C4A022 /* CustomCell.xib */,
-				8BF696D01A36B790008FD264 /* AddViewController.swift */,
-				8BF035D31A36F99B006B83F4 /* RepeatViewController.swift */,
-				8B623B311A4028FD00EE9FB3 /* LabelViewController.swift */,
-				8B50929F1A41124900C582D1 /* SoundViewController.swift */,
-				8BB2C54C1A6A5AB500767657 /* EditViewController.swift */,
 				8BB0FE131A70D97C00231E1A /* PNDAlarmEntity.swift */,
 				8BB0FE151A70DB0A00231E1A /* PNDAlarmCalculateClass.swift */,
 				8BB0FE171A70E04400231E1A /* PNDAlarmFireClass.swift */,
 				8BB0FE1D1A7106D300231E1A /* PNDTableViewDataSource.swift */,
 				E883AAC71A721FDB0013C38D /* PNDMinutesTableViewDataSource.swift */,
+				8BF696D01A36B790008FD264 /* AddViewController.swift */,
+				8BF035D31A36F99B006B83F4 /* RepeatViewController.swift */,
+				8B623B311A4028FD00EE9FB3 /* LabelViewController.swift */,
+				8B50929F1A41124900C582D1 /* SoundViewController.swift */,
+				8BB2C54C1A6A5AB500767657 /* EditViewController.swift */,
 			);
 			path = PandaNotif;
 			sourceTree = "<group>";
