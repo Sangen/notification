@@ -13,7 +13,7 @@ class PNDAlarmFireClass: NSObject {
     
     func createInteractiveNotificationSettings() -> UIUserNotificationSettings {
         let snooze = UIMutableUserNotificationAction()
-        snooze.title = "スヌーズ";
+        snooze.title = "スヌーズ"
         snooze.identifier = "SNOOZE"
         snooze.activationMode = .Background
         snooze.destructive = true
@@ -48,12 +48,12 @@ class PNDAlarmFireClass: NSObject {
         let todayTime = calculate.stringForFireDate(time)
         
         // 現在より過去の時間を指定＆リピートなし＝通知しない
-        if (todayTime.compare(now) == NSComparisonResult.OrderedAscending && repeat == "0000000"){
+        if (todayTime.compare(now) == NSComparisonResult.OrderedAscending && repeat == "0000000") {
             NSLog("NO GO")
-        }else if (todayTime.compare(now) == NSComparisonResult.OrderedAscending && repeat != "0000000"){
+        }else if (todayTime.compare(now) == NSComparisonResult.OrderedAscending && repeat != "0000000") {
             NSLog("Repeat GO")
             showNotificationFire(time, repeat: repeat, snooze: snooze, label: label, sound: sound)
-        }else if (todayTime.compare(now) == NSComparisonResult.OrderedDescending){
+        }else if (todayTime.compare(now) == NSComparisonResult.OrderedDescending) {
             NSLog("GO")
             showNotificationFire(time, repeat: repeat, snooze: snooze, label: label, sound: sound)
         }else{
@@ -63,13 +63,13 @@ class PNDAlarmFireClass: NSObject {
     }
     
     // Notification Fire
-    func showNotificationFire(time:String, repeat:String, snooze:Bool, label:String, sound:String){
+    func showNotificationFire(time:String, repeat:String, snooze:Bool, label:String, sound:String) {
         let PNDNotification = UILocalNotification()
         PNDNotification.alertBody = label
         PNDNotification.soundName = sound
         PNDNotification.timeZone = NSTimeZone.systemTimeZone()
         
-        if snooze == true{
+        if snooze == true {
             PNDNotification.category = "NOTIFICATION_SNOOZE_ON_CATEGORY"
         }else{
             PNDNotification.category = "NOTIFICATION_SNOOZE_OFF_CATEGORY"
@@ -78,20 +78,20 @@ class PNDAlarmFireClass: NSObject {
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
         
         // Notification Fire Today
-        if (todayTime.compare(NSDate()) == NSComparisonResult.OrderedDescending){
+        if (todayTime.compare(NSDate()) == NSComparisonResult.OrderedDescending) {
             NSLog("Today Fire : %@", todayTime)
             PNDNotification.fireDate = todayTime
             UIApplication.sharedApplication().scheduleLocalNotification(PNDNotification)
         }
         
         // Notification Fire Weekday
-        if repeat != "0000000"{
+        if repeat != "0000000" {
             var weekdays = [Character]()
-            for i in repeat{
+            for i in repeat {
                 weekdays.append(i)
             }
             for i in 0...6 {
-                if weekdays[i] == "1"{
+                if weekdays[i] == "1" {
                     let nextWeekday = calendar.nextDateAfterDate(NSDate(), matchingUnit: .WeekdayCalendarUnit, value: i + 1, options: NSCalendarOptions.MatchNextTime)!
                     let nextWeekdayFire = calendar.dateBySettingHour(calculate.stringForHour(time), minute: calculate.stringForMinute(time), second:0, ofDate: nextWeekday, options: nil)!
                     NSLog("Weekday Fire : %@",nextWeekdayFire)

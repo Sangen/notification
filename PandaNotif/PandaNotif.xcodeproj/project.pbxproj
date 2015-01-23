@@ -15,12 +15,12 @@
 		8BB0FE161A70DB0A00231E1A /* PNDAlarmCalculateClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB0FE151A70DB0A00231E1A /* PNDAlarmCalculateClass.swift */; };
 		8BB0FE181A70E04400231E1A /* PNDAlarmFireClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB0FE171A70E04400231E1A /* PNDAlarmFireClass.swift */; };
 		8BB0FE1E1A7106D300231E1A /* PNDTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB0FE1D1A7106D300231E1A /* PNDTableViewDataSource.swift */; };
-		8BB0FE201A71096D00231E1A /* PNDTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB0FE1F1A71096D00231E1A /* PNDTableViewDelegate.swift */; };
 		8BB2C54D1A6A5AB500767657 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB2C54C1A6A5AB500767657 /* EditViewController.swift */; };
 		8BD3B61B1A2C5D7000AFF19E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD3B61A1A2C5D7000AFF19E /* ViewController.swift */; };
 		8BF035D51A36F99B006B83F4 /* RepeatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF035D31A36F99B006B83F4 /* RepeatViewController.swift */; };
 		8BF696D21A36B790008FD264 /* AddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF696D01A36B790008FD264 /* AddViewController.swift */; };
 		E80BC5041A6E112A003652F8 /* EditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80BC5031A6E112A003652F8 /* EditTableViewController.swift */; };
+		E883AAC81A721FDB0013C38D /* PNDMinutesTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E883AAC71A721FDB0013C38D /* PNDMinutesTableViewDataSource.swift */; };
 		E893636F1A1F0F6D009A0259 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E893636E1A1F0F6D009A0259 /* AppDelegate.swift */; };
 		E89363761A1F0F6D009A0259 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E89363741A1F0F6D009A0259 /* Main.storyboard */; };
 		E89363781A1F0F6D009A0259 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E89363771A1F0F6D009A0259 /* Images.xcassets */; };
@@ -49,12 +49,12 @@
 		8BB0FE151A70DB0A00231E1A /* PNDAlarmCalculateClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDAlarmCalculateClass.swift; sourceTree = "<group>"; };
 		8BB0FE171A70E04400231E1A /* PNDAlarmFireClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDAlarmFireClass.swift; sourceTree = "<group>"; };
 		8BB0FE1D1A7106D300231E1A /* PNDTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDTableViewDataSource.swift; sourceTree = "<group>"; };
-		8BB0FE1F1A71096D00231E1A /* PNDTableViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDTableViewDelegate.swift; sourceTree = "<group>"; };
 		8BB2C54C1A6A5AB500767657 /* EditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		8BD3B61A1A2C5D7000AFF19E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		8BF035D31A36F99B006B83F4 /* RepeatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatViewController.swift; sourceTree = "<group>"; };
 		8BF696D01A36B790008FD264 /* AddViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddViewController.swift; sourceTree = "<group>"; };
 		E80BC5031A6E112A003652F8 /* EditTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditTableViewController.swift; sourceTree = "<group>"; };
+		E883AAC71A721FDB0013C38D /* PNDMinutesTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDMinutesTableViewDataSource.swift; sourceTree = "<group>"; };
 		E89363691A1F0F6D009A0259 /* PandaNotif.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PandaNotif.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E893636D1A1F0F6D009A0259 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E893636E1A1F0F6D009A0259 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -127,7 +127,7 @@
 				8BB0FE151A70DB0A00231E1A /* PNDAlarmCalculateClass.swift */,
 				8BB0FE171A70E04400231E1A /* PNDAlarmFireClass.swift */,
 				8BB0FE1D1A7106D300231E1A /* PNDTableViewDataSource.swift */,
-				8BB0FE1F1A71096D00231E1A /* PNDTableViewDelegate.swift */,
+				E883AAC71A721FDB0013C38D /* PNDMinutesTableViewDataSource.swift */,
 			);
 			path = PandaNotif;
 			sourceTree = "<group>";
@@ -261,9 +261,9 @@
 				8BB2C54D1A6A5AB500767657 /* EditViewController.swift in Sources */,
 				E80BC5041A6E112A003652F8 /* EditTableViewController.swift in Sources */,
 				8BD3B61B1A2C5D7000AFF19E /* ViewController.swift in Sources */,
+				E883AAC81A721FDB0013C38D /* PNDMinutesTableViewDataSource.swift in Sources */,
 				8B63F58C1A3561EC00C4A022 /* CustomCell.swift in Sources */,
 				E8AF74741A6E438700583747 /* SoundTableViewController.swift in Sources */,
-				8BB0FE201A71096D00231E1A /* PNDTableViewDelegate.swift in Sources */,
 				E8AF74721A6E42BA00583747 /* RepeatTableViewController.swift in Sources */,
 				8BF696D21A36B790008FD264 /* AddViewController.swift in Sources */,
 				8BB0FE141A70D97C00231E1A /* PNDAlarmEntity.swift in Sources */,

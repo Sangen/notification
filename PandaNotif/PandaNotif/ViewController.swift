@@ -11,7 +11,8 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSourceDelegate, AddViewControllerDelegate, EditViewControllerDelegate {
     @IBOutlet weak var alarmTableView: UITableView!
     @IBOutlet weak var minuteTableView: UITableView!
-    let dataSource = PNDTableViewDataSource();
+    let dataSource = PNDTableViewDataSource()
+    let minutesDataSource = PNDMinutesTableViewDataSource()
     let calculate = PNDAlarmCalculateClass()
 
     var editIndexPath = Int()
@@ -29,7 +30,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         
         self.minuteTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
         self.minuteTableView.delegate = self
-        self.minuteTableView.dataSource = self.dataSource
+        self.minuteTableView.dataSource = self.minutesDataSource
         self.minuteTableView.backgroundColor = UIColor.clearColor()
         self.minuteTableView.estimatedRowHeight = 80.0
         self.alarmTableView.delegate = self
@@ -38,14 +39,14 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.estimatedRowHeight = 80.0
     }
 
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 80
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!){
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!) {
         if tableView.tag == 0 {
             self.minuteTableView.deselectRowAtIndexPath(indexPath, animated: true)
-            switch self.dataSource.texts[indexPath.row]{
+            switch self.minutesDataSource.texts[indexPath.row] {
                 case "3分後":
                     minuteSet(.Minute,number:3,date: calculate.localDate())
                 case "5分後":
@@ -69,7 +70,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
     }
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
-        if tableView.tag == 1{
+        if tableView.tag == 1 {
             let delete = UITableViewRowAction(style: .Default, title: "delete"){ action, indexPath in
                 self.dataSource.alarmEntities.removeAtIndex(indexPath.row)
                 self.alarmTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
@@ -82,38 +83,8 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         }
     }
     
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        if tableView.tag == 1{
-            return true
-        }else{
-            return false
-        }
-    }
-    
-    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        if tableView.tag == 1{
-            return true
-        }else{
-            return false
-        }
-    }
-    
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if tableView.tag == 1{
-            switch editingStyle {
-            case .Delete:
-                self.alarmTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-            default:
-                return
-            }
-        }
-    }
-    
-    func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
-    }
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if segue.identifier == "toEditTableViewController"{
+        if segue.identifier == "toEditTableViewController" {
             let VC = segue.destinationViewController as EditTableViewController
             /*editVC.alarmTime = self.alarmTimes[editIndexPath]
             VC.label = self.labels[editIndexPath]
@@ -142,7 +113,6 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         if let row = cellIndexPath?.row {
             self.dataSource.alarmEntities[row].enabled = switchOnCell.on
         }
-        
         let delay = 0.2 * Double(NSEC_PER_SEC)
         let time  = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         dispatch_after(time, dispatch_get_main_queue(), {
@@ -196,11 +166,11 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.reloadData()
     }
 
-    @IBAction private func backFromAddView(segue:UIStoryboardSegue){
+    @IBAction private func backFromAddView(segue:UIStoryboardSegue) {
         NSLog("backFromAddView")
     }
     
-    @IBAction private func backFromEditView(segue:UIStoryboardSegue){
+    @IBAction private func backFromEditView(segue:UIStoryboardSegue) {
         NSLog("backFromEditView")
     }
 
@@ -208,7 +178,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         performSegueWithIdentifier("toEditTableViewControllerAdd",sender: nil)
     }
     
-    func addDidSaved(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool){
+    func addDidSaved(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool) {
         NSLog("addDidSaved fire")
         var alarmEntity = PNDAlarmEntity()
         alarmEntity.alarmTime = alarmTime
@@ -223,7 +193,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.reloadData()
     }
     
-    func editDidSaved(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,indexPath:Int){
+    func editDidSaved(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,indexPath:Int) {
         NSLog("editDidSaved fire")
         NSLog("editalarmTimes : %@", alarmTime)
 
@@ -237,7 +207,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.reloadData()
     }
     
-    func editDidDeleted(indexPath:Int){
+    func editDidDeleted(indexPath:Int) {
         NSLog("editDidDeleted fire")
 
         self.dataSource.alarmEntities.removeAtIndex(indexPath)
@@ -245,9 +215,10 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.reloadData()
     }
     
-    func enterBackground(notification: NSNotification){
+    func enterBackground(notification: NSNotification) {
         NSLog("applicationDidEnterBackground")
         PNDUserDefaults.setAlarmEntities(self.dataSource.alarmEntities)
+        NSLog("alarmEntities : %@",PNDUserDefaults.alarmEntities())
     }
     
     override func didReceiveMemoryWarning() {

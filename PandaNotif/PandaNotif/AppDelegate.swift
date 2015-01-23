@@ -13,13 +13,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     let PNDUserDafault = NSUserDefaults()
     let fire = PNDAlarmFireClass()
-
+    let calculate = PNDAlarmCalculateClass()
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary!) -> Bool {
         // Override point for customization after application launch.
         UIApplication.sharedApplication().cancelAllLocalNotifications()
         application.registerUserNotificationSettings(fire.createInteractiveNotificationSettings())
         
-        if let options = launchOptions{
+        if let options = launchOptions {
             let notification = launchOptions.objectForKey(UIApplicationLaunchOptionsLocalNotificationKey) as? UILocalNotification
             if let notif = notification {
                 NSLog("通知されてアプリ起動したよ")
@@ -41,16 +42,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         NSNotificationCenter.defaultCenter().postNotificationName("applicationDidEnterBackground", object: nil)
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        if PNDUserDafault.arrayForKey("alarmEntities") != nil{
+        let alarmEntities = PNDUserDefaults.alarmEntities()
+        if alarmEntities.isEmpty {
+            NSLog("UserDefaults does not exist")
+        }else{
             NSLog("UserDefalts exist value. Alarms enabled check start")
-            let alarmEntities = PNDUserDefaults.alarmEntities()
-            for a in 0...alarmEntities.count-1{
-                if alarmEntities[a].enabled == true{
-                    fire.makeNotification(alarmEntities[a].alarmTime,repeat:alarmEntities[a].repeat,snooze:alarmEntities[a].snooze,label:alarmEntities[a].label,sound:alarmEntities[a].sound)
+            for entity in alarmEntities {
+                if entity.enabled {
+                    fire.makeNotification(entity.alarmTime,repeat:entity.repeat,snooze:entity.snooze,label:entity.label,sound:entity.sound)
                 }
             }
-        }else{
-            NSLog("UserDefaults does not exist")
         }
     }
 
@@ -70,35 +71,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        if PNDUserDafault.arrayForKey("alarmEntities") != nil{
-            NSLog("UserDefalts exist value alarm enabled check start")
-            let alarmEntities = PNDUserDefaults.alarmEntities()
-            for a in 0...alarmEntities.count-1{
-                if alarmEntities[a].enabled == true{
-                    fire.makeNotification(alarmEntities[a].alarmTime,repeat:alarmEntities[a].repeat,snooze:alarmEntities[a].snooze,label:alarmEntities[a].label,sound:alarmEntities[a].sound)
+        let alarmEntities = PNDUserDefaults.alarmEntities()
+        if alarmEntities.isEmpty {
+            NSLog("UserDefaults does not exist")
+        }else{
+            NSLog("UserDefalts exist value. Alarms enabled check start")
+            for entity in alarmEntities {
+                if entity.enabled {
+                    fire.makeNotification(entity.alarmTime,repeat:entity.repeat,snooze:entity.snooze,label:entity.label,sound:entity.sound)
                 }
             }
-        }else{
-            NSLog("UserDefaults does not exist")
         }
     }
     
     // アプリがバックグラウンド状態で通知発火したとき
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
-        if let actionId = identifier{
+        if let actionId = identifier {
             switch actionId {
             case "SNOOZE":
-                let calendar = NSCalendar(identifier: NSGregorianCalendar)!
-                let snoozeFireDate = calendar.dateByAddingUnit(.MinuteCalendarUnit, value: +9, toDate:notification.fireDate!, options: nil)!
-                var comps = (0, 0, 0, 0)
-                calendar.getHour(&comps.0, minute: &comps.1, second: &comps.2, nanosecond: &comps.3, fromDate: snoozeFireDate)
-                var hour = String(comps.0)
-                let minute = String(comps.1)
-                if countElements(hour) == 1{
-                    hour = "0" + hour
-                }
-                let time = hour + ":" + minute as String
-                fire.makeNotification(time, repeat:"0000000", snooze:true, label:notification.alertBody!, sound:notification.soundName!)
+                fire.makeNotification(calculate.snoozeTime(notification.fireDate!), repeat:"0000000", snooze:true, label:notification.alertBody!, sound:notification.soundName!)
             case "OK":
                 NSLog("OK : %@",notification)
             default:

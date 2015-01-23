@@ -37,15 +37,15 @@ class EditViewController: UIViewController, UITableViewDelegate, UITableViewData
         datePicker.setDate(currentDate, animated: false)
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 44
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 4
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
         if indexPath.row == 3 {
             let mySwicth = UISwitch()
@@ -64,48 +64,47 @@ class EditViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         if indexPath.row == 0{
             var repeatStatuses = [String]()
-            for i in repeat{
+            for i in repeat {
                 repeatStatuses.append(String(i))
             }
 
-            if repeatStatuses == ["1","1","1","1","1","1","1"]{
+            if repeatStatuses == ["1","1","1","1","1","1","1"] {
                 cell.detailTextLabel?.text = "毎日"
-            }else if repeatStatuses == ["1","0","0","0","0","0","1"]{
+            }else if repeatStatuses == ["1","0","0","0","0","0","1"] {
                 cell.detailTextLabel?.text = "週末"
-            }else if repeatStatuses == ["0","1","1","1","1","1","0"]{
+            }else if repeatStatuses == ["0","1","1","1","1","1","0"] {
                 cell.detailTextLabel?.text = "平日"
-            }else if repeatStatuses == ["0","0","0","0","0","0","0"]{
+            }else if repeatStatuses == ["0","0","0","0","0","0","0"] {
                 cell.detailTextLabel?.text = "しない"
             }else{
                 var weekDay = ""
-                if repeatStatuses[1] == "1"{
+                if repeatStatuses[1] == "1" {
                     weekDay += "月 "
                 }
-                if repeatStatuses[2] == "1"{
+                if repeatStatuses[2] == "1" {
                     weekDay += "火 "
                 }
-                if repeatStatuses[3] == "1"{
+                if repeatStatuses[3] == "1" {
                     weekDay += "水 "
                 }
-                if repeatStatuses[4] == "1"{
+                if repeatStatuses[4] == "1" {
                     weekDay += "木 "
                 }
-                if repeatStatuses[5] == "1"{
+                if repeatStatuses[5] == "1" {
                     weekDay += "金 "
                 }
-                if repeatStatuses[6] == "1"{
+                if repeatStatuses[6] == "1" {
                     weekDay += "土 "
                 }
-                if repeatStatuses[0] == "1"{
+                if repeatStatuses[0] == "1" {
                     weekDay += "日"
                 }
                 cell.detailTextLabel?.text = weekDay
             }
-        }else if indexPath.row == 1{
+        }else if indexPath.row == 1 {
             cell.detailTextLabel?.text = label
-        }else if indexPath.row == 2{
-            let flg:Bool = sound == UILocalNotificationDefaultSoundName
-            if flg {
+        }else if indexPath.row == 2 {
+            if sound == UILocalNotificationDefaultSoundName {
                 cell.detailTextLabel?.text = "レーザー"
             }else{
                 cell.detailTextLabel?.text = "なし"
@@ -116,7 +115,7 @@ class EditViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!){
-        switch texts[indexPath.row]{
+        switch texts[indexPath.row] {
         case "Repeat":
             performSegueWithIdentifier("toRepeatViewController",sender: nil)
         case "Label":
@@ -129,8 +128,7 @@ class EditViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func onClickMySwicth(sender: UISwitch){
-        let flg:Bool = sender.on == true
-        if flg {
+        if sender.on == true {
             snooze = true
         } else {
             snooze = false
