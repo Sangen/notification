@@ -8,20 +8,13 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AddViewControllerDelegate, EditViewControllerDelegate {
+class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSourceDelegate, AddViewControllerDelegate, EditViewControllerDelegate {
     @IBOutlet weak var alarmTableView: UITableView!
     @IBOutlet weak var minuteTableView: UITableView!
-    let dataSource = PNDTableViewDataSource.self
+    let dataSource = PNDTableViewDataSource();
     let calculate = PNDAlarmCalculateClass()
-    let texts = ["3分後", "5分後", "10分後", "15分後", "30分後", "60分後"]
-    var alarmTimes = [String]()
-    var labels = [String]()
-    var repeats = [String]()
-    var sounds = [String]()
-    var snoozes = [Bool]()
-    var enabled = [Bool]()
+
     var editIndexPath = Int()
-    let PNDUserDafault = NSUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,27 +23,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.navigationItem.title = "アラーム"
         let nib = UINib(nibName: "CustomCell", bundle: nil)
         self.alarmTableView.registerNib(nib, forCellReuseIdentifier:"cell")
-        if PNDUserDafault.arrayForKey("alarmEntities") != nil{
-            NSLog("UserDefaults exist value")
-            let alarmEntities = PNDUserDefaults.alarmEntities()
-            for a in 0...alarmEntities.count-1{
-                self.alarmTimes.append(alarmEntities[a].alarmTime)
-                self.labels.append(alarmEntities[a].label)
-                self.repeats.append(alarmEntities[a].repeat)
-                self.sounds.append(alarmEntities[a].sound)
-                self.snoozes.append(alarmEntities[a].snooze)
-                self.enabled.append(alarmEntities[a].enabled)
-            }
-        }else{
-            NSLog("UserDefaults not exist value")
-        }
+        
+        self.dataSource.delegate = self
+        self.dataSource.alarmEntities = PNDUserDefaults.alarmEntities()
+        
         self.minuteTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
         self.minuteTableView.delegate = self
-        self.minuteTableView.dataSource = self
+        self.minuteTableView.dataSource = self.dataSource
         self.minuteTableView.backgroundColor = UIColor.clearColor()
         self.minuteTableView.estimatedRowHeight = 80.0
         self.alarmTableView.delegate = self
-        self.alarmTableView.dataSource = self
+        self.alarmTableView.dataSource = self.dataSource
         self.alarmTableView.backgroundColor = UIColor.clearColor()
         self.alarmTableView.estimatedRowHeight = 80.0
     }
@@ -58,64 +41,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
         return 80
     }
-
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        if tableView.tag == 0{
-            return self.texts.count
-        }else{
-            return self.alarmTimes.count
-        }
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        if tableView.tag == 0{
-            var cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
-            cell.textLabel?.text = self.texts[indexPath.row]
-            cell.textLabel?.font = UIFont.systemFontOfSize(25.0)
-            return cell
-        }else{
-            let customCell = tableView.dequeueReusableCellWithIdentifier("cell") as CustomCell
-            //customCell.delegate = self
-            if self.enabled[indexPath.row] == true{
-                customCell.enabledSwitch.on = true
-                customCell.repeatLabel.enabled = true
-                customCell.snoozeLabel.enabled = true
-                customCell.timeLabel?.textColor = UIColor.blackColor()
-                customCell.descriptionLabel?.textColor = UIColor.blackColor()
-            }else{
-                customCell.enabledSwitch.on = false
-                customCell.repeatLabel.enabled = false
-                customCell.snoozeLabel.enabled = false
-                customCell.timeLabel?.textColor = UIColor.grayColor()
-                customCell.descriptionLabel?.textColor = UIColor.grayColor()
-            }
-            
-            if self.repeats[indexPath.row] != "0000000"{
-                customCell.repeatLabel.alpha = 1.0
-            }else{
-                customCell.repeatLabel.alpha = 0
-            }
-            
-            if self.snoozes[indexPath.row] == true{
-                customCell.snoozeLabel.alpha = 1.0
-            }else{
-                customCell.snoozeLabel.alpha = 0
-            }
-            customCell.timeLabel?.text = self.alarmTimes[indexPath.row]
-            customCell.timeLabel?.font = UIFont.systemFontOfSize(40.0)
-            customCell.descriptionLabel?.text = self.labels[indexPath.row]
-            customCell.enabledSwitch.addTarget(self, action: "onClickEnabledSwicth:", forControlEvents: .ValueChanged)
-            customCell.setNeedsLayout()
-            customCell.layoutIfNeeded()
-
-            return customCell
-        }
-    }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath!){
-        if tableView.tag == 0{
+        if tableView.tag == 0 {
             self.minuteTableView.deselectRowAtIndexPath(indexPath, animated: true)
-            switch self.texts[indexPath.row]{
+            switch self.dataSource.texts[indexPath.row]{
                 case "3分後":
                     minuteSet(.Minute,number:3,date: calculate.localDate())
                 case "5分後":
@@ -140,16 +70,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
         if tableView.tag == 1{
-            let delete = UITableViewRowAction(style: .Default,
-                title: "delete"){(action, indexPath) in
-                    self.alarmTimes.removeAtIndex(indexPath.row)
-                    self.labels.removeAtIndex(indexPath.row)
-                    self.repeats.removeAtIndex(indexPath.row)
-                    self.sounds.removeAtIndex(indexPath.row)
-                    self.snoozes.removeAtIndex(indexPath.row)
-                    self.enabled.removeAtIndex(indexPath.row)
-                    self.alarmTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                    println("\(indexPath) deleted")}
+            let delete = UITableViewRowAction(style: .Default, title: "delete"){ action, indexPath in
+                self.dataSource.alarmEntities.removeAtIndex(indexPath.row)
+                self.alarmTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                println("\(indexPath) deleted")
+            }
             delete.backgroundColor = UIColor.redColor()
             return [delete]
         }else{
@@ -210,16 +135,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             VC.navigationTitle = "アラームの追加"
         }
     }
-   
-    func onClickEnabledSwicth(sender: UISwitch){
-        let pointInTable: CGPoint = sender.convertPoint(sender.bounds.origin, toView: self.alarmTableView)
+    
+    func pndDataSource(sender: PNDTableViewDataSource, didChangeSwitchOnCell switchOnCell: UISwitch) {
+        let pointInTable: CGPoint = switchOnCell.convertPoint(switchOnCell.bounds.origin, toView: self.alarmTableView)
         let cellIndexPath = self.alarmTableView.indexPathForRowAtPoint(pointInTable)
-        let row = cellIndexPath?.row
-        
-        if self.enabled[row!] == true{
-            self.enabled[row!] = false
-        }else{
-            self.enabled[row!] = true
+        if let row = cellIndexPath?.row {
+            self.dataSource.alarmEntities[row].enabled = switchOnCell.on
         }
         
         let delay = 0.2 * Double(NSEC_PER_SEC)
@@ -262,12 +183,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
 
-        self.alarmTimes.append(dateFormatter.stringFromDate(alarmTime))
-        self.labels.append("アラーム")
-        self.repeats.append("0000000")
-        self.snoozes.append(true)
-        self.enabled.append(true)
-        self.sounds.append(UILocalNotificationDefaultSoundName)
+        var alarmEntity = PNDAlarmEntity()
+        alarmEntity.alarmTime = dateFormatter.stringFromDate(alarmTime)
+        alarmEntity.label = "アラーム"
+        alarmEntity.repeat = "0000000"
+        alarmEntity.snooze = true
+        alarmEntity.enabled = true
+        alarmEntity.sound = UILocalNotificationDefaultSoundName
+        
+        self.dataSource.alarmEntities += [alarmEntity]
         
         self.alarmTableView.reloadData()
     }
@@ -286,53 +210,44 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func addDidSaved(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool){
         NSLog("addDidSaved fire")
-        self.alarmTimes.append(alarmTime)
-        self.labels.append(label)
-        self.repeats.append(repeat)
-        self.sounds.append(sound)
-        self.snoozes.append(snooze)
-        self.enabled.append(true)
+        var alarmEntity = PNDAlarmEntity()
+        alarmEntity.alarmTime = alarmTime
+        alarmEntity.label = label
+        alarmEntity.repeat = repeat
+        alarmEntity.snooze = snooze
+        alarmEntity.enabled = true
+        alarmEntity.sound = sound
+        
+        self.dataSource.alarmEntities += [alarmEntity]
+
         self.alarmTableView.reloadData()
     }
     
     func editDidSaved(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,indexPath:Int){
         NSLog("editDidSaved fire")
         NSLog("editalarmTimes : %@", alarmTime)
-        self.alarmTimes[indexPath] = alarmTime
-        self.labels[indexPath] = label
-        self.repeats[indexPath] = repeat
-        self.sounds[indexPath] = sound
-        self.snoozes[indexPath] = snooze
+
+        var alarmEntity = self.dataSource.alarmEntities[indexPath]
+        alarmEntity.alarmTime = alarmTime
+        alarmEntity.label = label
+        alarmEntity.repeat = repeat
+        alarmEntity.snooze = snooze
+        alarmEntity.sound = sound
+
         self.alarmTableView.reloadData()
     }
     
     func editDidDeleted(indexPath:Int){
         NSLog("editDidDeleted fire")
-        self.alarmTimes.removeAtIndex(indexPath)
-        self.labels.removeAtIndex(indexPath)
-        self.repeats.removeAtIndex(indexPath)
-        self.sounds.removeAtIndex(indexPath)
-        self.snoozes.removeAtIndex(indexPath)
-        self.enabled.removeAtIndex(indexPath)
+
+        self.dataSource.alarmEntities.removeAtIndex(indexPath)
+
         self.alarmTableView.reloadData()
     }
     
     func enterBackground(notification: NSNotification){
         NSLog("applicationDidEnterBackground")
-        var entity = PNDAlarmEntity()
-        var entityArray = [PNDAlarmEntity]()
-        if self.alarmTimes.isEmpty != true{
-            for a in 0...alarmTimes.count-1{
-                entity.alarmTime = self.alarmTimes[a]
-                entity.label = self.labels[a]
-                entity.repeat = self.repeats[a]
-                entity.snooze = self.snoozes[a]
-                entity.sound = self.sounds[a]
-                entity.enabled = self.enabled[a]
-                entityArray.append(entity)
-            }
-            PNDUserDefaults.setAlarmEntities(entityArray)
-        }
+        PNDUserDefaults.setAlarmEntities(self.dataSource.alarmEntities)
     }
     
     override func didReceiveMemoryWarning() {
