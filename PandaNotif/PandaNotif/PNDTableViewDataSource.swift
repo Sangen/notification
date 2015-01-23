@@ -8,33 +8,47 @@
 
 import UIKit
 
-class PNDTableViewDataSource: NSObject, UITableViewDataSource{
-    let vc = ViewController()
-    var tableView = UITableView()
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        if tableView.tag == 0{
-            return vc.texts.count
+protocol PNDTableViewDataSourceDelegate {
+    func pndDataSource(sender: PNDTableViewDataSource, didChangeSwitchOnCell switchOnCell: UISwitch)
+}
+
+class PNDTableViewDataSource: NSObject, UITableViewDataSource {
+    let texts = ["3分後", "5分後", "10分後", "15分後", "30分後", "60分後"]
+    
+    var delegate: PNDTableViewDataSourceDelegate?
+    var alarmEntities = [PNDAlarmEntity]()
+    
+    
+    // delegate
+    func onClickEnabledSwicth(sender: UISwitch) {
+        self.delegate?.pndDataSource(self, didChangeSwitchOnCell: sender)
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tableView.tag == 0 {
+            return self.texts.count
         }else{
-            return vc.alarmTimes.count
+            return self.alarmEntities.count
         }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        if tableView.tag == 0{
+        if tableView.tag == 0 {
             let cell = tableView.dequeueReusableCellWithIdentifier("data") as UITableViewCell
-            cell.textLabel?.text = vc.texts[indexPath.row]
+            cell.textLabel?.text = self.texts[indexPath.row]
             cell.textLabel?.font = UIFont.systemFontOfSize(25.0)
             return cell
-        }else{
+        } else {
+            let alarmEntity = self.alarmEntities[indexPath.row]
             let customCell = tableView.dequeueReusableCellWithIdentifier("cell") as CustomCell
             //customCell.delegate = self
-            if vc.enabled[indexPath.row] == true{
+            if alarmEntity.enabled {
                 customCell.enabledSwitch.on = true
                 customCell.repeatLabel.enabled = true
                 customCell.snoozeLabel.enabled = true
                 customCell.timeLabel?.textColor = UIColor.blackColor()
                 customCell.descriptionLabel?.textColor = UIColor.blackColor()
-            }else{
+            } else {
                 customCell.enabledSwitch.on = false
                 customCell.repeatLabel.enabled = false
                 customCell.snoozeLabel.enabled = false
@@ -42,21 +56,21 @@ class PNDTableViewDataSource: NSObject, UITableViewDataSource{
                 customCell.descriptionLabel?.textColor = UIColor.grayColor()
             }
             
-            if vc.repeats[indexPath.row] != "0000000"{
+            if alarmEntity.repeat != "0000000" {
                 customCell.repeatLabel.alpha = 1.0
-            }else{
+            } else {
                 customCell.repeatLabel.alpha = 0
             }
             
-            if vc.snoozes[indexPath.row] == true{
+            if alarmEntity.snooze {
                 customCell.snoozeLabel.alpha = 1.0
-            }else{
+            } else {
                 customCell.snoozeLabel.alpha = 0
             }
-            customCell.timeLabel?.text = vc.alarmTimes[indexPath.row]
+            customCell.timeLabel?.text = alarmEntity.alarmTime
             customCell.timeLabel?.font = UIFont.systemFontOfSize(40.0)
-            customCell.descriptionLabel?.text = vc.labels[indexPath.row]
-            customCell.enabledSwitch.addTarget(vc, action: "onClickEnabledSwicth:", forControlEvents: .ValueChanged)
+            customCell.descriptionLabel?.text = alarmEntity.label
+            customCell.enabledSwitch.addTarget(self, action: "onClickEnabledSwicth:", forControlEvents: .ValueChanged)
             customCell.setNeedsLayout()
             customCell.layoutIfNeeded()
             
@@ -88,7 +102,7 @@ class PNDTableViewDataSource: NSObject, UITableViewDataSource{
         if tableView.tag == 1{
             switch editingStyle {
             case .Delete:
-                vc.alarmTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
             default:
                 return
             }
