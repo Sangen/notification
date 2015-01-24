@@ -8,16 +8,44 @@
 
 import UIKit
 
-class RepeatTableViewController: UITableViewController {
+protocol RepeatTableViewControllerDelegate : class{
+    func changeRepeat(repeat:String)
+}
 
+class RepeatTableViewController: UITableViewController {
+    weak var delegate: RepeatTableViewControllerDelegate? = nil
+    @IBOutlet weak var repeatTable: UITableView!
+    var repeat = String()
+    var repeatStatuses = [String]()
+    let texts = ["毎日曜日","毎月曜日","毎火曜日","毎水曜日","毎木曜日","毎金曜日","毎土曜日"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        for r in repeat { self.repeatStatuses.append(String(r)) }
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        let viewControllers = self.navigationController?.viewControllers!
+        if indexOfArray(viewControllers!, searchObject: self) == nil {
+            self.repeat = ""
+            for r in repeatStatuses { self.repeat = self.repeat + r }
+            self.delegate?.changeRepeat(repeat)
+        }
+        super.viewWillDisappear(animated)
+    }
+    
+    func indexOfArray(array:[AnyObject], searchObject: AnyObject)-> Int? {
+        for (index, value) in enumerate(array) {
+            if value as UIViewController == searchObject as UIViewController {
+                return index
+            }
+        }
+        return nil
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,18 +64,76 @@ class RepeatTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        return 8
+        return self.texts.count
     }
-
-    /*
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as UITableViewCell
-
-        // Configure the cell...
-
+        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+        cell.textLabel?.text = self.texts[indexPath.row]
+        
+        if self.repeatStatuses[indexPath.row] == "1" {
+            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+        }else{
+            cell.accessoryType = UITableViewCellAccessoryType.None
+        }
         return cell
     }
-    */
+    
+   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath){
+        self.repeatTable.deselectRowAtIndexPath(indexPath, animated: true)
+
+        switch indexPath.row {
+            case 0:
+                if self.repeatStatuses[0] == "0" {
+                    self.repeatStatuses[0] = "1"
+                }else{
+                    self.repeatStatuses[0] = "0"
+                }
+            case 1:
+                if self.repeatStatuses[1] == "0" {
+                    self.repeatStatuses[1] = "1"
+                }else{
+                    self.repeatStatuses[1] = "0"
+                }
+            case 2:
+                if self.repeatStatuses[2] == "0" {
+                    self.repeatStatuses[2] = "1"
+                }else{
+                    self.repeatStatuses[2] = "0"
+                }
+            case 3:
+                if self.repeatStatuses[3] == "0" {
+                    self.repeatStatuses[3] = "1"
+                }else{
+                    self.repeatStatuses[3] = "0"
+                }
+            case 4:
+                if self.repeatStatuses[4] == "0" {
+                    self.repeatStatuses[4] = "1"
+                }else{
+                    self.repeatStatuses[4] = "0"
+                }
+            case 5:
+                if self.repeatStatuses[5] == "0" {
+                    self.repeatStatuses[5] = "1"
+                }else{
+                    self.repeatStatuses[5] = "0"
+                }
+            case 6:
+                if self.repeatStatuses[6] == "0" {
+                    self.repeatStatuses[6] = "1"
+                }else{
+                    self.repeatStatuses[6] = "0"
+                }
+            default:
+                break
+        }
+        let delay = 0.2 * Double(NSEC_PER_SEC)
+        let time  = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        dispatch_after(time, dispatch_get_main_queue(), {
+            self.repeatTable.reloadData()
+        })
+    }
 
     /*
     // Override to support conditional editing of the table view.

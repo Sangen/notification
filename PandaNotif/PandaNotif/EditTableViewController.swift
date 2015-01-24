@@ -14,7 +14,8 @@ protocol EditTableViewControllerDelegate : class{
     func deletedAlarm(indexPath:Int)
 }
 
-class EditTableViewController: UITableViewController {
+class EditTableViewController: UITableViewController, RepeatTableViewControllerDelegate, SoundTableViewControllerDelegate {
+    @IBOutlet weak var editTable: UITableView!
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var snoozeSwitch: UISwitch!
     @IBOutlet weak var repeatLabel: UILabel!
@@ -115,11 +116,62 @@ class EditTableViewController: UITableViewController {
             self.repeatLabel.text = weekDay
         }
         self.label.text = self.alarmEntity.label
-
-        if self.alarmEntity.sound == UILocalNotificationDefaultSoundName {
-            self.sound.text = "レーダー（デフォルト）"
-        }else{
-            self.sound.text = "なし"
+        
+        switch self.alarmEntity.sound {
+            case UILocalNotificationDefaultSoundName:
+                self.sound.text = "レーダー（デフォルト）"
+            case "Alarm.m4r":
+                self.sound.text = "アラーム"
+            case "Ascending.m4r":
+                self.sound.text = "ステップ"
+            case "Bark.m4r":
+                self.sound.text = "犬の吠え声"
+            case "Bell Tower.m4r":
+                self.sound.text = "教会の鐘"
+            case "Blues.m4r":
+                self.sound.text = "ブルース"
+            case "Boing.m4r":
+                self.sound.text = "バネ"
+            case "Crickets.m4r":
+                self.sound.text = "こおろぎの鳴き声"
+            case "Digital.m4r":
+                self.sound.text = "デジタル"
+            case "Doorbell.m4r":
+                self.sound.text = "玄関チャイム"
+            case "Duck.m4r":
+                self.sound.text = "アヒル"
+            case "Harp.m4r":
+                self.sound.text = "ハープ"
+            case "Motorcycle.m4r":
+                self.sound.text = "オートバイ"
+            case "Old Car Horn.m4r":
+                self.sound.text = "クラクション"
+            case "Old Phone.m4r":
+                self.sound.text = "黒電話"
+            case "Piano Riff.m4r":
+                self.sound.text = "ピアノリフ"
+            case "Pinball.m4r":
+                self.sound.text = "ピンボール"
+            case "Robot.m4r":
+                self.sound.text = "ロボット"
+            case "Sci-Fi.m4r":
+                self.sound.text = "SF"
+            case "Sonar.m4r":
+                self.sound.text = "ソナー"
+            case "Strum.m4r":
+                self.sound.text = "ストラム"
+            case "Timba.m4r":
+                self.sound.text = "ティンバ"
+            case "Time Passing.m4r":
+                self.sound.text = "タイムパス"
+            case "Trill.m4r":
+                self.sound.text = "トリル"
+            case "Xylophone.m4r":
+                self.sound.text = "シフォン"
+            case "nil":
+                self.sound.text = "なし"
+            default:
+                break
         }
         return cell
     }
@@ -139,6 +191,22 @@ class EditTableViewController: UITableViewController {
     */
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        if segue.identifier == "toRepeatTableViewController" {
+            let vc = segue.destinationViewController as RepeatTableViewController
+            vc.navigationItem.title = "繰り返し"
+            vc.repeat = alarmEntity.repeat
+            vc.delegate = self
+        }else if segue.identifier == "toSoundTableViewController" {
+            let vc = segue.destinationViewController as SoundTableViewController
+            vc.navigationItem.title = "サウンド"
+            NSLog("entitySound : %@", alarmEntity.sound)
+            vc.sound = alarmEntity.sound
+            NSLog("get sound : %@", vc.sound)
+            vc.delegate = self
+        }
+    }
+    
     @IBAction func saveButtonPush(sender: UIBarButtonItem) {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
@@ -151,12 +219,26 @@ class EditTableViewController: UITableViewController {
         self.navigationController?.popViewControllerAnimated(true);
     }
     
-    func onClickSnoozeSwicth(sender: UISwitch){
+    func onClickSnoozeSwicth(sender: UISwitch) {
         if sender.on {
             self.alarmEntity.snooze = true
         }else{
             self.alarmEntity.snooze = false
         }
+    }
+    
+    func changeRepeat(repeat:String) {
+        NSLog("change repeat fire")
+        self.alarmEntity.repeat = repeat
+        
+        self.editTable.reloadData()
+    }
+    
+    func changeSound(sound:String) {
+        NSLog("change sound fire")
+        self.alarmEntity.sound = sound
+        
+        self.editTable.reloadData()
     }
     
     /*

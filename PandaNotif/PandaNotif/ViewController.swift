@@ -14,7 +14,6 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
     let dataSource = PNDTableViewDataSource()
     let minutesDataSource = PNDMinutesTableViewDataSource()
     let calculate = PNDAlarmCalculateClass()
-
     var editIndexPath = Int()
     
     override func viewDidLoad() {
