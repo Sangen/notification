@@ -37,6 +37,8 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
         let currentDate = calendar.dateBySettingHour(calculate.stringForHour(self.alarmEntity.alarmTime), minute:calculate.stringForMinute(self.alarmEntity.alarmTime), second: 0, ofDate: NSDate(), options: nil)!
         datePicker.setDate(currentDate, animated: false)
+        
+        self.label.addTarget(self, action:"editingChangedLabel:",forControlEvents: UIControlEvents.EditingChanged)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -200,10 +202,16 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         }else if segue.identifier == "toSoundTableViewController" {
             let vc = segue.destinationViewController as SoundTableViewController
             vc.navigationItem.title = "サウンド"
-            NSLog("entitySound : %@", alarmEntity.sound)
             vc.sound = alarmEntity.sound
-            NSLog("get sound : %@", vc.sound)
             vc.delegate = self
+        }
+    }
+
+    func editingChangedLabel(sender: UITextField) {
+        if self.label.text == "" {
+            self.alarmEntity.label = "アラーム"
+        }else{
+            self.alarmEntity.label = self.label.text
         }
     }
     
