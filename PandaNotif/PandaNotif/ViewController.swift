@@ -19,7 +19,6 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
     override func viewDidLoad() {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "enterBackground:", name:"applicationDidEnterBackground", object: nil)
-        NSLog("viewDidLoad")
         self.navigationItem.title = "アラーム"
         let nib = UINib(nibName: "CustomCell", bundle: nil)
         self.alarmTableView.registerNib(nib, forCellReuseIdentifier:"cell")
@@ -65,18 +64,16 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
             self.alarmTableView.deselectRowAtIndexPath(indexPath, animated: true)
             if indexPath.row == 0 {
                 self.editIndexPath = Int(0)
-                NSLog("indexPath.row = 0")
             }else{
                 self.editIndexPath = indexPath.row
             }
-            NSLog("editIndexPath : %d", editIndexPath)
             performSegueWithIdentifier("toEditTableViewController",sender: nil)
         }
     }
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
         if tableView.tag == 1 {
-            let delete = UITableViewRowAction(style: .Default, title: "delete"){ action, indexPath in
+            let delete = UITableViewRowAction(style: .Default, title: "削除") { action, indexPath in
                 self.dataSource.alarmEntities.removeAtIndex(indexPath.row)
                 self.alarmTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                 println("\(indexPath) deleted")
@@ -172,7 +169,6 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
     }
 
     @IBAction private func backFromEditView(segue:UIStoryboardSegue) {
-        NSLog("backFromEditView")
     }
 
     @IBAction private func addButton(sender: UIBarButtonItem) {
@@ -180,7 +176,6 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
     }
     
     func savedNewAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool) {
-        NSLog("saved New Alarm fire")
         var alarmEntity = PNDAlarmEntity()
         alarmEntity.alarmTime = alarmTime
         alarmEntity.label = label
@@ -195,8 +190,6 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
     }
     
     func savedEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,enabled:Bool,indexPath:Int) {
-        NSLog("saved Edit Alarm fire")
-
         var alarmEntity = PNDAlarmEntity()
         alarmEntity.alarmTime = alarmTime
         alarmEntity.label = label
@@ -210,18 +203,8 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.reloadData()
     }
     
-    func deletedAlarm(indexPath:Int) {
-        NSLog("Deleted fire")
-
-        self.dataSource.alarmEntities.removeAtIndex(indexPath)
-
-        self.alarmTableView.reloadData()
-    }
-    
     func enterBackground(notification: NSNotification) {
-        NSLog("applicationDidEnterBackground")
         PNDUserDefaults.setAlarmEntities(self.dataSource.alarmEntities)
-        NSLog("alarmEntities : %@",PNDUserDefaults.alarmEntities())
     }
     
     override func didReceiveMemoryWarning() {

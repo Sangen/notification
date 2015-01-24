@@ -53,7 +53,7 @@ class RepeatTableViewController: UITableViewController {
     }
 
     // MARK: - Table view data source
-
+/*
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
@@ -65,7 +65,7 @@ class RepeatTableViewController: UITableViewController {
         // Return the number of rows in the section.
         return 7
     }
-    
+*/
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
         

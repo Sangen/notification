@@ -88,12 +88,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
         if let actionId = identifier {
             switch actionId {
-            case "SNOOZE":
-                fire.makeNotification(calculate.snoozeTime(notification.fireDate!), repeat:"0000000", snooze:true, label:notification.alertBody!, sound:notification.soundName!)
-            case "OK":
-                NSLog("OK : %@",notification)
-            default:
-                NSLog("What?")
+                case "SNOOZE":
+                    fire.makeNotification(calculate.snoozeTime(notification.fireDate!), repeat:"0000000", snooze:true, label:notification.alertBody!, sound:notification.soundName!)
+                case "OK":
+                    NSLog("OK : %@",notification)
+                default:
+                    NSLog("What?")
             }
         }
         completionHandler()

@@ -11,7 +11,6 @@ import UIKit
 protocol EditTableViewControllerDelegate : class {
     func savedNewAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool)
     func savedEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,enabled:Bool,indexPath:Int)
-    func deletedAlarm(indexPath:Int)
 }
 
 class EditTableViewController: UITableViewController, RepeatTableViewControllerDelegate, SoundTableViewControllerDelegate {
@@ -150,14 +149,6 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         let selectedTime = dateFormatter.stringFromDate(datePicker.date)
-        NSLog("saveButtonPush fire")
-        NSLog("selectedTime : %@", selectedTime)
-        NSLog("Label : %@", self.alarmEntity.label)
-        NSLog("repeat : %@", self.alarmEntity.repeat)
-        NSLog("sound : %@", self.alarmEntity.sound)
-        NSLog("snooze : %@", self.alarmEntity.snooze)
-        NSLog("enabled : %@", self.alarmEntity.enabled)
-        NSLog("editIndexPath : %d", editIndexPath)
         
         if self.from == "add" {
             self.delegate?.savedNewAlarm(selectedTime,label:self.alarmEntity.label,repeat:self.alarmEntity.repeat,sound:self.alarmEntity.sound,snooze:self.alarmEntity.snooze)
@@ -176,13 +167,11 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     }
     
     func changeRepeat(repeat:String) {
-        NSLog("change repeat fire")
         self.alarmEntity.repeat = repeat
         self.repeatLabel.text = tableClass.repeatStatus(self.alarmEntity.repeat)
     }
     
     func changeSound(sound:String) {
-        NSLog("change sound fire")
         self.alarmEntity.sound = sound
         self.sound.text = tableClass.soundName(self.alarmEntity.sound)
     }
