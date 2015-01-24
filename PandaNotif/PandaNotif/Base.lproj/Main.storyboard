@@ -69,7 +69,7 @@
             </objects>
             <point key="canvasLocation" x="503" y="451"/>
         </scene>
-        <!--Title-->
+        <!--アラームの編集・追加-->
         <scene sceneID="d6r-9K-y6p">
             <objects>
                 <tableViewController id="3oq-zh-jPk" customClass="EditTableViewController" customModule="PandaNotif" customModuleProvider="target" sceneMemberID="viewController">
@@ -223,7 +223,7 @@
                         </connections>
                     </tableView>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Title" id="vIJ-eU-Mv3">
+                    <navigationItem key="navigationItem" title="アラームの編集・追加" id="vIJ-eU-Mv3">
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="oTx-UH-e6v">
                             <connections>
                                 <action selector="saveButtonPush:" destination="3oq-zh-jPk" id="wEa-Ia-U0W"/>

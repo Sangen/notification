@@ -63,7 +63,13 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
             }
         }else{
             self.alarmTableView.deselectRowAtIndexPath(indexPath, animated: true)
-            self.editIndexPath = indexPath.row
+            if indexPath.row == 0 {
+                self.editIndexPath = Int(0)
+                NSLog("indexPath.row = 0")
+            }else{
+                self.editIndexPath = indexPath.row
+            }
+            NSLog("editIndexPath : %d", editIndexPath)
             performSegueWithIdentifier("toEditTableViewController",sender: nil)
         }
     }
@@ -188,16 +194,19 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.reloadData()
     }
     
-    func savedEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,indexPath:Int) {
+    func savedEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,enabled:Bool,indexPath:Int) {
         NSLog("saved Edit Alarm fire")
 
-        var alarmEntity = self.dataSource.alarmEntities[indexPath]
+        var alarmEntity = PNDAlarmEntity()
         alarmEntity.alarmTime = alarmTime
         alarmEntity.label = label
         alarmEntity.repeat = repeat
         alarmEntity.snooze = snooze
         alarmEntity.sound = sound
-
+        alarmEntity.enabled = enabled
+        
+        self.dataSource.alarmEntities[indexPath] = alarmEntity
+        
         self.alarmTableView.reloadData()
     }
     

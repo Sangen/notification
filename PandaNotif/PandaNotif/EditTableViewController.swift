@@ -10,7 +10,7 @@ import UIKit
 
 protocol EditTableViewControllerDelegate : class {
     func savedNewAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool)
-    func savedEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,indexPath:Int)
+    func savedEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,enabled:Bool,indexPath:Int)
     func deletedAlarm(indexPath:Int)
 }
 
@@ -32,6 +32,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     var defaultRepeat = String()
     var defaultSnooze = Bool()
     var defaultSound = String()
+    var defaultEnabled = Bool()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +59,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         self.defaultAlarmTime = alarmEntity.alarmTime
         self.defaultSnooze = alarmEntity.snooze
         self.defaultSound = alarmEntity.sound
+        self.defaultEnabled = alarmEntity.enabled
         
         self.repeatLabel.text = tableClass.repeatStatus(self.alarmEntity.repeat)
         self.label.text = self.alarmEntity.label
@@ -78,6 +80,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
             self.alarmEntity.repeat = self.defaultRepeat
             self.alarmEntity.sound = self.defaultSound
             self.alarmEntity.snooze = self.defaultSnooze
+            self.alarmEntity.enabled = self.defaultEnabled
         }
         super.viewWillDisappear(animated)
     }
@@ -147,11 +150,19 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         let selectedTime = dateFormatter.stringFromDate(datePicker.date)
-        NSLog("saveButtonPussh fire")
+        NSLog("saveButtonPush fire")
+        NSLog("selectedTime : %@", selectedTime)
+        NSLog("Label : %@", self.alarmEntity.label)
+        NSLog("repeat : %@", self.alarmEntity.repeat)
+        NSLog("sound : %@", self.alarmEntity.sound)
+        NSLog("snooze : %@", self.alarmEntity.snooze)
+        NSLog("enabled : %@", self.alarmEntity.enabled)
+        NSLog("editIndexPath : %d", editIndexPath)
+        
         if self.from == "add" {
             self.delegate?.savedNewAlarm(selectedTime,label:self.alarmEntity.label,repeat:self.alarmEntity.repeat,sound:self.alarmEntity.sound,snooze:self.alarmEntity.snooze)
         }else{
-            self.delegate?.savedEditAlarm(selectedTime, label:self.alarmEntity.label, repeat:self.alarmEntity.repeat, sound:self.alarmEntity.sound, snooze:self.alarmEntity.snooze, indexPath:self.editIndexPath)
+            self.delegate?.savedEditAlarm(selectedTime, label:self.alarmEntity.label, repeat:self.alarmEntity.repeat, sound:self.alarmEntity.sound, snooze:self.alarmEntity.snooze, enabled:self.alarmEntity.enabled, indexPath:self.editIndexPath)
         }
         self.navigationController?.popViewControllerAnimated(true);
     }
