@@ -15,67 +15,14 @@ protocol SoundTableViewControllerDelegate : class{
 class SoundTableViewController: UITableViewController {
     @IBOutlet weak var soundTable: UITableView!
     weak var delegate: SoundTableViewControllerDelegate? = nil
+    let tableClass = PNDAlarmTableViewClass()
     var soundStatuses = Int()
     var sound = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        switch sound {
-        case UILocalNotificationDefaultSoundName:
-            self.soundStatuses = Int(0)
-        case "Alarm.m4r":
-            self.soundStatuses = 1
-        case "Ascending.m4r":
-            self.soundStatuses = 2
-        case "Bark.m4r":
-            self.soundStatuses = 3
-        case "Bell Tower.m4r":
-            self.soundStatuses = 4
-        case "Blues.m4r":
-            self.soundStatuses = 5
-        case "Boing.m4r":
-            self.soundStatuses = 6
-        case "Crickets.m4r":
-            self.soundStatuses = 7
-        case "Digital.m4r":
-            self.soundStatuses = 8
-        case "Doorbell.m4r":
-            self.soundStatuses = 9
-        case "Duck.m4r":
-            self.soundStatuses = 10
-        case "Harp.m4r":
-            self.soundStatuses = 11
-        case "Motorcycle.m4r":
-            self.soundStatuses = 12
-        case "Old Car Horn.m4r":
-            self.soundStatuses = 13
-        case "Old Phone.m4r":
-            self.soundStatuses = 14
-        case "Piano Riff.m4r":
-            self.soundStatuses = 15
-        case "Pinball.m4r":
-            self.soundStatuses = 16
-        case "Robot.m4r":
-            self.soundStatuses = 17
-        case "Sci-Fi.m4r":
-            self.soundStatuses = 18
-        case "Sonar.m4r":
-            self.soundStatuses = 19
-        case "Strum.m4r":
-            self.soundStatuses = 20
-        case "Timba.m4r":
-            self.soundStatuses = 21
-        case "Time Passing.m4r":
-            self.soundStatuses = 22
-        case "Trill.m4r":
-            self.soundStatuses = 23
-        case "Xylophone.m4r":
-            self.soundStatuses = 24
-        case "nil":
-            self.soundStatuses = 25
-        default:
-            break
-        }
+        self.soundStatuses = tableClass.soundStatus(sound)
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -106,7 +53,7 @@ class SoundTableViewController: UITableViewController {
     }
 
     // MARK: - Table view data source
-
+/*
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
@@ -122,6 +69,7 @@ class SoundTableViewController: UITableViewController {
             return 1
         }
     }
+    */
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)

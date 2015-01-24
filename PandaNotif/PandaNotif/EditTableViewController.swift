@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol EditTableViewControllerDelegate : class{
+protocol EditTableViewControllerDelegate : class {
     func savedNewAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool)
     func savedEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,indexPath:Int)
     func deletedAlarm(indexPath:Int)
@@ -23,13 +23,19 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     @IBOutlet weak var sound: UILabel!
     weak var delegate: EditTableViewControllerDelegate? = nil
     let calculate = PNDAlarmCalculateClass()
+    let tableClass = PNDAlarmTableViewClass()
     var from = String()
     var editIndexPath = Int()
     var alarmEntity = PNDAlarmEntity()
-
+    var defaultAlarmTime = String()
+    var defaultLabel = String()
+    var defaultRepeat = String()
+    var defaultSnooze = Bool()
+    var defaultSound = String()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        var v = UIView(frame: CGRectZero)
+        let v = UIView(frame: CGRectZero)
         v.backgroundColor = UIColor.clearColor()
         self.tableView.tableFooterView = v
         self.tableView.tableHeaderView = v
@@ -39,11 +45,50 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         datePicker.setDate(currentDate, animated: false)
         
         self.label.addTarget(self, action:"editingChangedLabel:",forControlEvents: UIControlEvents.EditingChanged)
+        self.snoozeSwitch.addTarget(self, action: "onClickSnoozeSwicth:", forControlEvents: UIControlEvents.ValueChanged)
+        
+        if self.alarmEntity.snooze {
+            self.snoozeSwitch.on = true
+        }else{
+            self.snoozeSwitch.on = false
+        }
+        
+        self.defaultRepeat = alarmEntity.repeat
+        self.defaultLabel = alarmEntity.label
+        self.defaultAlarmTime = alarmEntity.alarmTime
+        self.defaultSnooze = alarmEntity.snooze
+        self.defaultSound = alarmEntity.sound
+        
+        self.repeatLabel.text = tableClass.repeatStatus(self.alarmEntity.repeat)
+        self.label.text = self.alarmEntity.label
+        self.sound.text = tableClass.soundName(alarmEntity.sound)
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        let viewControllers = self.navigationController?.viewControllers!
+        if indexOfArray(viewControllers!, searchObject: self) == nil {
+            self.alarmEntity.alarmTime = self.defaultAlarmTime
+            self.alarmEntity.label = self.defaultLabel
+            self.alarmEntity.repeat = self.defaultRepeat
+            self.alarmEntity.sound = self.defaultSound
+            self.alarmEntity.snooze = self.defaultSnooze
+        }
+        super.viewWillDisappear(animated)
+    }
+    
+    func indexOfArray(array:[AnyObject], searchObject: AnyObject)-> Int? {
+        for (index, value) in enumerate(array) {
+            if value as UIViewController == searchObject as UIViewController {
+                return index
+            }
+        }
+        return nil
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,7 +97,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     }
 
     // MARK: - Table view data source
-
+/*
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
@@ -64,122 +109,9 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         // Return the number of rows in the section.
         return 5
     }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
-        switch indexPath.row {
-            case 0,4,5:
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
-            default:
-            break
-        }
 
-        if self.alarmEntity.snooze {
-            self.snoozeSwitch.on = true
-        }else{
-            self.snoozeSwitch.on = false
-        }
-        self.snoozeSwitch.addTarget(self, action: "onClickSnoozeSwicth:", forControlEvents: UIControlEvents.ValueChanged)
-    
-        var repeats = [String]()
-        for i in alarmEntity.repeat { repeats.append(String(i)) }
-    
-        if repeats == ["1","1","1","1","1","1","1"] {
-            self.repeatLabel.text = "毎日"
-        }else if repeats == ["1","0","0","0","0","0","1"] {
-            self.repeatLabel.text = "週末"
-        }else if repeats == ["0","1","1","1","1","1","0"] {
-            self.repeatLabel.text = "平日"
-        }else if repeats == ["0","0","0","0","0","0","0"] {
-            self.repeatLabel.text = "しない"
-        }else{
-            var weekDay = String()
-            if repeats[1] == "1" {
-                weekDay += "月 "
-            }
-            if repeats[2] == "1" {
-                weekDay += "火 "
-            }
-            if repeats[3] == "1" {
-                weekDay += "水 "
-            }
-            if repeats[4] == "1" {
-                weekDay += "木 "
-            }
-            if repeats[5] == "1" {
-                weekDay += "金 "
-            }
-            if repeats[6] == "1" {
-                weekDay += "土 "
-            }
-            if repeats[0] == "1" {
-                weekDay += "日"
-            }
-            self.repeatLabel.text = weekDay
-        }
-        self.label.text = self.alarmEntity.label
-        
-        switch self.alarmEntity.sound {
-            case UILocalNotificationDefaultSoundName:
-                self.sound.text = "レーダー（デフォルト）"
-            case "Alarm.m4r":
-                self.sound.text = "アラーム"
-            case "Ascending.m4r":
-                self.sound.text = "ステップ"
-            case "Bark.m4r":
-                self.sound.text = "犬の吠え声"
-            case "Bell Tower.m4r":
-                self.sound.text = "教会の鐘"
-            case "Blues.m4r":
-                self.sound.text = "ブルース"
-            case "Boing.m4r":
-                self.sound.text = "バネ"
-            case "Crickets.m4r":
-                self.sound.text = "こおろぎの鳴き声"
-            case "Digital.m4r":
-                self.sound.text = "デジタル"
-            case "Doorbell.m4r":
-                self.sound.text = "玄関チャイム"
-            case "Duck.m4r":
-                self.sound.text = "アヒル"
-            case "Harp.m4r":
-                self.sound.text = "ハープ"
-            case "Motorcycle.m4r":
-                self.sound.text = "オートバイ"
-            case "Old Car Horn.m4r":
-                self.sound.text = "クラクション"
-            case "Old Phone.m4r":
-                self.sound.text = "黒電話"
-            case "Piano Riff.m4r":
-                self.sound.text = "ピアノリフ"
-            case "Pinball.m4r":
-                self.sound.text = "ピンボール"
-            case "Robot.m4r":
-                self.sound.text = "ロボット"
-            case "Sci-Fi.m4r":
-                self.sound.text = "SF"
-            case "Sonar.m4r":
-                self.sound.text = "ソナー"
-            case "Strum.m4r":
-                self.sound.text = "ストラム"
-            case "Timba.m4r":
-                self.sound.text = "ティンバ"
-            case "Time Passing.m4r":
-                self.sound.text = "タイムパス"
-            case "Trill.m4r":
-                self.sound.text = "トリル"
-            case "Xylophone.m4r":
-                self.sound.text = "シフォン"
-            case "nil":
-                self.sound.text = "なし"
-            default:
-                break
-        }
-        return cell
-    }
-    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath){
-     /*   let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
             switch indexPath.row {
             case 1:
                 performSegueWithIdentifier("toRepeatTableViewController",sender: nil)
@@ -190,8 +122,8 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
             default:
                 break
         }
-    */
     }
+*/
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if segue.identifier == "toRepeatTableViewController" {
@@ -208,17 +140,14 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     }
 
     func editingChangedLabel(sender: UITextField) {
-        if self.label.text == "" {
-            self.alarmEntity.label = "アラーム"
-        }else{
-            self.alarmEntity.label = self.label.text
-        }
+        self.alarmEntity.label = self.label.text
     }
     
     @IBAction func saveButtonPush(sender: UIBarButtonItem) {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         let selectedTime = dateFormatter.stringFromDate(datePicker.date)
+        NSLog("saveButtonPussh fire")
         if self.from == "add" {
             self.delegate?.savedNewAlarm(selectedTime,label:self.alarmEntity.label,repeat:self.alarmEntity.repeat,sound:self.alarmEntity.sound,snooze:self.alarmEntity.snooze)
         }else{
@@ -238,15 +167,13 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     func changeRepeat(repeat:String) {
         NSLog("change repeat fire")
         self.alarmEntity.repeat = repeat
-        
-        self.editTable.reloadData()
+        self.repeatLabel.text = tableClass.repeatStatus(self.alarmEntity.repeat)
     }
     
     func changeSound(sound:String) {
         NSLog("change sound fire")
         self.alarmEntity.sound = sound
-        
-        self.editTable.reloadData()
+        self.sound.text = tableClass.soundName(self.alarmEntity.sound)
     }
     
     /*

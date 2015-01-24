@@ -17,7 +17,6 @@ class RepeatTableViewController: UITableViewController {
     @IBOutlet weak var repeatTable: UITableView!
     var repeat = String()
     var repeatStatuses = [String]()
-    let texts = ["毎日曜日","毎月曜日","毎火曜日","毎水曜日","毎木曜日","毎金曜日","毎土曜日"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,12 +63,11 @@ class RepeatTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        return self.texts.count
+        return 7
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
-        cell.textLabel?.text = self.texts[indexPath.row]
         
         if self.repeatStatuses[indexPath.row] == "1" {
             cell.accessoryType = UITableViewCellAccessoryType.Checkmark
