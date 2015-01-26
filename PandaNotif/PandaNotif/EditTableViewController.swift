@@ -41,7 +41,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         self.tableView.tableHeaderView = v
         
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
-        let currentDate = calendar.dateBySettingHour(calculate.stringForHour(self.alarmEntity.alarmTime), minute:calculate.stringForMinute(self.alarmEntity.alarmTime), second: 0, ofDate: NSDate(), options: nil)!
+        let currentDate = calendar.dateBySettingHour(calculate.convertTimeStringToHour(self.alarmEntity.alarmTime), minute:calculate.convertTimeStringToMinute(self.alarmEntity.alarmTime), second: 0, ofDate: NSDate(), options: nil)!
         datePicker.setDate(currentDate, animated: false)
         
         self.label.addTarget(self, action:"editingChangedLabel:",forControlEvents: UIControlEvents.EditingChanged)
@@ -53,16 +53,16 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
             self.snoozeSwitch.on = false
         }
         
-        self.defaultRepeat = alarmEntity.repeat
-        self.defaultLabel = alarmEntity.label
-        self.defaultAlarmTime = alarmEntity.alarmTime
-        self.defaultSnooze = alarmEntity.snooze
-        self.defaultSound = alarmEntity.sound
-        self.defaultEnabled = alarmEntity.enabled
+        self.defaultRepeat = self.alarmEntity.repeat
+        self.defaultLabel = self.alarmEntity.label
+        self.defaultAlarmTime = self.alarmEntity.alarmTime
+        self.defaultSnooze = self.alarmEntity.snooze
+        self.defaultSound = self.alarmEntity.sound
+        self.defaultEnabled = self.alarmEntity.enabled
         
-        self.repeatLabel.text = tableClass.repeatStatus(self.alarmEntity.repeat)
+        self.repeatLabel.text = self.tableClass.repeatStatus(self.alarmEntity.repeat)
         self.label.text = self.alarmEntity.label
-        self.sound.text = tableClass.soundName(alarmEntity.sound)
+        self.sound.text = self.tableClass.soundName(self.alarmEntity.sound)
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

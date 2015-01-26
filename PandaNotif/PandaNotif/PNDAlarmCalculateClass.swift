@@ -9,7 +9,7 @@
 import UIKit
 
 class PNDAlarmCalculateClass: NSObject {
-    func stringForFireDate(time:String) -> NSDate {
+    func convertTimeStringToFireDate(time:String) -> NSDate {
         let startIndex = advance(time.startIndex, 0)
         let endIndex = advance(time.startIndex, 2)
         let hour = time.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
@@ -23,18 +23,18 @@ class PNDAlarmCalculateClass: NSObject {
         return calendar.dateBySettingHour(hour, minute: minute, second: 0, ofDate:NSDate(), options: nil)!
     }
     
-    func stringForHour(hour:String) -> Int {
-        let startIndex = advance(hour.startIndex, 0)
-        let endIndex = advance(hour.startIndex, 2)
+    func convertTimeStringToHour(time:String) -> Int {
+        let startIndex = advance(time.startIndex, 0)
+        let endIndex = advance(time.startIndex, 2)
         
-        return hour.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
+        return time.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
     }
     
-    func stringForMinute(minute:String) -> Int {
-        let startIndex = advance(minute.startIndex, 3)
-        let endIndex = advance(minute.startIndex, 2)
+    func convertTimeStringToMinute(time:String) -> Int {
+        let startIndex = advance(time.startIndex, 3)
+        let endIndex = advance(time.startIndex, 2)
         
-        return minute.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
+        return time.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
     }
     
     func localDate() -> NSDate {
@@ -52,15 +52,13 @@ class PNDAlarmCalculateClass: NSObject {
     func snoozeTime(fireDate:NSDate) -> String {
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
         let snoozeFireDate = calendar.dateByAddingUnit(.MinuteCalendarUnit, value: +9, toDate:fireDate, options: nil)!
+        NSLog("snoozeFireDate : %@", snoozeFireDate)
         var comps = (0, 0, 0, 0)
         calendar.getHour(&comps.0, minute: &comps.1, second: &comps.2, nanosecond: &comps.3, fromDate: snoozeFireDate)
         var hour = String(comps.0)
-        let minute = String(comps.1)
-        
-        if countElements(hour) == 1 {
-        hour = "0" + hour
-        }
-        return hour + ":" + minute
+        var minute = String(comps.1)
+
+        return makeTwoDigitTime(hour) + ":" + makeTwoDigitTime(minute)
     }
     
     func currentTime() -> String {
@@ -68,5 +66,12 @@ class PNDAlarmCalculateClass: NSObject {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         return dateFormatter.stringFromDate(NSDate())
+    }
+    
+    func makeTwoDigitTime(time:String) -> String {
+        if countElements(time) == 1 {
+            return "0" + time
+        }
+        return time
     }
 }

@@ -43,9 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSNotificationCenter.defaultCenter().postNotificationName("applicationDidEnterBackground", object: nil)
         UIApplication.sharedApplication().cancelAllLocalNotifications()
         let alarmEntities = PNDUserDefaults.alarmEntities()
-        if alarmEntities.isEmpty {
-            NSLog("UserDefaults does not exist")
-        }else{
+        if !alarmEntities.isEmpty {
             NSLog("UserDefalts exist value. Alarms enabled check start")
             for entity in alarmEntities {
                 if entity.enabled {
@@ -72,9 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         UIApplication.sharedApplication().cancelAllLocalNotifications()
         let alarmEntities = PNDUserDefaults.alarmEntities()
-        if alarmEntities.isEmpty {
-            NSLog("UserDefaults does not exist")
-        }else{
+        if !alarmEntities.isEmpty {
             NSLog("UserDefalts exist value. Alarms enabled check start")
             for entity in alarmEntities {
                 if entity.enabled {
@@ -89,6 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let actionId = identifier {
             switch actionId {
                 case "SNOOZE":
+                    NSLog("notification.fireDate : %@", notification.fireDate!)
                     fire.makeNotification(calculate.snoozeTime(notification.fireDate!), repeat:"0000000", snooze:true, label:notification.alertBody!, sound:notification.soundName!)
                 case "OK":
                     NSLog("OK : %@",notification)
