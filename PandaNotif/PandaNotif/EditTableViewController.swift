@@ -8,9 +8,9 @@
 
 import UIKit
 
-protocol EditTableViewControllerDelegate : class {
-    func saveNewAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool)
-    func saveEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,enabled:Bool,indexPath:Int)
+protocol EditTableViewControllerDelegate: class {
+    func saveNewAlarm(alarmEntity: PNDAlarmEntity)
+    func saveEditAlarm(alarmEntity: PNDAlarmEntity, editedRow: Int)
 }
 
 class EditTableViewController: UITableViewController, RepeatTableViewControllerDelegate, SoundTableViewControllerDelegate, UITextFieldDelegate {
@@ -20,7 +20,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     @IBOutlet weak var repeatLabel: UILabel!
     @IBOutlet weak var label: UITextField!
     @IBOutlet weak var sound: UILabel!
-    weak var delegate: EditTableViewControllerDelegate? = nil
+    weak var delegate: EditTableViewControllerDelegate?
     let calculate = PNDAlarmCalculateClass()
     let tableClass = PNDAlarmTableViewClass()
     var from = String()
@@ -115,12 +115,12 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     @IBAction func saveButtonPush(sender: UIBarButtonItem) {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
-        let selectedTime = dateFormatter.stringFromDate(datePicker.date)
+        self.alarmEntity.alarmTime = dateFormatter.stringFromDate(datePicker.date)
         
         if self.from == "add" {
-            self.delegate?.saveNewAlarm(selectedTime,label:self.alarmEntity.label,repeat:self.alarmEntity.repeat,sound:self.alarmEntity.sound,snooze:self.alarmEntity.snooze)
+            self.delegate?.saveNewAlarm(self.alarmEntity)
         } else {
-            self.delegate?.saveEditAlarm(selectedTime, label:self.alarmEntity.label, repeat:self.alarmEntity.repeat, sound:self.alarmEntity.sound, snooze:self.alarmEntity.snooze, enabled:self.alarmEntity.enabled, indexPath:self.editIndexPath)
+            self.delegate?.saveEditAlarm(self.alarmEntity, editedRow: self.editIndexPath)
         }
         self.navigationController?.popViewControllerAnimated(true);
     }
