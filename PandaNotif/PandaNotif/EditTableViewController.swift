@@ -9,11 +9,11 @@
 import UIKit
 
 protocol EditTableViewControllerDelegate : class {
-    func savedNewAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool)
-    func savedEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,enabled:Bool,indexPath:Int)
+    func saveNewAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool)
+    func saveEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,enabled:Bool,indexPath:Int)
 }
 
-class EditTableViewController: UITableViewController, RepeatTableViewControllerDelegate, SoundTableViewControllerDelegate {
+class EditTableViewController: UITableViewController, RepeatTableViewControllerDelegate, SoundTableViewControllerDelegate, UITextFieldDelegate {
     @IBOutlet weak var editTable: UITableView!
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var snoozeSwitch: UISwitch!
@@ -29,8 +29,8 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     var defaultAlarmTime = String()
     var defaultLabel = String()
     var defaultRepeat = String()
-    var defaultSnooze = Bool()
     var defaultSound = String()
+    var defaultSnooze = Bool()
     var defaultEnabled = Bool()
     
     override func viewDidLoad() {
@@ -39,6 +39,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         v.backgroundColor = UIColor.clearColor()
         self.tableView.tableFooterView = v
         self.tableView.tableHeaderView = v
+        self.label.delegate = self
         
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
         let currentDate = calendar.dateBySettingHour(calculate.convertTimeStringToHour(self.alarmEntity.alarmTime), minute:calculate.convertTimeStringToMinute(self.alarmEntity.alarmTime), second: 0, ofDate: NSDate(), options: nil)!
@@ -49,26 +50,19 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         
         if self.alarmEntity.snooze {
             self.snoozeSwitch.on = true
-        }else{
+        } else {
             self.snoozeSwitch.on = false
         }
-        
-        self.defaultRepeat = self.alarmEntity.repeat
-        self.defaultLabel = self.alarmEntity.label
         self.defaultAlarmTime = self.alarmEntity.alarmTime
-        self.defaultSnooze = self.alarmEntity.snooze
+        self.defaultLabel = self.alarmEntity.label
+        self.defaultRepeat = self.alarmEntity.repeat
         self.defaultSound = self.alarmEntity.sound
+        self.defaultSnooze = self.alarmEntity.snooze
         self.defaultEnabled = self.alarmEntity.enabled
         
         self.repeatLabel.text = self.tableClass.repeatStatus(self.alarmEntity.repeat)
         self.label.text = self.alarmEntity.label
         self.sound.text = self.tableClass.soundName(self.alarmEntity.sound)
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -92,40 +86,6 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         }
         return nil
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // MARK: - Table view data source
-/*
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
-        return 1
-    }
-
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
-        return 5
-    }
-
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath){
-        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
-            switch indexPath.row {
-            case 1:
-                performSegueWithIdentifier("toRepeatTableViewController",sender: nil)
-            case 2:
-                performSegueWithIdentifier("toLabelTableViewController",sender: nil)
-            case 3:
-                performSegueWithIdentifier("toSoundTableViewController",sender: nil)
-            default:
-                break
-        }
-    }
-*/
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if segue.identifier == "toRepeatTableViewController" {
@@ -133,7 +93,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
             vc.navigationItem.title = "繰り返し"
             vc.repeat = alarmEntity.repeat
             vc.delegate = self
-        }else if segue.identifier == "toSoundTableViewController" {
+        } else if segue.identifier == "toSoundTableViewController" {
             let vc = segue.destinationViewController as SoundTableViewController
             vc.navigationItem.title = "サウンド"
             vc.sound = alarmEntity.sound
@@ -142,7 +102,14 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     }
 
     func editingChangedLabel(sender: UITextField) {
-        self.alarmEntity.label = self.label.text
+        if !self.label.text.isEmpty {
+            self.alarmEntity.label = self.label.text
+        }
+    }
+    
+    func textFieldShouldReturn(textField: UITextField!) -> Bool {
+        self.view.endEditing(true)
+        return false
     }
     
     @IBAction func saveButtonPush(sender: UIBarButtonItem) {
@@ -151,9 +118,9 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         let selectedTime = dateFormatter.stringFromDate(datePicker.date)
         
         if self.from == "add" {
-            self.delegate?.savedNewAlarm(selectedTime,label:self.alarmEntity.label,repeat:self.alarmEntity.repeat,sound:self.alarmEntity.sound,snooze:self.alarmEntity.snooze)
-        }else{
-            self.delegate?.savedEditAlarm(selectedTime, label:self.alarmEntity.label, repeat:self.alarmEntity.repeat, sound:self.alarmEntity.sound, snooze:self.alarmEntity.snooze, enabled:self.alarmEntity.enabled, indexPath:self.editIndexPath)
+            self.delegate?.saveNewAlarm(selectedTime,label:self.alarmEntity.label,repeat:self.alarmEntity.repeat,sound:self.alarmEntity.sound,snooze:self.alarmEntity.snooze)
+        } else {
+            self.delegate?.saveEditAlarm(selectedTime, label:self.alarmEntity.label, repeat:self.alarmEntity.repeat, sound:self.alarmEntity.sound, snooze:self.alarmEntity.snooze, enabled:self.alarmEntity.enabled, indexPath:self.editIndexPath)
         }
         self.navigationController?.popViewControllerAnimated(true);
     }
@@ -161,7 +128,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     func onClickSnoozeSwicth(sender: UISwitch) {
         if sender.on {
             self.alarmEntity.snooze = true
-        }else{
+        } else {
             self.alarmEntity.snooze = false
         }
     }
@@ -176,49 +143,8 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         self.sound.text = tableClass.soundName(self.alarmEntity.sound)
     }
     
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

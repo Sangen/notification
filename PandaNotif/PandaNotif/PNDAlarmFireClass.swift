@@ -45,14 +45,11 @@ class PNDAlarmFireClass: NSObject {
     func makeNotification(time:String, repeat:String, snooze:Bool, label:String, sound:String) {
         let now = NSDate()
         let todayTime = calculate.convertTimeStringToFireDate(time)
-        
-        // 現在より過去の時間を指定・リピートなしの場合は通知しない
-        if todayTime.compare(now) == NSComparisonResult.OrderedAscending && repeat == "0000000" {
-            NSLog("NO GO")
-        }else if repeat != "0000000" {
+
+        if repeat != "0000000" {
             NSLog("Repeat GO")
             showNotificationFire(time, repeat: repeat, snooze: snooze, label: label, sound: sound)
-        }else if todayTime.compare(now) == NSComparisonResult.OrderedDescending {
+        } else if todayTime.compare(now) == NSComparisonResult.OrderedDescending {
             NSLog("Today GO")
             showNotificationFire(time, repeat: repeat, snooze: snooze, label: label, sound: sound)
         }
@@ -61,18 +58,22 @@ class PNDAlarmFireClass: NSObject {
     func showNotificationFire(time:String, repeat:String, snooze:Bool, label:String, sound:String) {
         let PNDNotification = UILocalNotification()
         PNDNotification.alertBody = label
-        PNDNotification.soundName = sound
+        
+        // LocalNotification.soundNameはデフォルト値nilのためサウンドなしは設定不要
+        if sound == UILocalNotificationDefaultSoundName {
+            PNDNotification.soundName = UILocalNotificationDefaultSoundName
+        }
         PNDNotification.timeZone = NSTimeZone.systemTimeZone()
         
         if snooze {
             PNDNotification.category = "NOTIFICATION_SNOOZE_ON_CATEGORY"
-        }else{
+        } else {
             PNDNotification.category = "NOTIFICATION_SNOOZE_OFF_CATEGORY"
         }
         let todayTime = calculate.convertTimeStringToFireDate(time)
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
         
-        if (todayTime.compare(NSDate()) == NSComparisonResult.OrderedDescending) {
+        if todayTime.compare(NSDate()) == NSComparisonResult.OrderedDescending {
             NSLog("Today Fire : %@", todayTime)
             PNDNotification.fireDate = todayTime
             UIApplication.sharedApplication().scheduleLocalNotification(PNDNotification)
@@ -93,5 +94,4 @@ class PNDAlarmFireClass: NSObject {
             }
         }
     }
-
 }

@@ -47,31 +47,12 @@ class RepeatTableViewController: UITableViewController {
         return nil
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // MARK: - Table view data source
-/*
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
-        return 1
-    }
-
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
-        return 7
-    }
-*/
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
         
         if self.repeatStatuses[indexPath.row] == "1" {
             cell.accessoryType = UITableViewCellAccessoryType.Checkmark
-        }else{
+        } else {
             cell.accessoryType = UITableViewCellAccessoryType.None
         }
         return cell
@@ -84,43 +65,43 @@ class RepeatTableViewController: UITableViewController {
             case 0:
                 if self.repeatStatuses[0] == "0" {
                     self.repeatStatuses[0] = "1"
-                }else{
+                } else {
                     self.repeatStatuses[0] = "0"
                 }
             case 1:
                 if self.repeatStatuses[1] == "0" {
                     self.repeatStatuses[1] = "1"
-                }else{
+                } else {
                     self.repeatStatuses[1] = "0"
                 }
             case 2:
                 if self.repeatStatuses[2] == "0" {
                     self.repeatStatuses[2] = "1"
-                }else{
+                } else {
                     self.repeatStatuses[2] = "0"
                 }
             case 3:
                 if self.repeatStatuses[3] == "0" {
                     self.repeatStatuses[3] = "1"
-                }else{
+                } else {
                     self.repeatStatuses[3] = "0"
                 }
             case 4:
                 if self.repeatStatuses[4] == "0" {
                     self.repeatStatuses[4] = "1"
-                }else{
+                } else {
                     self.repeatStatuses[4] = "0"
                 }
             case 5:
                 if self.repeatStatuses[5] == "0" {
                     self.repeatStatuses[5] = "1"
-                }else{
+                } else {
                     self.repeatStatuses[5] = "0"
                 }
             case 6:
                 if self.repeatStatuses[6] == "0" {
                     self.repeatStatuses[6] = "1"
-                }else{
+                } else {
                     self.repeatStatuses[6] = "0"
                 }
             default:
@@ -133,49 +114,8 @@ class RepeatTableViewController: UITableViewController {
         })
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

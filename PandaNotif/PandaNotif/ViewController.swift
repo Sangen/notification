@@ -45,26 +45,26 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         if tableView.tag == 0 {
             self.minuteTableView.deselectRowAtIndexPath(indexPath, animated: true)
             switch self.minutesDataSource.texts[indexPath.row] {
-                case "3分後":
-                    minuteSet(.Minute,number:3,date: calculate.localDate())
-                case "5分後":
-                    minuteSet(.Minute,number:5,date: calculate.localDate())
-                case "10分後":
-                    minuteSet(.Minute,number:10,date: calculate.localDate())
-                case "15分後":
-                    minuteSet(.Minute,number:15,date: calculate.localDate())
-                case "30分後":
-                    minuteSet(.Minute,number:30,date: calculate.localDate())
-                case "60分後":
-                    minuteSet(.Minute,number:60,date: calculate.localDate())
-                default:
-                    break
+            case "3分後":
+                minuteSet(.Minute,number:3,date: calculate.localDate())
+            case "5分後":
+                minuteSet(.Minute,number:5,date: calculate.localDate())
+            case "10分後":
+                minuteSet(.Minute,number:10,date: calculate.localDate())
+            case "15分後":
+                minuteSet(.Minute,number:15,date: calculate.localDate())
+            case "30分後":
+                minuteSet(.Minute,number:30,date: calculate.localDate())
+            case "60分後":
+                minuteSet(.Minute,number:60,date: calculate.localDate())
+            default:
+                break
             }
-        }else{
+        } else {
             self.alarmTableView.deselectRowAtIndexPath(indexPath, animated: true)
             if indexPath.row == 0 {
                 self.editIndexPath = Int(0)
-            }else{
+            } else {
                 self.editIndexPath = indexPath.row
             }
             performSegueWithIdentifier("toEditTableViewController",sender: nil)
@@ -80,7 +80,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
             }
             delete.backgroundColor = UIColor.redColor()
             return [delete]
-        }else{
+        } else {
             return nil
         }
     }
@@ -93,7 +93,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
             vc.editIndexPath = self.editIndexPath
             vc.delegate = self
             vc.from = "edit"
-        }else if segue.identifier == "toEditTableViewControllerAdd" {
+        } else if segue.identifier == "toEditTableViewControllerAdd" {
             let vc = segue.destinationViewController as EditTableViewController
             vc.navigationItem.title = "アラームの追加"
             var alarmEntity = PNDAlarmEntity()
@@ -136,20 +136,20 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         var comp = NSDateComponents()
         
         switch interval {
-            case .Year:
-                comp.year = number
-            case .Month:
-                comp.month = number
-            case .Day:
-                comp.day = number
-            case .Hour:
-                comp.hour = number
-            case .Minute:
-                comp.minute = number
-            case .Second:
-                comp.second = number
-            default:
-                comp.day = 0
+        case .Year:
+            comp.year = number
+        case .Month:
+            comp.month = number
+        case .Day:
+            comp.day = number
+        case .Hour:
+            comp.hour = number
+        case .Minute:
+            comp.minute = number
+        case .Second:
+            comp.second = number
+        default:
+            comp.day = 0
         }
         let alarmTime = calendar.dateByAddingComponents(comp, toDate: date, options: nil)!
         let dateFormatter = NSDateFormatter()
@@ -168,14 +168,11 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.reloadData()
     }
 
-    @IBAction private func backFromEditView(segue:UIStoryboardSegue) {
-    }
-
     @IBAction private func addButton(sender: UIBarButtonItem) {
         performSegueWithIdentifier("toEditTableViewControllerAdd",sender: nil)
     }
     
-    func savedNewAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool) {
+    func saveNewAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool) {
         var alarmEntity = PNDAlarmEntity()
         alarmEntity.alarmTime = alarmTime
         alarmEntity.label = label
@@ -189,7 +186,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.reloadData()
     }
     
-    func savedEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,enabled:Bool,indexPath:Int) {
+    func saveEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,enabled:Bool,indexPath:Int) {
         var alarmEntity = PNDAlarmEntity()
         alarmEntity.alarmTime = alarmTime
         alarmEntity.label = label

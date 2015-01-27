@@ -55,15 +55,3 @@ class PNDUserDefaults {
         return [PNDAlarmEntity]()
     }
 }
-
-/* Usage ---------
-
-let alarm1 = PNDAlarmEntity()
-var alarm2 = PNDAlarmEntity()
-
-alarm2.label = "hoge"
-alarm2.snooze = true
-
-PNDUserDefaults.setAlarmEntities([alarm1, alarm2])
-PNDUserDefaults.alarmEntities()
-*/
