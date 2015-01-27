@@ -172,30 +172,14 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         performSegueWithIdentifier("toEditTableViewControllerAdd",sender: nil)
     }
     
-    func saveNewAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool) {
-        var alarmEntity = PNDAlarmEntity()
-        alarmEntity.alarmTime = alarmTime
-        alarmEntity.label = label
-        alarmEntity.repeat = repeat
-        alarmEntity.snooze = snooze
-        alarmEntity.enabled = true
-        alarmEntity.sound = sound
-        
+    func saveNewAlarm(alarmEntity: PNDAlarmEntity) {
         self.dataSource.alarmEntities += [alarmEntity]
 
         self.alarmTableView.reloadData()
     }
     
-    func saveEditAlarm(alarmTime:String,label:String,repeat:String,sound:String,snooze:Bool,enabled:Bool,indexPath:Int) {
-        var alarmEntity = PNDAlarmEntity()
-        alarmEntity.alarmTime = alarmTime
-        alarmEntity.label = label
-        alarmEntity.repeat = repeat
-        alarmEntity.snooze = snooze
-        alarmEntity.sound = sound
-        alarmEntity.enabled = enabled
-        
-        self.dataSource.alarmEntities[indexPath] = alarmEntity
+    func saveEditAlarm(alarmEntity: PNDAlarmEntity, editedRow: Int) {
+        self.dataSource.alarmEntities[editedRow] = alarmEntity
         
         self.alarmTableView.reloadData()
     }

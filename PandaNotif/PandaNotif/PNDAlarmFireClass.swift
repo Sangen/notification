@@ -78,19 +78,15 @@ class PNDAlarmFireClass: NSObject {
             PNDNotification.fireDate = todayTime
             UIApplication.sharedApplication().scheduleLocalNotification(PNDNotification)
         }
-    
-        if repeat != "0000000" {
-            var weekdays = [Character]()
-            for r in repeat { weekdays.append(r) }
-            
-            for i in 0...6 {
-                if weekdays[i] == "1" {
-                    let nextWeekday = calendar.nextDateAfterDate(NSDate(), matchingUnit: .WeekdayCalendarUnit, value: i + 1, options: NSCalendarOptions.MatchNextTime)!
-                    let nextWeekdayFire = calendar.dateBySettingHour(calculate.convertTimeStringToHour(time), minute: calculate.convertTimeStringToMinute(time), second:0, ofDate: nextWeekday, options: nil)!
-                    NSLog("Weekday Fire : %@",nextWeekdayFire)
-                    PNDNotification.fireDate = nextWeekdayFire
-                    UIApplication.sharedApplication().scheduleLocalNotification(PNDNotification)
-                }
+        
+        let weekdaysNotifFlags = Array(repeat)
+        for (i, notifFlag) in enumerate(weekdaysNotifFlags) {
+            if notifFlag == "1" {
+                let nextWeekday = calendar.nextDateAfterDate(NSDate(), matchingUnit: .WeekdayCalendarUnit, value: i + 1, options: NSCalendarOptions.MatchNextTime)!
+                let nextWeekdayFire = calendar.dateBySettingHour(calculate.convertTimeStringToHour(time), minute: calculate.convertTimeStringToMinute(time), second:0, ofDate: nextWeekday, options: nil)!
+                NSLog("Weekday Fire : %@",nextWeekdayFire)
+                PNDNotification.fireDate = nextWeekdayFire
+                UIApplication.sharedApplication().scheduleLocalNotification(PNDNotification)
             }
         }
     }

@@ -8,12 +8,12 @@
 
 import UIKit
 
-protocol PNDTableViewDataSourceDelegate {
+protocol PNDTableViewDataSourceDelegate: class {
     func pndDataSource(sender: PNDTableViewDataSource, didChangeSwitchOnCell switchOnCell: UISwitch)
 }
 
 class PNDTableViewDataSource: NSObject, UITableViewDataSource {
-    var delegate: PNDTableViewDataSourceDelegate?
+    weak var delegate: PNDTableViewDataSourceDelegate?
     var alarmEntities = [PNDAlarmEntity]()
     
     // delegate
@@ -42,17 +42,8 @@ class PNDTableViewDataSource: NSObject, UITableViewDataSource {
             customCell.descriptionLabel?.textColor = UIColor.grayColor()
         }
         
-        if alarmEntity.repeat != "0000000" {
-            customCell.repeatLabel.alpha = 1.0
-        } else {
-            customCell.repeatLabel.alpha = 0
-        }
-        
-        if alarmEntity.snooze {
-            customCell.snoozeLabel.alpha = 1.0
-        } else {
-            customCell.snoozeLabel.alpha = 0
-        }
+        customCell.repeatLabel.alpha = (alarmEntity.repeat != "0000000" ? 1.0 : 0.0)
+        customCell.snoozeLabel.alpha = (alarmEntity.snooze ? 1.0 : 0.0 )
         customCell.timeLabel?.text = alarmEntity.alarmTime
         customCell.timeLabel?.font = UIFont.systemFontOfSize(40.0)
         customCell.descriptionLabel?.text = alarmEntity.label
