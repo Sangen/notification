@@ -11,13 +11,11 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-    let fire = PNDAlarmFireManager()
-    let calculate = PNDAlarmCalculateManager()
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary!) -> Bool {
         // Override point for customization after application launch.
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        application.registerUserNotificationSettings(fire.createInteractiveNotificationSettings())
+        application.registerUserNotificationSettings(PNDAlarmFireManager.createInteractiveNotificationSettings())
         
         if let options = launchOptions {
             let notification = launchOptions.objectForKey(UIApplicationLaunchOptionsLocalNotificationKey) as? UILocalNotification
@@ -43,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             NSLog("UserDefalts exist value. Alarms enabled check start")
             for entity in alarmEntities {
                 if entity.enabled {
-                    fire.makeNotification(entity.alarmTime,repeat:entity.repeat,snooze:entity.snooze,label:entity.label,sound:entity.sound)
+                    PNDAlarmFireManager.makeNotification(entity.alarmTime,repeat:entity.repeat,snooze:entity.snooze,label:entity.label,sound:entity.sound)
                 }
             }
         }
@@ -67,7 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             NSLog("UserDefalts exist value. Alarms enabled check start")
             for entity in alarmEntities {
                 if entity.enabled {
-                    fire.makeNotification(entity.alarmTime,repeat:entity.repeat,snooze:entity.snooze,label:entity.label,sound:entity.sound)
+                    PNDAlarmFireManager.makeNotification(entity.alarmTime,repeat:entity.repeat,snooze:entity.snooze,label:entity.label,sound:entity.sound)
                 }
             }
         }
@@ -78,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             switch actionId {
             case "SNOOZE":
                 NSLog("notification.fireDate : %@", notification.fireDate!)
-                fire.makeNotification(calculate.snoozeTime(notification.fireDate!), repeat:"0000000", snooze:true, label:notification.alertBody!, sound:notification.soundName!)
+                PNDAlarmFireManager.makeNotification(PNDAlarmCalculateManager.snoozeTime(notification.fireDate!), repeat:"0000000", snooze:true, label:notification.alertBody!, sound:notification.soundName!)
             case "OK":
                 NSLog("OK : %@",notification)
             default:

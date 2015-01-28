@@ -1,14 +1,15 @@
 //
-//  PNDAlarmCalculateManager.swift
+//  PNDAlarmCalculateManagerTests.swift
 //  PandaNotif
 //
 //  Created by ShinichiSakaguchi on 2015/01/28.
 //  Copyright (c) 2015年 Shinichi.Sakaguchi. All rights reserved.
+//
 
 import UIKit
 
-class PNDAlarmCalculateManager: NSObject {
-    class func convertTimeStringToFireDate(time:String) -> NSDate {
+class PNDAlarmCalculateManagerTests: NSObject {
+    func convertTimeStringToFireDate(time:String) -> NSDate {
         let startIndex = advance(time.startIndex, 0)
         let endIndex = advance(time.startIndex, 2)
         let hour = time.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
@@ -22,21 +23,21 @@ class PNDAlarmCalculateManager: NSObject {
         return calendar.dateBySettingHour(hour, minute: minute, second: 0, ofDate:NSDate(), options: nil)!
     }
     
-    class func convertTimeStringToHour(time:String) -> Int {
+    func convertTimeStringToHour(time:String) -> Int {
         let startIndex = advance(time.startIndex, 0)
         let endIndex = advance(time.startIndex, 2)
         
         return time.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
     }
     
-    class func convertTimeStringToMinute(time:String) -> Int {
+    func convertTimeStringToMinute(time:String) -> Int {
         let startIndex = advance(time.startIndex, 3)
         let endIndex = advance(time.startIndex, 2)
         
         return time.substringFromIndex(startIndex).substringToIndex(endIndex).toInt()!
     }
     
-    class func localDate() -> NSDate {
+    func localDate() -> NSDate {
         let date = NSDate()
         
         let dateFormatter = NSDateFormatter()
@@ -48,14 +49,7 @@ class PNDAlarmCalculateManager: NSObject {
         return dateFormatter.dateFromString(dStr)!
     }
     
-    class func currentTime() -> String {
-        let calendar = NSCalendar(identifier: NSGregorianCalendar)!
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
-        return dateFormatter.stringFromDate(NSDate())
-    }
-    
-    class func snoozeTime(fireDate:NSDate) -> String {
+    func snoozeTime(fireDate:NSDate) -> String {
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
         let snoozeFireDate = calendar.dateByAddingUnit(.MinuteCalendarUnit, value: +9, toDate:fireDate, options: nil)!
         NSLog("snoozeFireDate : %@", snoozeFireDate)
@@ -64,10 +58,17 @@ class PNDAlarmCalculateManager: NSObject {
         var hour = String(comps.0)
         var minute = String(comps.1)
         
-        return self.makeTwoDigitTime(hour) + ":" + self.makeTwoDigitTime(minute)
+        return makeTwoDigitTime(hour) + ":" + makeTwoDigitTime(minute)
     }
     
-    private class func makeTwoDigitTime(time:String) -> String {
+    func currentTime() -> String {
+        let calendar = NSCalendar(identifier: NSGregorianCalendar)!
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        return dateFormatter.stringFromDate(NSDate())
+    }
+    
+    func makeTwoDigitTime(time:String) -> String {
         if countElements(time) == 1 {
             return "0" + time
         }

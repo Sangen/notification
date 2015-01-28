@@ -21,9 +21,26 @@ class PandaNotifTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
+    func testCalculate() {
+        let calculate = PNDAlarmCalculateManagerTests()
+        let calendar = NSCalendar(identifier: NSGregorianCalendar)!
+        let data =  calendar.dateBySettingHour(12, minute: 34, second: 0, ofDate:NSDate(), options: nil)!
+        let data2 = calendar.dateBySettingHour(12, minute: 34, second: 1, ofDate:NSDate(), options: nil)!
+        let data3 = calendar.dateBySettingHour(12, minute: 35, second: 0, ofDate:NSDate(), options: nil)!
         // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
+        //XCTAssertEqual(PNDAlarmCalculateManager.convertTimeStringToFireDate("12:34"), data, "convertTimeStringToFireDate Error")
+        XCTAssertNotEqual(calculate.convertTimeStringToFireDate("12:34"), data2, "convertTimeStringToFireDate2 Error")
+        XCTAssertNotEqual(calculate.convertTimeStringToFireDate("12:34"), data3, "convertTimeStringToFireDate3 Error")
+        
+        XCTAssertEqual(calculate.convertTimeStringToHour("12:34"), 12, "convertTimeStringToHour Equal Error")
+        XCTAssertNotEqual(calculate.convertTimeStringToHour("12:34"), 11, "convertTimeStringToHour NotEqual Error")
+        
+        XCTAssertEqual(calculate.convertTimeStringToMinute("12:34"), 34, "convertTimeStringToMinute Equal Error")
+        XCTAssertNotEqual(calculate.convertTimeStringToHour("12:34"), 33, "convertTimeStringToMinute NotEqual Error")
+        
+        //XCTAssertEqual(calculate.localDate(), NSDate(), "Bad LocalDate")
+        XCTAssertEqual(calculate.snoozeTime(data), "12:43", "snoozeTime Equal Error")
+        XCTAssertNotEqual(calculate.snoozeTime(data), "12:42", "snoozeTime NotEqual Error")
     }
     
     func testPerformanceExample() {
@@ -32,5 +49,4 @@ class PandaNotifTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
-    
 }

@@ -15,13 +15,12 @@ protocol SoundTableViewControllerDelegate : class {
 class SoundTableViewController: UITableViewController {
     @IBOutlet private weak var soundTable: UITableView!
     weak var delegate: SoundTableViewControllerDelegate?
-    let tableManager = PNDAlarmTableViewManager()
     var sound = ""
     var soundStatuses = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.soundStatuses = self.tableManager.soundStatus(sound)
+        self.soundStatuses = PNDAlarmTableViewManager.soundStatus(sound)
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

@@ -8,10 +8,8 @@
 
 import UIKit
 
-class PNDAlarmFireManager: NSObject {
-    let calculate = PNDAlarmCalculateManager()
-    
-    func createInteractiveNotificationSettings() -> UIUserNotificationSettings {
+class PNDAlarmFireManager: NSObject {    
+    class func createInteractiveNotificationSettings() -> UIUserNotificationSettings {
         let snooze = UIMutableUserNotificationAction()
         snooze.title = "スヌーズ"
         snooze.identifier = "SNOOZE"
@@ -42,9 +40,9 @@ class PNDAlarmFireManager: NSObject {
         return notificationSettings
     }
     
-    func makeNotification(time:String, repeat:String, snooze:Bool, label:String, sound:String) {
+    class func makeNotification(time:String, repeat:String, snooze:Bool, label:String, sound:String) {
         let now = NSDate()
-        let todayTime = calculate.convertTimeStringToFireDate(time)
+        let todayTime = PNDAlarmCalculateManager.convertTimeStringToFireDate(time)
         
         if repeat != "0000000" {
             NSLog("Repeat GO")
@@ -55,7 +53,7 @@ class PNDAlarmFireManager: NSObject {
         }
     }
     
-    func showNotificationFire(time:String, repeat:String, snooze:Bool, label:String, sound:String) {
+    private class func showNotificationFire(time:String, repeat:String, snooze:Bool, label:String, sound:String) {
         let PNDNotification = UILocalNotification()
         PNDNotification.alertBody = label
         
@@ -70,7 +68,7 @@ class PNDAlarmFireManager: NSObject {
         } else {
             PNDNotification.category = "NOTIFICATION_SNOOZE_OFF_CATEGORY"
         }
-        let todayTime = calculate.convertTimeStringToFireDate(time)
+        let todayTime = PNDAlarmCalculateManager.convertTimeStringToFireDate(time)
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
         
         if todayTime.compare(NSDate()) == NSComparisonResult.OrderedDescending {
@@ -83,7 +81,7 @@ class PNDAlarmFireManager: NSObject {
         for (i, notifFlag) in enumerate(weekdaysNotifFlags) {
             if notifFlag == "1" {
                 let nextWeekday = calendar.nextDateAfterDate(NSDate(), matchingUnit: .WeekdayCalendarUnit, value: i + 1, options: NSCalendarOptions.MatchNextTime)!
-                let nextWeekdayFire = calendar.dateBySettingHour(calculate.convertTimeStringToHour(time), minute: calculate.convertTimeStringToMinute(time), second:0, ofDate: nextWeekday, options: nil)!
+                let nextWeekdayFire = calendar.dateBySettingHour(PNDAlarmCalculateManager.convertTimeStringToHour(time), minute: PNDAlarmCalculateManager.convertTimeStringToMinute(time), second:0, ofDate: nextWeekday, options: nil)!
                 NSLog("Weekday Fire : %@",nextWeekdayFire)
                 PNDNotification.fireDate = nextWeekdayFire
                 UIApplication.sharedApplication().scheduleLocalNotification(PNDNotification)

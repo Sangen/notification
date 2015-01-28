@@ -9,10 +9,10 @@
 import UIKit
 
 class PNDAlarmTableViewManager: NSObject {
-    func soundStatus(sound:String) -> Int {
+    class func soundStatus(sound:String) -> Int {
         switch sound {
         case UILocalNotificationDefaultSoundName:
-            return Int(0)
+            return 0
         case "nil":
             return 1
         default:
@@ -21,7 +21,7 @@ class PNDAlarmTableViewManager: NSObject {
         return 0
     }
     
-    func soundName(sound:String) -> String {
+   class func soundName(sound:String) -> String {
         switch sound {
         case UILocalNotificationDefaultSoundName:
             return "デフォルト"
@@ -33,7 +33,7 @@ class PNDAlarmTableViewManager: NSObject {
         return "Unknown SoundName"
     }
     
-    func repeatStatus(repeat:String) -> String {
+   class func repeatStatus(repeat:String) -> String {
         var repeatStatuses = [String]()
         for r in repeat { repeatStatuses.append(String(r)) }
         
@@ -52,7 +52,7 @@ class PNDAlarmTableViewManager: NSObject {
         if repeatStatuses == ["0","0","0","0","0","0","0"] {
             return "しない"
         }
-        var weekDays = String()
+        var weekDays = ""
         if repeatStatuses[1] == "1" {
             weekDays += "月 "
         }

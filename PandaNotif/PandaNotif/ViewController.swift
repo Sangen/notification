@@ -13,7 +13,6 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
     @IBOutlet private weak var minuteTableView: UITableView!
     let dataSource = PNDTableViewDataSource()
     let minutesDataSource = PNDMinutesTableViewDataSource()
-    let calculate = PNDAlarmCalculateManager()
     var editIndexPath = 0
     
     override func viewDidLoad() {
@@ -46,17 +45,17 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
             self.minuteTableView.deselectRowAtIndexPath(indexPath, animated: true)
             switch self.minutesDataSource.texts[indexPath.row] {
             case "3分後":
-                minuteSet(.Minute,number:3,date: calculate.localDate())
+                minuteSet(.Minute,number:3,date: PNDAlarmCalculateManager.localDate())
             case "5分後":
-                minuteSet(.Minute,number:5,date: calculate.localDate())
+                minuteSet(.Minute,number:5,date: PNDAlarmCalculateManager.localDate())
             case "10分後":
-                minuteSet(.Minute,number:10,date: calculate.localDate())
+                minuteSet(.Minute,number:10,date: PNDAlarmCalculateManager.localDate())
             case "15分後":
-                minuteSet(.Minute,number:15,date: calculate.localDate())
+                minuteSet(.Minute,number:15,date: PNDAlarmCalculateManager.localDate())
             case "30分後":
-                minuteSet(.Minute,number:30,date: calculate.localDate())
+                minuteSet(.Minute,number:30,date: PNDAlarmCalculateManager.localDate())
             case "60分後":
-                minuteSet(.Minute,number:60,date: calculate.localDate())
+                minuteSet(.Minute,number:60,date: PNDAlarmCalculateManager.localDate())
             default:
                 break
             }
@@ -96,7 +95,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
             let vc = segue.destinationViewController as EditTableViewController
             vc.navigationItem.title = "アラームの追加"
             var alarmEntity = PNDAlarmEntity()
-            alarmEntity.alarmTime = calculate.currentTime()
+            alarmEntity.alarmTime = PNDAlarmCalculateManager.currentTime()
             alarmEntity.label = "アラーム"
             alarmEntity.repeat = "0000000"
             alarmEntity.snooze = true
