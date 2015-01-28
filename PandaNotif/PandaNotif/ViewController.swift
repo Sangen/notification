@@ -9,12 +9,12 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSourceDelegate, EditTableViewControllerDelegate {
-    @IBOutlet weak var alarmTableView: UITableView!
-    @IBOutlet weak var minuteTableView: UITableView!
+    @IBOutlet private weak var alarmTableView: UITableView!
+    @IBOutlet private weak var minuteTableView: UITableView!
     let dataSource = PNDTableViewDataSource()
     let minutesDataSource = PNDMinutesTableViewDataSource()
-    let calculate = PNDAlarmCalculateClass()
-    var editIndexPath = Int()
+    let calculate = PNDAlarmCalculateManager()
+    var editIndexPath = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +24,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         self.alarmTableView.registerNib(nib, forCellReuseIdentifier:"cell")
         
         self.dataSource.delegate = self
-        self.dataSource.alarmEntities = PNDUserDefaults.alarmEntities()
+        self.dataSource.alarmEntities = PNDAlarmUserDefaults.alarmEntities()
         
         self.minuteTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
         self.minuteTableView.delegate = self
@@ -62,11 +62,8 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
             }
         } else {
             self.alarmTableView.deselectRowAtIndexPath(indexPath, animated: true)
-            if indexPath.row == 0 {
-                self.editIndexPath = Int(0)
-            } else {
-                self.editIndexPath = indexPath.row
-            }
+            self.editIndexPath = indexPath.row
+
             performSegueWithIdentifier("toEditTableViewController",sender: nil)
         }
     }
@@ -185,7 +182,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
     }
     
     func enterBackground(notification: NSNotification) {
-        PNDUserDefaults.setAlarmEntities(self.dataSource.alarmEntities)
+        PNDAlarmUserDefaults.setAlarmEntities(self.dataSource.alarmEntities)
     }
     
     override func didReceiveMemoryWarning() {

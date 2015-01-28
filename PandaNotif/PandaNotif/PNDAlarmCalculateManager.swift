@@ -1,14 +1,13 @@
 //
-//  PNDAlarmCalculateClass.swift
+//  PNDAlarmCalculateManager.swift
 //  PandaNotif
 //
-//  Created by 坂口真一 on 2015/01/22.
+//  Created by ShinichiSakaguchi on 2015/01/28.
 //  Copyright (c) 2015年 Shinichi.Sakaguchi. All rights reserved.
-//
 
 import UIKit
 
-class PNDAlarmCalculateClass: NSObject {
+class PNDAlarmCalculateManager: NSObject {
     func convertTimeStringToFireDate(time:String) -> NSDate {
         let startIndex = advance(time.startIndex, 0)
         let endIndex = advance(time.startIndex, 2)
@@ -57,7 +56,7 @@ class PNDAlarmCalculateClass: NSObject {
         calendar.getHour(&comps.0, minute: &comps.1, second: &comps.2, nanosecond: &comps.3, fromDate: snoozeFireDate)
         var hour = String(comps.0)
         var minute = String(comps.1)
-
+        
         return makeTwoDigitTime(hour) + ":" + makeTwoDigitTime(minute)
     }
     

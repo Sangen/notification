@@ -14,22 +14,22 @@ protocol EditTableViewControllerDelegate: class {
 }
 
 class EditTableViewController: UITableViewController, RepeatTableViewControllerDelegate, SoundTableViewControllerDelegate, UITextFieldDelegate {
-    @IBOutlet weak var editTable: UITableView!
-    @IBOutlet weak var datePicker: UIDatePicker!
-    @IBOutlet weak var snoozeSwitch: UISwitch!
-    @IBOutlet weak var repeatLabel: UILabel!
-    @IBOutlet weak var label: UITextField!
-    @IBOutlet weak var sound: UILabel!
+    @IBOutlet private weak var editTable: UITableView!
+    @IBOutlet private weak var datePicker: UIDatePicker!
+    @IBOutlet private weak var snoozeSwitch: UISwitch!
+    @IBOutlet private weak var repeatLabel: UILabel!
+    @IBOutlet private weak var label: UITextField!
+    @IBOutlet private weak var sound: UILabel!
     weak var delegate: EditTableViewControllerDelegate?
-    let calculate = PNDAlarmCalculateClass()
-    let tableClass = PNDAlarmTableViewClass()
-    var from = String()
-    var editIndexPath = Int()
+    let calculate = PNDAlarmCalculateManager()
+    let tableManager = PNDAlarmTableViewManager()
+    var from = ""
+    var editIndexPath = 0
     var alarmEntity = PNDAlarmEntity()
-    var defaultAlarmTime = String()
-    var defaultLabel = String()
-    var defaultRepeat = String()
-    var defaultSound = String()
+    var defaultAlarmTime = ""
+    var defaultLabel = ""
+    var defaultRepeat = ""
+    var defaultSound = ""
     var defaultSnooze = Bool()
     var defaultEnabled = Bool()
     
@@ -60,9 +60,9 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         self.defaultSnooze = self.alarmEntity.snooze
         self.defaultEnabled = self.alarmEntity.enabled
         
-        self.repeatLabel.text = self.tableClass.repeatStatus(self.alarmEntity.repeat)
+        self.repeatLabel.text = self.tableManager.repeatStatus(self.alarmEntity.repeat)
         self.label.text = self.alarmEntity.label
-        self.sound.text = self.tableClass.soundName(self.alarmEntity.sound)
+        self.sound.text = self.tableManager.soundName(self.alarmEntity.sound)
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -112,7 +112,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         return false
     }
     
-    @IBAction func saveButtonPush(sender: UIBarButtonItem) {
+    @IBAction private func saveButtonPush(sender: UIBarButtonItem) {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         self.alarmEntity.alarmTime = dateFormatter.stringFromDate(datePicker.date)
@@ -135,12 +135,12 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     
     func changeRepeat(repeat:String) {
         self.alarmEntity.repeat = repeat
-        self.repeatLabel.text = tableClass.repeatStatus(self.alarmEntity.repeat)
+        self.repeatLabel.text = tableManager.repeatStatus(self.alarmEntity.repeat)
     }
     
     func changeSound(sound:String) {
         self.alarmEntity.sound = sound
-        self.sound.text = tableClass.soundName(self.alarmEntity.sound)
+        self.sound.text = tableManager.soundName(self.alarmEntity.sound)
     }
     
     override func didReceiveMemoryWarning() {

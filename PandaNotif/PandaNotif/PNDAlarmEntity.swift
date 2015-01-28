@@ -39,19 +39,3 @@ class PNDAlarmEntity: NSObject, NSCoding {
         aCoder.encodeObject(self.enabled, forKey: "enabled")
     }
 }
-
-class PNDUserDefaults {
-    class func setAlarmEntities(entities: [PNDAlarmEntity]) {
-        let dataList = entities.map { e in NSKeyedArchiver.archivedDataWithRootObject(e) }
-        let ud = NSUserDefaults.standardUserDefaults()
-        ud.setObject(dataList, forKey: "alarmEntities")
-        ud.synchronize()
-    }
-    
-    class func alarmEntities() -> [PNDAlarmEntity] {
-        if let dataList = NSUserDefaults.standardUserDefaults().arrayForKey("alarmEntities") as? [NSData] {
-            return dataList.map { d in NSKeyedUnarchiver.unarchiveObjectWithData(d) as PNDAlarmEntity }
-        }
-        return [PNDAlarmEntity]()
-    }
-}

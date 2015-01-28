@@ -1,14 +1,14 @@
 //
-//  PNDAlarmTableViewClass.swift
+//  PNDAlarmTableViewManager.swift
 //  PandaNotif
 //
-//  Created by ShinichiSakaguchi on 2015/01/24.
+//  Created by ShinichiSakaguchi on 2015/01/28.
 //  Copyright (c) 2015年 Shinichi.Sakaguchi. All rights reserved.
 //
 
 import UIKit
 
-class PNDAlarmTableViewClass: NSObject {
+class PNDAlarmTableViewManager: NSObject {
     func soundStatus(sound:String) -> Int {
         switch sound {
         case UILocalNotificationDefaultSoundName:
@@ -18,7 +18,7 @@ class PNDAlarmTableViewClass: NSObject {
         default:
             break
         }
-            return 0
+        return 0
     }
     
     func soundName(sound:String) -> String {

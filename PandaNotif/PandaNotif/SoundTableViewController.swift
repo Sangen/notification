@@ -8,20 +8,20 @@
 
 import UIKit
 
-protocol SoundTableViewControllerDelegate : class{
+protocol SoundTableViewControllerDelegate : class {
     func changeSound(sound:String)
 }
 
 class SoundTableViewController: UITableViewController {
-    @IBOutlet weak var soundTable: UITableView!
-    weak var delegate: SoundTableViewControllerDelegate? = nil
-    let tableClass = PNDAlarmTableViewClass()
-    var soundStatuses = Int()
-    var sound = String()
+    @IBOutlet private weak var soundTable: UITableView!
+    weak var delegate: SoundTableViewControllerDelegate?
+    let tableManager = PNDAlarmTableViewManager()
+    var sound = ""
+    var soundStatuses = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.soundStatuses = tableClass.soundStatus(sound)
+        self.soundStatuses = self.tableManager.soundStatus(sound)
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -77,7 +77,7 @@ class SoundTableViewController: UITableViewController {
         case 0:
             if self.soundStatuses != 0 {
                 self.sound = UILocalNotificationDefaultSoundName
-                self.soundStatuses = Int(0)
+                self.soundStatuses = 0
             }
         case 1:
             if self.soundStatuses != 1 {

@@ -1,15 +1,15 @@
 //
-//  PNDAlarmFireClass.swift
+//  PNDAlarmFireManager.swift
 //  PandaNotif
 //
-//  Created by 坂口真一 on 2015/01/22.
+//  Created by ShinichiSakaguchi on 2015/01/28.
 //  Copyright (c) 2015年 Shinichi.Sakaguchi. All rights reserved.
 //
 
 import UIKit
 
-class PNDAlarmFireClass: NSObject {
-    let calculate = PNDAlarmCalculateClass()
+class PNDAlarmFireManager: NSObject {
+    let calculate = PNDAlarmCalculateManager()
     
     func createInteractiveNotificationSettings() -> UIUserNotificationSettings {
         let snooze = UIMutableUserNotificationAction()
@@ -45,7 +45,7 @@ class PNDAlarmFireClass: NSObject {
     func makeNotification(time:String, repeat:String, snooze:Bool, label:String, sound:String) {
         let now = NSDate()
         let todayTime = calculate.convertTimeStringToFireDate(time)
-
+        
         if repeat != "0000000" {
             NSLog("Repeat GO")
             showNotificationFire(time, repeat: repeat, snooze: snooze, label: label, sound: sound)

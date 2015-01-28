@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol RepeatTableViewControllerDelegate : class{
+protocol RepeatTableViewControllerDelegate : class {
     func changeRepeat(repeat:String)
 }
 
 class RepeatTableViewController: UITableViewController {
-    weak var delegate: RepeatTableViewControllerDelegate? = nil
-    @IBOutlet weak var repeatTable: UITableView!
-    var repeat = String()
+    @IBOutlet private weak var repeatTable: UITableView!
+    weak var delegate: RepeatTableViewControllerDelegate?
+    var repeat = ""
     var repeatStatuses = [Character]()
     
     override func viewDidLoad() {

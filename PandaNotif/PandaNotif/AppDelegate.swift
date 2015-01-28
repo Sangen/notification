@@ -11,9 +11,8 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-    let PNDUserDafault = NSUserDefaults()
-    let fire = PNDAlarmFireClass()
-    let calculate = PNDAlarmCalculateClass()
+    let fire = PNDAlarmFireManager()
+    let calculate = PNDAlarmCalculateManager()
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary!) -> Bool {
         // Override point for customization after application launch.
@@ -39,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         NSNotificationCenter.defaultCenter().postNotificationName("applicationDidEnterBackground", object: nil)
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        let alarmEntities = PNDUserDefaults.alarmEntities()
+        let alarmEntities = PNDAlarmUserDefaults.alarmEntities()
         if !alarmEntities.isEmpty {
             NSLog("UserDefalts exist value. Alarms enabled check start")
             for entity in alarmEntities {
@@ -63,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        let alarmEntities = PNDUserDefaults.alarmEntities()
+        let alarmEntities = PNDAlarmUserDefaults.alarmEntities()
         if !alarmEntities.isEmpty {
             NSLog("UserDefalts exist value. Alarms enabled check start")
             for entity in alarmEntities {
