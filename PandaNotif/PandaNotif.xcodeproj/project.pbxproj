@@ -113,12 +113,12 @@
 				8B63F58A1A3561EC00C4A022 /* CustomCell.swift */,
 				8B63F58B1A3561EC00C4A022 /* CustomCell.xib */,
 				8BB0FE131A70D97C00231E1A /* PNDAlarmEntity.swift */,
+				E84A2AF01A78A69100F14C8A /* PNDAlarmUserDefaults.swift */,
 				8BB0FE1D1A7106D300231E1A /* PNDTableViewDataSource.swift */,
 				E883AAC71A721FDB0013C38D /* PNDMinutesTableViewDataSource.swift */,
 				E8EEDA3E1A789E6400A9A6F6 /* PNDAlarmCalculateManager.swift */,
 				E8EEDA401A789EFA00A9A6F6 /* PNDAlarmFireManager.swift */,
 				E8EEDA421A789F6800A9A6F6 /* PNDAlarmTableViewManager.swift */,
-				E84A2AF01A78A69100F14C8A /* PNDAlarmUserDefaults.swift */,
 			);
 			path = PandaNotif;
 			sourceTree = "<group>";

@@ -91,12 +91,12 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         if segue.identifier == "toRepeatTableViewController" {
             let vc = segue.destinationViewController as RepeatTableViewController
             vc.navigationItem.title = "繰り返し"
-            vc.repeat = alarmEntity.repeat
+            vc.repeat = self.alarmEntity.repeat
             vc.delegate = self
         } else if segue.identifier == "toSoundTableViewController" {
             let vc = segue.destinationViewController as SoundTableViewController
             vc.navigationItem.title = "サウンド"
-            vc.sound = alarmEntity.sound
+            vc.sound = self.alarmEntity.sound
             vc.delegate = self
         }
     }
@@ -112,7 +112,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         return false
     }
     
-    @IBAction private func saveButtonPush(sender: UIBarButtonItem) {
+    @IBAction func saveButtonPush(sender: UIBarButtonItem) {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         self.alarmEntity.alarmTime = dateFormatter.stringFromDate(datePicker.date)
@@ -120,9 +120,10 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         if self.from == "add" {
             self.delegate?.saveNewAlarm(self.alarmEntity)
         } else {
+            NSLog("editIndexPath : %d",self.editIndexPath)
             self.delegate?.saveEditAlarm(self.alarmEntity, editedRow: self.editIndexPath)
         }
-        self.navigationController?.popViewControllerAnimated(true);
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     func onClickSnoozeSwicth(sender: UISwitch) {
