@@ -24,7 +24,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         
         self.dataSource.delegate = self
         self.dataSource.alarmEntities = PNDAlarmUserDefaults.alarmEntities()
-        
+
         self.minuteTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier:"data")
         self.minuteTableView.delegate = self
         self.minuteTableView.dataSource = self.minutesDataSource
@@ -95,7 +95,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
             let vc = segue.destinationViewController as EditTableViewController
             vc.navigationItem.title = "アラームの追加"
             var alarmEntity = PNDAlarmEntity()
-            alarmEntity.alarmTime = PNDAlarmCalculateManager.currentTime()
+            alarmEntity.alarmTime = PNDAlarmCalculateManager.currentTimeString()
             alarmEntity.label = "アラーム"
             alarmEntity.repeat = "0000000"
             alarmEntity.snooze = true

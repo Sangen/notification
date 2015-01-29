@@ -22,7 +22,12 @@
 		E89363871A1F0F6D009A0259 /* PandaNotifTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89363861A1F0F6D009A0259 /* PandaNotifTests.swift */; };
 		E8AF74721A6E42BA00583747 /* RepeatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AF74711A6E42BA00583747 /* RepeatTableViewController.swift */; };
 		E8AF74741A6E438700583747 /* SoundTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AF74731A6E438700583747 /* SoundTableViewController.swift */; };
-		E8DE20881A78D38400BBA76A /* PNDAlarmCalculateManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DE20871A78D38400BBA76A /* PNDAlarmCalculateManagerTests.swift */; };
+		E8CC4F361A79D06E006EEF33 /* PNDAlarmCalculateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EEDA3E1A789E6400A9A6F6 /* PNDAlarmCalculateManager.swift */; };
+		E8CC4F381A7A0185006EEF33 /* PNDAlarmFireManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EEDA401A789EFA00A9A6F6 /* PNDAlarmFireManager.swift */; };
+		E8CC4F3A1A7A1ABA006EEF33 /* PNDCalculateManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CC4F391A7A1ABA006EEF33 /* PNDCalculateManagerTest.swift */; };
+		E8CC4F3C1A7A1B41006EEF33 /* PNDFireManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CC4F3B1A7A1B41006EEF33 /* PNDFireManagerTest.swift */; };
+		E8CC4F3E1A7A1BD2006EEF33 /* PNDAlarmTableViewManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CC4F3D1A7A1BD2006EEF33 /* PNDAlarmTableViewManagerTest.swift */; };
+		E8CC4F3F1A7A1BDF006EEF33 /* PNDAlarmTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EEDA421A789F6800A9A6F6 /* PNDAlarmTableViewManager.swift */; };
 		E8EEDA3F1A789E6400A9A6F6 /* PNDAlarmCalculateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EEDA3E1A789E6400A9A6F6 /* PNDAlarmCalculateManager.swift */; };
 		E8EEDA411A789EFA00A9A6F6 /* PNDAlarmFireManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EEDA401A789EFA00A9A6F6 /* PNDAlarmFireManager.swift */; };
 		E8EEDA431A789F6800A9A6F6 /* PNDAlarmTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EEDA421A789F6800A9A6F6 /* PNDAlarmTableViewManager.swift */; };
@@ -58,7 +63,9 @@
 		E89363861A1F0F6D009A0259 /* PandaNotifTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PandaNotifTests.swift; sourceTree = "<group>"; };
 		E8AF74711A6E42BA00583747 /* RepeatTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatTableViewController.swift; sourceTree = "<group>"; };
 		E8AF74731A6E438700583747 /* SoundTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundTableViewController.swift; sourceTree = "<group>"; };
-		E8DE20871A78D38400BBA76A /* PNDAlarmCalculateManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDAlarmCalculateManagerTests.swift; sourceTree = "<group>"; };
+		E8CC4F391A7A1ABA006EEF33 /* PNDCalculateManagerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDCalculateManagerTest.swift; sourceTree = "<group>"; };
+		E8CC4F3B1A7A1B41006EEF33 /* PNDFireManagerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDFireManagerTest.swift; sourceTree = "<group>"; };
+		E8CC4F3D1A7A1BD2006EEF33 /* PNDAlarmTableViewManagerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDAlarmTableViewManagerTest.swift; sourceTree = "<group>"; };
 		E8EEDA3E1A789E6400A9A6F6 /* PNDAlarmCalculateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDAlarmCalculateManager.swift; sourceTree = "<group>"; };
 		E8EEDA401A789EFA00A9A6F6 /* PNDAlarmFireManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDAlarmFireManager.swift; sourceTree = "<group>"; };
 		E8EEDA421A789F6800A9A6F6 /* PNDAlarmTableViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PNDAlarmTableViewManager.swift; sourceTree = "<group>"; };
@@ -137,7 +144,9 @@
 			isa = PBXGroup;
 			children = (
 				E89363861A1F0F6D009A0259 /* PandaNotifTests.swift */,
-				E8DE20871A78D38400BBA76A /* PNDAlarmCalculateManagerTests.swift */,
+				E8CC4F3B1A7A1B41006EEF33 /* PNDFireManagerTest.swift */,
+				E8CC4F391A7A1ABA006EEF33 /* PNDCalculateManagerTest.swift */,
+				E8CC4F3D1A7A1BD2006EEF33 /* PNDAlarmTableViewManagerTest.swift */,
 				E89363841A1F0F6D009A0259 /* Supporting Files */,
 			);
 			path = PandaNotifTests;
@@ -273,8 +282,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8CC4F361A79D06E006EEF33 /* PNDAlarmCalculateManager.swift in Sources */,
 				E89363871A1F0F6D009A0259 /* PandaNotifTests.swift in Sources */,
-				E8DE20881A78D38400BBA76A /* PNDAlarmCalculateManagerTests.swift in Sources */,
+				E8CC4F3F1A7A1BDF006EEF33 /* PNDAlarmTableViewManager.swift in Sources */,
+				E8CC4F3E1A7A1BD2006EEF33 /* PNDAlarmTableViewManagerTest.swift in Sources */,
+				E8CC4F381A7A0185006EEF33 /* PNDAlarmFireManager.swift in Sources */,
+				E8CC4F3A1A7A1ABA006EEF33 /* PNDCalculateManagerTest.swift in Sources */,
+				E8CC4F3C1A7A1B41006EEF33 /* PNDFireManagerTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

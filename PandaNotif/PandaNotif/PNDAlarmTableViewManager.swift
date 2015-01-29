@@ -16,9 +16,8 @@ class PNDAlarmTableViewManager: NSObject {
         case "nil":
             return 1
         default:
-            break
+            return 999
         }
-        return 0
     }
     
    class func soundName(sound:String) -> String {
@@ -28,30 +27,26 @@ class PNDAlarmTableViewManager: NSObject {
         case "nil":
             return "なし"
         default:
-            break
+            return "Unknown SoundName"
         }
-        return "Unknown SoundName"
     }
     
    class func repeatStatus(repeat:String) -> String {
-        var repeatStatuses = [String]()
-        for r in repeat { repeatStatuses.append(String(r)) }
-        
-        if repeatStatuses == ["1","1","1","1","1","1","1"] {
+        switch repeat {
+        case "1111111":
             return "毎日"
-        }
-        
-        if repeatStatuses == ["1","0","0","0","0","0","1"] {
+        case "1000001":
             return "週末"
-        }
-        
-        if repeatStatuses == ["0","1","1","1","1","1","0"] {
+        case "0111110":
             return "平日"
-        }
-        
-        if repeatStatuses == ["0","0","0","0","0","0","0"] {
+        case "0000000":
             return "しない"
+        default:
+            break
         }
+    
+        var repeatStatuses = [Character]()
+        repeatStatuses = Array(repeat)
         var weekDays = ""
         if repeatStatuses[1] == "1" {
             weekDays += "月 "

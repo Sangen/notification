@@ -76,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             switch actionId {
             case "SNOOZE":
                 NSLog("notification.fireDate : %@", notification.fireDate!)
-                PNDAlarmFireManager.makeNotification(PNDAlarmCalculateManager.snoozeTime(notification.fireDate!), repeat:"0000000", snooze:true, label:notification.alertBody!, sound:notification.soundName!)
+                PNDAlarmFireManager.makeNotification(PNDAlarmCalculateManager.snoozeTimeString(notification.fireDate!), repeat:"0000000", snooze:true, label:notification.alertBody!, sound:notification.soundName!)
             case "OK":
                 NSLog("OK : %@",notification)
             default:

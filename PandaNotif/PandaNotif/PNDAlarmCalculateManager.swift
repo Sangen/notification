@@ -48,14 +48,14 @@ class PNDAlarmCalculateManager: NSObject {
         return dateFormatter.dateFromString(dStr)!
     }
     
-    class func currentTime() -> String {
+    class func currentTimeString() -> String {
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         return dateFormatter.stringFromDate(NSDate())
     }
     
-    class func snoozeTime(fireDate:NSDate) -> String {
+    class func snoozeTimeString(fireDate:NSDate) -> String {
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
         let snoozeFireDate = calendar.dateByAddingUnit(.MinuteCalendarUnit, value: +9, toDate:fireDate, options: nil)!
         NSLog("snoozeFireDate : %@", snoozeFireDate)
@@ -63,8 +63,8 @@ class PNDAlarmCalculateManager: NSObject {
         calendar.getHour(&comps.0, minute: &comps.1, second: &comps.2, nanosecond: &comps.3, fromDate: snoozeFireDate)
         var hour = String(comps.0)
         var minute = String(comps.1)
-        
-        return self.makeTwoDigitTime(hour) + ":" + self.makeTwoDigitTime(minute)
+
+        return makeTwoDigitTime(hour) + ":" + makeTwoDigitTime(minute)
     }
     
     private class func makeTwoDigitTime(time:String) -> String {

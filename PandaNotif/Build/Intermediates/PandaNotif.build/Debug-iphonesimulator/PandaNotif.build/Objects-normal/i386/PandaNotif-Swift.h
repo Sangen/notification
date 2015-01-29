@@ -63,15 +63,8 @@ typedef struct _NSZone NSZone;
 # endif
 #endif
 #if defined(__has_feature) && __has_feature(modules)
-@import ObjectiveC;
 #endif
 
 #pragma clang diagnostic ignored "-Wproperty-attribute-mismatch"
 #pragma clang diagnostic ignored "-Wduplicate-method-arg"
-
-SWIFT_CLASS("_TtC10PandaNotif24PNDAlarmCalculateManager")
-@interface PNDAlarmCalculateManager : NSObject
-- (instancetype)init OBJC_DESIGNATED_INITIALIZER;
-@end
-
 #pragma clang diagnostic pop
