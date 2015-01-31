@@ -10,12 +10,12 @@ import UIKit
 import XCTest
 
 class PNDFireManagerTest: XCTestCase {
-    func testMakeNotification(){
+    func testMakeNotification() {
         UIApplication.sharedApplication().cancelAllLocalNotifications()
         NSThread.sleepForTimeInterval(0.5)
         XCTAssert(UIApplication.sharedApplication().scheduledLocalNotifications.isEmpty)
 
-        // 登録済みNotificationと時刻・ラベルが同じものは登録されない
+        // 登録済みNotificationと時刻・ラベルが同じ、かつリピートなしは登録されない
         do {
             PNDAlarmFireManager.makeNotification("23:59", repeat: "0000000", snooze: true, label: "Test", sound: "nil")
             PNDAlarmFireManager.makeNotification("23:59", repeat: "0000000", snooze: true, label: "Test", sound: "nil")
@@ -26,7 +26,7 @@ class PNDFireManagerTest: XCTestCase {
         
         // 登録されるNotification例
         do {
-            PNDAlarmFireManager.makeNotification("23:59", repeat: "0000000", snooze: true, label: "Test2", sound: "nil")
+            PNDAlarmFireManager.makeNotification("23:59", repeat: "0000000", snooze: true, label: "Super Unit Test", sound: "nil")
             PNDAlarmFireManager.makeNotification("23:59", repeat: "1000000", snooze: true, label: "Test", sound: "nil")
             NSThread.sleepForTimeInterval(0.5)
             XCTAssertEqual(UIApplication.sharedApplication().scheduledLocalNotifications.count,3)

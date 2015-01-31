@@ -10,7 +10,7 @@ import UIKit
 import XCTest
 
 class PNDCalculateManagerTest: XCTestCase {
-    func testCalculateManager() {
+    func testConvertTimeStringToFireDate() {
         let calendar = NSCalendar(identifier: NSGregorianCalendar)!
         var data =  calendar.dateBySettingHour(12, minute: 34, second: 0, ofDate:NSDate(), options: nil)!
         XCTAssertEqual(PNDAlarmCalculateManager.convertTimeStringToFireDate("12:34"), data)
@@ -20,17 +20,26 @@ class PNDCalculateManagerTest: XCTestCase {
         
         data = calendar.dateBySettingHour(12, minute: 35, second: 0, ofDate:NSDate(), options: nil)!
         XCTAssertNotEqual(PNDAlarmCalculateManager.convertTimeStringToFireDate("12:34"), data)
-        
+    }
+    
+    func testConvertTimeStringToHour() {
         XCTAssertEqual(PNDAlarmCalculateManager.convertTimeStringToHour("12:34"), 12)
         XCTAssertNotEqual(PNDAlarmCalculateManager.convertTimeStringToHour("12:34"), 11)
-        
+    }
+    
+    func testConvertTimeStringToMinute() {
         XCTAssertEqual(PNDAlarmCalculateManager.convertTimeStringToMinute("12:34"), 34)
         XCTAssertNotEqual(PNDAlarmCalculateManager.convertTimeStringToMinute("12:34"), 33)
-        
-        data =  calendar.dateBySettingHour(12, minute: 34, second: 0, ofDate:NSDate(), options: nil)!
+    }
+    
+    func testSnoozeTimeString() {
+        let calendar = NSCalendar(identifier: NSGregorianCalendar)!
+        let data =  calendar.dateBySettingHour(12, minute: 34, second: 0, ofDate:NSDate(), options: nil)!
         XCTAssertEqual(PNDAlarmCalculateManager.snoozeTimeString(data), self.minuteSet(.Minute, number: 9, date: data))
         XCTAssertNotEqual(PNDAlarmCalculateManager.snoozeTimeString(data), self.minuteSet(.Minute, number: 8, date: data))
-        
+    }
+    
+    func testCurrentTime() {
         XCTAssertEqual(PNDAlarmCalculateManager.currentTimeString(), self.minuteSet(.Second, number: 0, date: NSDate()))
     }
 
@@ -43,7 +52,7 @@ class PNDCalculateManagerTest: XCTestCase {
         case Second = "ss"
     }
     
-    func minuteSet(interval: Interval, number: Int, date: NSDate) -> String {
+    private func minuteSet(interval: Interval, number: Int, date: NSDate) -> String {
         let calendar = NSCalendar.currentCalendar()
         var comp = NSDateComponents()
         
