@@ -44,10 +44,10 @@ class PNDAlarmTableViewManager: NSObject {
         default:
             break
         }
-    
-        var repeatStatuses = [Character]()
-        repeatStatuses = Array(repeat)
+
+        let repeatStatuses = Array(repeat)
         var weekDays = ""
+    
         if repeatStatuses[1] == "1" {
             weekDays += "月 "
         }

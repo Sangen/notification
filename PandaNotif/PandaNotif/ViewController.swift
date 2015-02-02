@@ -13,7 +13,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
     @IBOutlet private weak var minuteTableView: UITableView!
     let dataSource = PNDTableViewDataSource()
     let minutesDataSource = PNDMinutesTableViewDataSource()
-    var editIndexPath = 0
+    var editedRow = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,10 +61,7 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
             }
         } else {
             self.alarmTableView.deselectRowAtIndexPath(indexPath, animated: true)
-            NSLog("editindexpath : %d", indexPath.row)
-            self.editIndexPath = indexPath.row
-            NSLog("editRow : %d", editIndexPath)
-
+            self.editedRow = indexPath.row
             performSegueWithIdentifier("toEditTableViewController",sender: nil)
         }
     }
@@ -87,8 +84,8 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
         if segue.identifier == "toEditTableViewController" {
             let vc = segue.destinationViewController as EditTableViewController
             vc.navigationItem.title = "アラームの編集"
-            vc.alarmEntity = self.dataSource.alarmEntities[self.editIndexPath]
-            vc.editIndexPath = self.editIndexPath
+            vc.alarmEntity = self.dataSource.alarmEntities[self.editedRow]
+            vc.editedRow = self.editedRow
             vc.delegate = self
             vc.from = "edit"
         } else if segue.identifier == "toEditTableViewControllerAdd" {
@@ -171,29 +168,27 @@ class ViewController: UIViewController, UITableViewDelegate, PNDTableViewDataSou
     }
     
     func saveNewAlarm(alarmEntity: PNDAlarmEntity) {
-        var newAlarmEntity = PNDAlarmEntity()
-        newAlarmEntity.alarmTime =  alarmEntity.alarmTime
-        newAlarmEntity.label =      alarmEntity.label
-        newAlarmEntity.repeat =     alarmEntity.repeat
-        newAlarmEntity.sound =      alarmEntity.sound
-        newAlarmEntity.snooze =     alarmEntity.snooze
-        newAlarmEntity.enabled =    alarmEntity.enabled
-        self.dataSource.alarmEntities += [newAlarmEntity]
-
+        self.dataSource.alarmEntities += [self.createAlarmEntity(alarmEntity)]
+        
         self.alarmTableView.reloadData()
     }
     
     func saveEditAlarm(alarmEntity: PNDAlarmEntity, editedRow: Int) {
-        var editAlarmEntity = PNDAlarmEntity()
-        editAlarmEntity.alarmTime =     alarmEntity.alarmTime
-        editAlarmEntity.label =         alarmEntity.label
-        editAlarmEntity.repeat =        alarmEntity.repeat
-        editAlarmEntity.sound =         alarmEntity.sound
-        editAlarmEntity.snooze =        alarmEntity.snooze
-        editAlarmEntity.enabled =       alarmEntity.enabled
-        self.dataSource.alarmEntities[editedRow] = editAlarmEntity
+        self.dataSource.alarmEntities[editedRow] = self.createAlarmEntity(alarmEntity)
         
         self.alarmTableView.reloadData()
+    }
+    
+    private func createAlarmEntity(alarmEntity:PNDAlarmEntity) -> PNDAlarmEntity {
+        var createAlarmEntity = PNDAlarmEntity()
+        createAlarmEntity.alarmTime = alarmEntity.alarmTime
+        createAlarmEntity.label = alarmEntity.label
+        createAlarmEntity.repeat = alarmEntity.repeat
+        createAlarmEntity.sound = alarmEntity.sound
+        createAlarmEntity.snooze = alarmEntity.snooze
+        createAlarmEntity.enabled = alarmEntity.enabled
+
+        return createAlarmEntity
     }
     
     func enterBackground(notification: NSNotification) {

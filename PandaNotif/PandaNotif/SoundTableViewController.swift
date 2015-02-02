@@ -43,43 +43,27 @@ class SoundTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
         
-        switch indexPath.row {
-        case 0:
-            if self.soundStatuses == 0 {
-                cell.accessoryType = UITableViewCellAccessoryType.Checkmark
-            } else {
-                cell.accessoryType = UITableViewCellAccessoryType.None
-            }
-        case 1:
-            if self.soundStatuses == 1 {
-                cell.accessoryType = UITableViewCellAccessoryType.Checkmark
-            } else {
-                cell.accessoryType = UITableViewCellAccessoryType.None
-            }
-        default:
-            break
+        if (indexPath.row == 0 && self.soundStatuses == 0) ||
+           (indexPath.row == 1 && self.soundStatuses == 1) {
+            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+        } else {
+            cell.accessoryType = UITableViewCellAccessoryType.None
         }
+        
         return cell
-        // Configure the cell...
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath:NSIndexPath) {
         self.soundTable.deselectRowAtIndexPath(indexPath, animated: true)
         
-        switch indexPath.row {
-        case 0:
-            if self.soundStatuses != 0 {
-                self.sound = UILocalNotificationDefaultSoundName
-                self.soundStatuses = 0
-            }
-        case 1:
-            if self.soundStatuses != 1 {
-                self.sound = "nil"
-                self.soundStatuses = 1
-            }
-            default:
-            break
+        if indexPath.row == 0 && self.soundStatuses != 0 {
+            self.sound = UILocalNotificationDefaultSoundName
+            self.soundStatuses = 0
+        } else if indexPath.row == 1 && self.soundStatuses != 1 {
+            self.sound = "nil"
+            self.soundStatuses = 1
         }
+        
         let delay = 0.2 * Double(NSEC_PER_SEC)
         let time  = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         dispatch_after(time, dispatch_get_main_queue(), {

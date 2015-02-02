@@ -56,12 +56,12 @@ class PNDAlarmFireManager: NSObject {
     private class func showNotificationFire(time:String, repeat:String, snooze:Bool, label:String, sound:String) {
         let PNDNotification = UILocalNotification()
         PNDNotification.alertBody = label
+        PNDNotification.timeZone = NSTimeZone.systemTimeZone()
         
         // LocalNotification.soundNameはデフォルト値nilのためサウンドなしは設定不要
         if sound == UILocalNotificationDefaultSoundName {
             PNDNotification.soundName = UILocalNotificationDefaultSoundName
         }
-        PNDNotification.timeZone = NSTimeZone.systemTimeZone()
         
         if snooze {
             PNDNotification.category = "NOTIFICATION_SNOOZE_ON_CATEGORY"

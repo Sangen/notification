@@ -22,7 +22,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
     @IBOutlet private weak var sound: UILabel!
     weak var delegate: EditTableViewControllerDelegate?
     var from = ""
-    var editIndexPath = 0
+    var editedRow = 0
     var alarmEntity = PNDAlarmEntity()
     var defaultAlarmTime = ""
     var defaultLabel = ""
@@ -46,11 +46,7 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         self.label.addTarget(self, action:"editingChangedLabel:",forControlEvents: UIControlEvents.EditingChanged)
         self.snoozeSwitch.addTarget(self, action: "onClickSnoozeSwicth:", forControlEvents: UIControlEvents.ValueChanged)
         
-        if self.alarmEntity.snooze {
-            self.snoozeSwitch.on = true
-        } else {
-            self.snoozeSwitch.on = false
-        }
+        self.snoozeSwitch.on = (self.alarmEntity.snooze ? true : false)
         self.defaultAlarmTime = self.alarmEntity.alarmTime
         self.defaultLabel = self.alarmEntity.label
         self.defaultRepeat = self.alarmEntity.repeat
@@ -118,18 +114,14 @@ class EditTableViewController: UITableViewController, RepeatTableViewControllerD
         if self.from == "add" {
             self.delegate?.saveNewAlarm(self.alarmEntity)
         } else {
-            NSLog("editIndexPath : %d",self.editIndexPath)
-            self.delegate?.saveEditAlarm(self.alarmEntity, editedRow: self.editIndexPath)
+            NSLog("editIndexPath : %d",self.editedRow)
+            self.delegate?.saveEditAlarm(self.alarmEntity, editedRow: self.editedRow)
         }
         self.navigationController?.popViewControllerAnimated(true)
     }
     
     func onClickSnoozeSwicth(sender: UISwitch) {
-        if sender.on {
-            self.alarmEntity.snooze = true
-        } else {
-            self.alarmEntity.snooze = false
-        }
+        self.alarmEntity.snooze = (sender.on ? true : false)
     }
     
     func changeRepeat(repeat:String) {

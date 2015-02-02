@@ -26,7 +26,7 @@ class PNDFireManagerTest: XCTestCase {
         
         // 登録されるNotification例
         do {
-            PNDAlarmFireManager.makeNotification("23:59", repeat: "0000000", snooze: true, label: "Super Unit Test", sound: "nil")
+            PNDAlarmFireManager.makeNotification("23:59", repeat: "0000000", snooze: true, label: "Ultra Super Unit Test", sound: "nil")
             PNDAlarmFireManager.makeNotification("23:59", repeat: "1000000", snooze: true, label: "Test", sound: "nil")
             NSThread.sleepForTimeInterval(0.5)
             XCTAssertEqual(UIApplication.sharedApplication().scheduledLocalNotifications.count,3)
@@ -81,5 +81,4 @@ class PNDFireManagerTest: XCTestCase {
             XCTAssertEqual(UIApplication.sharedApplication().scheduledLocalNotifications.count,8)
         } while false
     }
-
 }
